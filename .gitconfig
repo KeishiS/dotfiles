@@ -1,0 +1,21 @@
+[core]
+editor = code --wait
+quotepath = false
+[merge]
+tool = code --wait \"$MERGED\"
+ff = false
+[push]
+default = simple
+[pull]
+rebase = true
+
+[user]
+name = KeishiS
+email = sando.keishi.sp@alumni.tsukuba.ac.jp
+[github]
+user = KeishiS
+[init]
+defaultBranch = main
+
+[includeIf "gitdir:~/Gits/nobuta05/"]
+path = ~/.gitconfig_nobuta05

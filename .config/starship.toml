@@ -1,0 +1,2 @@
+# エディタの補完を設定スキーマに合わせて取得
+"$schema" = 'https://starship.rs/config-schema.json'
