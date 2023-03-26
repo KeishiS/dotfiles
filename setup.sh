@@ -9,7 +9,7 @@ files=(
     ".tmux.conf"
     ".xprofile"
     ".gitconfig"
-    ".gitconfig.sub"
+    ".gitconfig_nobuta05"
     ".nanorc"
     ".zshenv"
     ".zshrc"
