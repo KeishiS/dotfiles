@@ -16,3 +16,6 @@ if [ ! -s "$HOME/.pyenv" ]; then
 fi
 
 eval "$(starship init zsh)"
+
+# GnuPG
+export GNUPGHOME=$HOME/.gnupg
