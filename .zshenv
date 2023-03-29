@@ -35,3 +35,8 @@ alias pbpaste='xsel --clipboard --output'
 alias ll='ls -lah'
 
 [[ -s "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+
+if [[ -n $DESKTOP_SESSION ]]; then
+    eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+    export SSH_AUTH_SOCK
+fi
