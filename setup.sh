@@ -15,6 +15,7 @@ files=(
     ".zshrc"
     ".config/user-dirs.dirs"
     ".config/starship.toml"
+    ".config/autostart/gnome-keyring-ssh.desktop"
     ".julia/config/startup.jl"
 )
 
