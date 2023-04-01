@@ -19,3 +19,5 @@ defaultBranch = main
 
 [includeIf "gitdir:~/Gits/nobuta05/"]
 path = ~/.gitconfig_nobuta05
+[commit]
+	gpgsign = true
