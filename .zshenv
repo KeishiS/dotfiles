@@ -39,4 +39,8 @@ alias ll='ls -lah'
 if [[ -n $DESKTOP_SESSION ]]; then
     eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets)
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    
+    # for evolution
+    export GNOME_KEYRING_PID
+    export GNOME_KEYRING_SOCKET
 fi
