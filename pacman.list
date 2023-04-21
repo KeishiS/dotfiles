@@ -11,7 +11,6 @@ cpanminus
 discord
 dunst
 docker
-evolution
 fcitx5-configtool
 fcitx5-im
 fcitx5-mozc
@@ -34,10 +33,11 @@ pyenv
 r
 rofi
 seahorse
-simplescreenrecorder
 starship
 texlive-langjapanese
 texlive-most
+thunderbird
+thunderbird-i18n-ja
 tk
 unzip
 wezterm
