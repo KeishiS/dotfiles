@@ -16,8 +16,8 @@ email = sando.keishi.sp@alumni.tsukuba.ac.jp
 user = KeishiS
 [init]
 defaultBranch = main
+[commit]
+gpgsign = true
 
 [includeIf "gitdir:~/Gits/nobuta05/"]
 path = ~/.gitconfig_nobuta05
-[commit]
-	gpgsign = true
