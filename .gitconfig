@@ -1,8 +1,8 @@
 [core]
-editor = code --wait
+editor = nvim
 quotepath = false
 [merge]
-tool = code --wait \"$MERGED\"
+tool = nvim
 ff = false
 [push]
 default = simple

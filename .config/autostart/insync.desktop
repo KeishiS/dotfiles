@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Insync
+GenericName=Insync
+Comment=Launch Insync
+Icon=insync
+Categories=Network;
+Exec=insync start --qt-qpa-platform=xcb
+TryExec=insync --qt-qpa-platform=xcb
+Terminal=false
+X-GNOME-Autostart-Delay=3
