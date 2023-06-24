@@ -1,9 +1,6 @@
-#!/bin/sh
-
-export XMODIFIERS="@im=fcitx5"
-export GTK_IM_MODULE=fcitx5
-export QT_IM_MODULE=fcitx5
-export DefaultIMModule=fcitx5
+export XMODIFIERS="@im=fcitx"
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
 export BROWSER=$(which google-chrome-stable)
 export EDITOR=nvim
 

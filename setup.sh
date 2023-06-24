@@ -5,28 +5,22 @@
 
 files=(
     ".latexmkrc"
-    ".Xresources"
-    ".tmux.conf"
-    ".xprofile"
     ".gitconfig"
     ".gitconfig_nobuta05"
     ".nanorc"
+    ".zprofile"
     ".zshenv"
     ".zshrc"
     ".config/user-dirs.dirs"
     ".config/starship.toml"
     ".config/autostart/gnome-keyring-ssh.desktop"
+    ".config/autostart/insync.desktop"
     ".julia/config/startup.jl"
 )
 
 dirs=(
-    ".config/i3"
-    ".config/alacritty"
-    ".config/rofi"
-    ".config/nixpkgs"
     ".config/wezterm"
     ".config/fontconfig"
-    ".Xresources.d"
 )
 
 for file in ${files[@]}; do
@@ -56,10 +50,3 @@ for dir in ${dirs[@]}; do
         ln -s $HOME/dotfiles/${dir} $HOME/${dir}
     fi
 done
-
-if [[ $(whoami) == "root" ]]; then
-    grep -E "blacklist pcspkr" /etc/modprobe.d/nobeep.conf
-    if [[ $? -ne 0 ]]; then
-        echo "blacklist pcspkr" >>/etc/modprobe.d/nobeep.conf
-    fi
-fi
