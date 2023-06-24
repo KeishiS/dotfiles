@@ -5,7 +5,6 @@
 
 files=(
     ".latexmkrc"
-    ".xprofile"
     ".gitconfig"
     ".gitconfig_nobuta05"
     ".nanorc"
