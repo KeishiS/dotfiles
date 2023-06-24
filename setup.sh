@@ -9,6 +9,7 @@ files=(
     ".gitconfig"
     ".gitconfig_nobuta05"
     ".nanorc"
+    ".zprofile"
     ".zshenv"
     ".zshrc"
     ".config/user-dirs.dirs"
