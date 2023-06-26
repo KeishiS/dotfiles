@@ -22,6 +22,7 @@ graphviz
 http-parser
 jq
 neovim
+parallel
 pavucontrol
 perl-rename
 poppler-data
@@ -51,3 +52,4 @@ ttf-iosevka-nerd
 ttf-fira-code
 ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
+ttf-nerd-fonts-symbols-mono
