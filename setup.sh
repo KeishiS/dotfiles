@@ -19,6 +19,7 @@ files=(
 )
 
 dirs=(
+    ".config/nvim"
     ".config/wezterm"
     ".config/fontconfig"
 )
