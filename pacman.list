@@ -35,6 +35,9 @@ texlive-basic
 texlive-bin
 texlive-langjapanese
 texlive-latex
+texlive-latexextra
+texlive-bibtexextra
+texlive-fontsextra
 thunderbird
 thunderbird-i18n-ja
 tk
