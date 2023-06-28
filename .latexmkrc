@@ -48,3 +48,6 @@ $out_dir = 'build/';
 $pvc_view_file_via_temporary = 1;
 $max_repeat = 5;
 $clean_ext = "run.xml synctex.gz dvi nav snm bbl";
+$ENV{TZ} = 'Asia/Tokyo';
+$ENV{OPENTYPEFONTS} = '/usr/share/fonts//:';
+$ENV{TTFONTS} = '/usr/share/fonts//:';
