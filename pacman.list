@@ -1,5 +1,4 @@
 arandr
-atril
 base-devel
 biber
 clamav
@@ -10,6 +9,7 @@ colordiff
 cpanminus
 discord
 docker
+evince
 fcitx5-configtool
 fcitx5-im
 fcitx5-mozc
