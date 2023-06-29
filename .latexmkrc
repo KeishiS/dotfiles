@@ -10,7 +10,7 @@
 ##      エラーに直面したときの動作を決める
 ##      nonstopmodeはエラーメッセージを表示せず無視して処理を続ける
 ##      scrollmodeは止まることなく処理するが，エラーは表示される
-$lualatex = 'lualatex -shell-escape -synctex=1 -interection=scrollmode';
+$lualatex = 'lualatex -shell-escape -synctex=1';
 $pdflatex = $lualatex;
 
 # bibTeX commands
