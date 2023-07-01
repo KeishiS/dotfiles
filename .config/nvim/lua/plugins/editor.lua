@@ -75,4 +75,12 @@ return {
       }
     end
   },
+  {
+    'jpalardy/vim-slime',
+    init = function()
+      vim.b.slime_cell_delimiter = "# %%"
+      vim.g.slime_target = "neovim"
+      vim.g.slime_python_ipython = 1
+    end
+  },
 }

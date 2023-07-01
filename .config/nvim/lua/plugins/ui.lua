@@ -30,7 +30,7 @@ return {
     config = function()
       require('toggleterm').setup {
         open_mapping = [[<C-a>]],
-        direction = 'tab',
+        direction = 'horizontal',
       }
     end
   },
