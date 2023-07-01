@@ -53,4 +53,26 @@ return {
       })
     end
   },
+  {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
+    config = function()
+      require 'nvim-treesitter.configs'.setup {
+        -- a list of parser names
+        ensure_installed = {
+          'r', 'python', 'markdown', 'markdown_inline',
+          'julia', 'lua', 'latex', 'html', 'css',
+        },
+
+        -- automatically install missing parsers when entering buffer
+        auto_install = true,
+
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = false,
+        },
+        indent = { enable = true },
+      }
+    end
+  },
 }
