@@ -24,4 +24,14 @@ return {
 
   -- show keybinding help window
   { 'folke/which-key.nvim' },
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    config = function()
+      require('toggleterm').setup {
+        open_mapping = [[<C-a>]],
+        direction = 'tab',
+      }
+    end
+  },
 }
