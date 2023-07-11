@@ -13,6 +13,7 @@ evince
 fcitx5-configtool
 fcitx5-im
 fcitx5-mozc
+fd
 fish
 gcc-fortran
 git
@@ -30,6 +31,7 @@ poppler-data
 pulseaudio-bluetooth
 pyenv
 r
+ripgrep
 seahorse
 starship
 texlive-basic

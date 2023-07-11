@@ -11,24 +11,20 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("plugins", {
-  defaults = { version = "*" },
-  dev = { path = "~/projects" },
-  install = { colorscheme = { "catppuccin", "habamax" } },
-  rtp = {
-    disabled_plugins = {
-      "gzip",
-      "matchit",
-      "matchparen",
-      "netrwPlugin",
-      "tarPlugin",
-      "tohtml",
-      "tutor",
-      "zipPlugin",
+require("lazy").setup(
+  "plugins", -- lua module name that contains plugin spec
+  {
+    defaults = { version = "*" },
+    performance = {
+      rtp = {
+        disabled_plugins = {
+          "gzip",
+          "tarPlugin",
+          "tohtml",
+          "tutor",
+          "zipPlugin",
+        },
+      },
     },
-  },
-  change_detection = {
-    enabled = true, -- automatically check for config file changes and reload the UI
-    notify = true, -- get a notification when changes are found
-  },
-})
+  }
+)
