@@ -40,3 +40,4 @@ if [[ -n $DESKTOP_SESSION ]]; then
     eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets)
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 fi
+. "$HOME/.cargo/env"

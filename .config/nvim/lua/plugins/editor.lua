@@ -76,11 +76,12 @@ return {
     end
   },
   {
-    'jpalardy/vim-slime',
-    init = function()
-      vim.b.slime_cell_delimiter = "# %%"
-      vim.g.slime_target = "neovim"
-      vim.g.slime_python_ipython = 1
+    'michaelb/sniprun',
+    build = "bash ./install.sh",
+    config = function()
+      require'sniprun'.setup({
+        repl_enable = { 'Julia_original' },
+      })
     end
   },
 }
