@@ -15,7 +15,7 @@ files=(
     ".config/starship.toml"
     ".config/autostart/gnome-keyring-ssh.desktop"
     ".config/autostart/insync.desktop"
-    ".julia/config/startup.jl"
+#    ".julia/config/startup.jl"
 )
 
 dirs=(
