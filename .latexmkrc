@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+$out_dir = 'build/';
+
 # LaTeX commands
 ## -shell-escape : 処理系による外部コマンド実行を許可
 ## -synctex=-1 :
@@ -41,7 +43,6 @@ $makeindex  =   'mendex %O -o %D %S';
 $pdf_mode = 4;
 
 # Other configuration
-$out_dir = 'build/';
 ## pvc_view_file_via_temporary :
 ##      値が1の時，pdfの閲覧でファイル更新が阻害されないよう
 ##      一時ファイルを作成する
