@@ -15,6 +15,13 @@ if [ ! -s "$HOME/.pyenv" ]; then
     curl https://pyenv.run | bash
 fi
 
+# rye
+if [ ! -s "$HOME/.rye" ]; then
+    curl -sSf https://rye-up.com/get | bash
+else
+    source "$HOME/.rye/env"
+fi
+
 eval "$(starship init zsh)"
 
 # GnuPG
