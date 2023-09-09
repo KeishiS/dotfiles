@@ -10,10 +10,10 @@ if [ ! -s "$HOME/.juliaup" ]; then
     curl -fsSL https://install.julialang.org | sh -s -- --yes
 fi
 
-# pyenv
-if [ ! -s "$HOME/.pyenv" ]; then
-    curl https://pyenv.run | bash
-fi
+## pyenv
+# if [ ! -s "$HOME/.pyenv" ]; then
+#     curl https://pyenv.run | bash
+# fi
 
 # rye
 if [ ! -s "$HOME/.rye" ]; then
