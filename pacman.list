@@ -14,7 +14,6 @@ fcitx5-configtool
 fcitx5-im
 fcitx5-mozc
 fd
-fish
 gcc-fortran
 git
 glpk
@@ -23,13 +22,10 @@ graphviz
 http-parser
 jq
 neovim
-okular
 parallel
 pavucontrol
 perl-rename
 poppler-data
-pulseaudio-bluetooth
-pyenv
 r
 ripgrep
 seahorse
@@ -57,8 +53,13 @@ noto-fonts
 noto-fonts-cjk
 otf-ipafont
 otf-ipaexfont
+ttf-roboto
 ttf-iosevka-nerd
 ttf-fira-code
 ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
 ttf-nerd-fonts-symbols-mono
+awesome
+picom
+rofi
+upower
