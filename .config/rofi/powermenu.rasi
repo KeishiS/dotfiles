@@ -1,0 +1,110 @@
+* {
+    PRIMARY:                #0E76A8;
+    PRIMARY-VARIANT:        #084D6E;
+    SECONDARY:              #FFD700;
+    SECONDARY-VARIANT:      #FFC400;
+    BACKGROUND:             #121212;
+    SURFACE:                #1E1E1E;
+    ERROR:                  #CF6679;
+    ON-PRIMARY:             #FFFFFF;
+    ON-SECONDARY:           #000000;
+    ON-BACKGROUND:          #FFFFFF;
+    ON-SURFACE:             #FFFFFF;
+    ON-ERROR:               #FFFFFF;
+}
+
+configuration {
+    font:                   "JetBrainsMono Nerd Font 12";
+}
+
+window {
+    border-radius:          1%;
+    height:                 30%;
+    width:                  50%;
+    location:               center;
+    border-radius:          2%;
+}
+
+mainbox {
+    background-color:       @BACKGROUND;
+    children:               [ inputbar, listview ];
+    spacing:                3%;
+    padding:                4% 2% 4% 2%;
+    border-radius:          2%;
+}
+
+inputbar {
+    children:               [ textbox-prompt-colon, prompt ];
+    background-color:       @SURFACE;
+    border:                 0% 0.2% 0.2% 0%;
+    border-radius:          0% 100% 100% 100%;
+    border-color:           @SECONDARY-VARIANT;
+    margin:                 0% 20% 0% 0%;
+    padding:                0.5%;
+    position:               center;
+}
+
+textbox-prompt-colon {
+    expand:                 false;
+    str:                    "POWER MENU | ";
+    background-color:       @SURFACE;
+    text-color:             @ON-SURFACE;
+    padding:                0.5% 0% 0.5% 0%;
+}
+
+prompt {
+    padding:                0.5% 0% 0.5% 0%;
+    background-color:       @SURFACE;
+    text-color:             @ON-SURFACE;
+}
+
+listview {
+    background-color:       @BACKGROUND;
+    spacing:                2%;
+    layout:                 horizontal;
+}
+
+element {
+    background-color:       @SURFACE;
+    border-radius:          100%;
+}
+
+element-text {
+    font:                   "Material Symbols Rounded 32";
+    background-color:       @SURFACE;
+    text-color:             @PRIMARY;
+    margin:                 4% 2.7% 4% 2.7%;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    background-color:       @ERROR;
+    text-color:             @SECONDARY;
+    border-radius:          0.2%;
+}
+
+element normal.active,
+element alternate.active {
+    background-color:       @ERROR;
+    text-color:             @SECONDARY;
+}
+
+element selected {
+    background-color:       @PRIMARY;
+    border-radius:          100%;
+}
+
+element-text selected {
+    background-color:       @PRIMARY;
+    text-color:             @SURFACE;
+}
+
+element selected.urgent {
+    background-color:       @ERROR;
+    text-color:             @SECONDARY;
+}
+
+element selected.active {
+    background-color:       @PRIMARY;
+    color:                  @ERROR;
+}

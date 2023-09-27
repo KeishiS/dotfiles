@@ -4,23 +4,26 @@
 # set -x
 
 files=(
+    ".nanorc"
+    ".zshenv"
+    ".zprofile"
     ".latexmkrc"
     ".gitconfig"
     ".gitconfig_nobuta05"
-    ".nanorc"
-    ".zprofile"
-    ".zshenv"
-    ".zshrc"
     ".config/user-dirs.dirs"
     ".config/starship.toml"
     ".config/autostart/gnome-keyring-ssh.desktop"
     ".config/autostart/insync.desktop"
-#    ".julia/config/startup.jl"
 )
 
 dirs=(
     ".config/nvim"
+    ".config/i3"
     ".config/wezterm"
+    ".config/polybar"
+    ".config/rofi"
+    ".config/gtk-2.0"
+    ".config/gtk-3.0"
     ".config/fontconfig"
 )
 

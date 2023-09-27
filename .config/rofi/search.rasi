@@ -1,0 +1,161 @@
+configuration {
+    font:                   "Roboto Medium 10";
+    show-icons:             true;
+	icon-theme:             "WhiteSur-dark";
+    display-drun:           "";
+    drun-display-format:    "{icon} {name}";
+    disable-history:        false;
+	sidebar-mode:           false;
+	click-to-exit:          true;
+    location:               6;
+}
+
+* {
+    PRIMARY:                #0E76A8;
+    PRIMARY-VARIANT:        #084D6E;
+    SECONDARY:              #FFD700;
+    SECONDARY-VARIANT:      #FFC400;
+    BACKGROUND:             #121212;
+    BACKGROUND-TRANS:       #12121200;
+    SURFACE:                #1E1E1E;
+    ERROR:                  #CF6679;
+    ON-PRIMARY:             #FFFFFF;
+    ON-SECONDARY:           #000000;
+    ON-BACKGROUND:          #FFFFFF;
+    ON-BACKGROUND-TRANS:    #FFFFFF40;
+    ON-SURFACE:             #FFFFFF;
+    ON-SURFACE-TRANS:       #FFFFFF40;
+    ON-ERROR:               #FFFFFF;
+}
+
+window {
+    transparency:           "real";
+    background-color:       @BACKGROUND;
+    text-color:             @ON-BACKGROUND;
+    border-radius:          8px;
+    border-color:           @PRIMARY;
+    width:                  700px;
+    x-offset:               0;
+    y-offset:               -4.3%;
+}
+
+prompt {
+    enabled:                true;
+	background-color:       @SURFACE;
+	text-color:             @ON-SURFACE;
+}
+
+/* prefix of search textbox */
+textbox-prompt-colon {
+	expand:                 false;
+	str:                    "";
+    background-color:       @SURFACE;
+    text-color:             @PRIMARY;
+    padding:                10px 0px 0px 12px;
+	font:                   "Material Icons Round 16";
+}
+
+/* search textbox */
+entry {
+    background-color:       @SURFACE;
+    text-color:             @ON-SURFACE;
+    placeholder-color:      @ON-SURFACE-TRANS;
+    expand:                 true;
+    horizontal-align:       0;
+    placeholder:            "Search App";
+    font:                   "Roboto Bold 12";
+    blink:                  true;
+    padding:                10px;
+}
+
+inputbar {
+	children:               [ textbox-prompt-colon, entry ];
+    spacing:                0px;
+    background-color:       @SURFACE;
+    text-color:             @PRIMARY;
+    expand:                 false;
+    border-radius:          8px;
+    position:               center;
+}
+
+case-indicator {
+    background-color:       @PRIMARY;
+    text-color:             @ON-PRIMARY;
+    spacing:                0;
+}
+
+
+/* icon list */
+listview {
+    background-color:       @SURFACE;
+    border-radius:          8px;
+    columns:                5;
+    lines:                  5;
+    spacing:                4px;
+    cycle:                  false;
+    dynamic:                true;
+    layout:                 vertical;
+}
+
+/* whole box */
+mainbox {
+    background-color:       @BACKGROUND;
+    children:               [ inputbar, listview ];
+    spacing:                40px;
+    padding:                30px;
+}
+
+/* icon in list */
+element {
+    background-color:       @SURFACE;
+    text-color:             @ON-SURFACE;
+    orientation:            vertical;
+    border-radius:          8px;
+    padding:                20px;
+}
+
+element-icon {
+    background-color:       inherit;
+    text-color:             inherit;
+    horizontal-align:       0.5;
+    vertical-align:         0.5;
+    size:                   48px;
+}
+
+element-text {
+    background-color:       inherit;
+    text-color:             inherit;
+    expand:                 true;
+    horizontal-align:       0.5;
+    vertical-align:         0.5;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    background-color:       @ERROR;
+    text-color:             @ON-ERROR;
+    border-radius:          8px;
+}
+
+element normal.active,
+element alternate.active {
+    background-color:       @PRIMARY;
+    text-color:             @ON-PRIMARY;
+}
+
+/* selected icon */
+element selected {
+    background-color:       @PRIMARY;
+    text-color:             @ON-PRIMARY;
+    border-radius:          8px;
+}
+
+element selected.urgent {
+    background-color:       @ERROR;
+    text-color:             @ON-ERROR;
+}
+
+element selected.active {
+    background-color:       @ERROR;
+    color:                  @ON-ERROR;
+}
