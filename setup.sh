@@ -26,6 +26,7 @@ dirs=(
     ".config/gtk-2.0"
     ".config/gtk-3.0"
     ".config/fontconfig"
+    ".config/sheldon"
 )
 
 for file in ${files[@]}; do

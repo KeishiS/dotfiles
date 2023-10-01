@@ -34,3 +34,5 @@ nano /etc/sddm.conf
 > [Theme]
 > Current=sugar-dark
 localectl set-x11-keymap jp,us
+systemctl enable NetworkManager
+systemctl start NetworkManager
