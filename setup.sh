@@ -5,6 +5,7 @@
 
 files=(
     ".nanorc"
+    ".zshrc"
     ".zshenv"
     ".zprofile"
     ".latexmkrc"
