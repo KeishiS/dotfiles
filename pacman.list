@@ -3,6 +3,8 @@ arandr
 base-devel
 biber
 blueman
+bluez
+bluez-utils
 clamav
 clamtk
 cmake
@@ -32,6 +34,8 @@ pacman-contrib
 parallel
 pavucontrol
 perl-rename
+pipewire
+pipewire-pulse
 poppler-data
 r
 ripgrep
