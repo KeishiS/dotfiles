@@ -20,6 +20,7 @@ files=(
 dirs=(
     ".config/nvim"
     ".config/i3"
+    ".config/dunst"
     ".config/wezterm"
     ".config/polybar"
     ".config/rofi"
