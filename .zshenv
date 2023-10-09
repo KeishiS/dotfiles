@@ -6,6 +6,7 @@ typeset -U ld_library_path
 # (N-/)をつければ、すでにpathに存在するときは追加しないよう設定する
 path=(
   $HOME/.juliaup/bin(N-/)
+  $HOME/.cargo/bin(N-/)
   $HOME/.local/bin(N-/)
   $HOME/bin(N-/)
   /usr/bin(N-/)
