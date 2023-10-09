@@ -20,7 +20,11 @@ if [[ ! -d $HOME/.juliaup ]]; then
 fi
 
 # cargo
-[[ -s $HOME/.cargo/env ]] && source $HOME/.cargo/env
+if [[ ! -d $HOME/.cargo ]]; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+else
+  source $HOME/.cargo/env
+fi
 
 #------------------------------------------------
 
