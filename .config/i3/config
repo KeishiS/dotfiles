@@ -5,7 +5,7 @@
 set $MOD Mod4
 set $ALT Mod1
 set $default_font HackGen Console 10
-set $terminal wezterm
+set $terminal urxvt
 floating_modifier $MOD
 
 # Define names for default workspaces for which we configure key bindings later on.

@@ -1,0 +1,40 @@
+URxvt.scrollBar:        false
+URxvt.cursorUnderline:  true
+URxvt.visualBell:       true
+URxvt.fading:           30
+URxvt.font:             xft:HackGen Console NF:pixelsize=18:antialias=true
+
+URxvt.background:       #1B262D
+URxvt.foreground:       #C2B49B
+
+! black, bright-black
+URxvt*color0:           #1B262D
+URxvt*color8:           #2E3C46
+
+! red, bright-red
+URxvt*color1:           #D67F67
+URxvt*color9:           #E39B8A
+
+! green, bright-green
+URxvt*color2:           #789A8F
+URxvt*color10:          #8CB1A3
+
+! yellow, bright-yellow
+URxvt*color3:           #D6B879
+URxvt*color11:          #E8D0A1
+
+! blue, bright-blue
+URxvt*color4:           #4F788E
+URxvt*color12:          #6899A8
+
+! magenta, bright-magenta
+URxvt*color5:           #937272
+URxvt*color13:          #AA8C8C
+
+! cyan, bright-cyan
+URxvt*color6:           #72939B
+URxvt*color14:          #8BAEB1
+
+! white, bright-white
+URxvt*color7:           #C2B49B
+URxvt*color15:          #DED2C1

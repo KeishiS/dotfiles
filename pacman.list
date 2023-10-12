@@ -12,6 +12,7 @@ coin-or-cbc
 colordiff
 cpanminus
 discord
+dnsutils
 docker
 dunst
 evince
@@ -31,6 +32,7 @@ less
 lxappearance
 materia-gtk-theme
 neovim
+nfs-utils
 pacman-contrib
 parallel
 pavucontrol
@@ -55,10 +57,12 @@ texlive-meta
 thunderbird
 thunderbird-i18n-ja
 tk
+tmux
 unzip
 wezterm
 xclip
 xdg-user-dirs
+xorg-xrdb
 xsel
 zsh
 noto-fonts

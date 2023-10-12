@@ -10,6 +10,8 @@ files=(
     ".zprofile"
     ".latexmkrc"
     ".gitconfig"
+    ".tmux.conf"
+    ".Xresources"
     ".gitconfig_nobuta05"
     ".config/user-dirs.dirs"
     ".config/starship.toml"
