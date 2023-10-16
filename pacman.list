@@ -11,6 +11,7 @@ cmake
 coin-or-cbc
 colordiff
 cpanminus
+dex
 discord
 dnsutils
 docker
