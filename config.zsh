@@ -26,6 +26,11 @@ else
   source $HOME/.cargo/env
 fi
 
+# Nim
+if [[ ! -d $HOME/.nimble ]]; then
+  curl https://nim-lang.org/choosenim/init.sh -sSf | sh
+fi
+
 #------------------------------------------------
 
 if [[ -n $DESKTOP_SESSION ]]; then
