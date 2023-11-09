@@ -2,7 +2,8 @@ URxvt.scrollBar:        false
 URxvt.cursorUnderline:  true
 URxvt.visualBell:       true
 URxvt.fading:           30
-URxvt.font:             xft:HackGen Console NF:pixelsize=18:antialias=true
+URxvt.font:             xft:JuliaMono:pixelsize=18:antialias=true, \
+                        xft:HackGen Console NF:pixelsize=18:antialias=true
 
 URxvt.background:       #1B262D
 URxvt.foreground:       #C2B49B
