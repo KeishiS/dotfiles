@@ -1,7 +1,7 @@
 #------------------------------------------------
 export GNUPGHOME=$HOME/.gnupg
 export JULIA_NUM_THREADS=`cat /proc/cpuinfo | grep "processor" | wc -l`
-
+export PYENV_ROOT=$HOME/.pyenv
 #------------------------------------------------
 
 # prompt by starship
@@ -12,6 +12,13 @@ if [[ ! -d $HOME/.rye ]]; then
     curl -sSf https://rye-up.com/get | bash
 else
     source $HOME/.rye/env
+fi
+
+# pyenv
+if [[ ! -d $HOME/.pyenv ]]; then
+  curl https://pyenv.run | bash
+else
+  eval "$(pyenv init -)"
 fi
 
 # Juliaup

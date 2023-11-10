@@ -8,6 +8,7 @@ path=(
   $HOME/.juliaup/bin(N-/)
   $HOME/.cargo/bin(N-/)
   $HOME/.local/bin(N-/)
+  $HOME/.pyenv/bin(N-/)
   $HOME/.nimble/bin(N-/)
   $HOME/bin(N-/)
   /usr/bin(N-/)
