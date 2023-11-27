@@ -14,6 +14,7 @@ files=(
     ".Xresources"
     ".gitconfig_nobuta05"
     ".config/user-dirs.dirs"
+    ".config/mimeapps.list"
     ".config/starship.toml"
     ".config/autostart/gnome-keyring-ssh.desktop"
     ".config/autostart/insync.desktop"

@@ -1,0 +1,9 @@
+[Default Applications]
+x-scheme-handler/gitkraken=GitKraken.desktop
+x-scheme-handler/mailspring=Mailspring.desktop
+text/html=google-chrome.desktop
+x-scheme-handler/http=google-chrome.desktop
+x-scheme-handler/https=google-chrome.desktop
+text/xml=google-chrome.desktop
+text/mml=google-chrome.desktop
+application/xhtml+xml=google-chrome.desktop
