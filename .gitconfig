@@ -21,3 +21,15 @@ gpgsign = true
 
 [includeIf "gitdir:~/Gits/nobuta05/"]
 path = ~/.gitconfig_nobuta05
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+
+[lfs]
+  standalonetransferagent = rclone
+[lfs "customtransfer.rclone"]
+  path = git-lfs-agent-rclone
+  args = --tmpdir /var/tmp box:repo-files
+  
