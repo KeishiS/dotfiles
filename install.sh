@@ -36,3 +36,5 @@ nano /etc/sddm.conf
 localectl set-x11-keymap jp,us
 systemctl enable NetworkManager
 systemctl start NetworkManager
+
+# systemctl enable pcscd

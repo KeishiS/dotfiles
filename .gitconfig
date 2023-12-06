@@ -31,5 +31,5 @@ path = ~/.gitconfig_nobuta05
   standalonetransferagent = rclone
 [lfs "customtransfer.rclone"]
   path = git-lfs-agent-rclone
-  args = --tmpdir /var/tmp box:repo-files
+  args = box:repo-files
   
