@@ -37,4 +37,4 @@ localectl set-x11-keymap jp,us
 systemctl enable NetworkManager
 systemctl start NetworkManager
 
-# systemctl enable pcscd
+systemctl enable pcscd
