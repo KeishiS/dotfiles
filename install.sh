@@ -33,6 +33,8 @@ nano /etc/crypttab
 # > swap /dev/mapper/arch-swap /dev/urandom swap,cipher=aes-xts-plain64,size=512
 mkinitcpio -p linux
 
+echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
+
 git clone https://github.com/KeishiS/dotfiles.git
 sudo pacman -S - < dotfiles/pacman.list
 install paru
@@ -53,3 +55,7 @@ systemctl enable sddm
 timedatectl set-ntp true
 
 systemctl enable pcscd
+
+#---
+nano ~/.vscode/argv.json
+# > "password-store": "gnome"
