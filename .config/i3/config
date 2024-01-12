@@ -129,6 +129,11 @@ bindsym $MOD+x exec --no-startup-id ~/.config/rofi/powermenu.sh
 # screenshot
 bindsym $MOD+s exec --no-startup-id ~/.config/rofi/screenshot.sh
 
+
+# adjust backlight
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl s +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl s 5%-
+
 #----------------------------------------------------------
 # Set modes
 #----------------------------------------------------------

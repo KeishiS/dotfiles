@@ -5,6 +5,7 @@ biber
 blueman
 bluez
 bluez-utils
+brightnessctl
 clamav
 clamtk
 cmake
