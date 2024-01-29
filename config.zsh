@@ -7,18 +7,16 @@ export PYENV_ROOT=$HOME/.pyenv
 # prompt by starship
 eval "$(starship init zsh)"
 
-# rye
-if [[ ! -d $HOME/.rye ]]; then
-    curl -sSf https://rye-up.com/get | bash
-else
-    source $HOME/.rye/env
-fi
-
 # pyenv
 if [[ ! -d $HOME/.pyenv ]]; then
   curl https://pyenv.run | bash
 else
   eval "$(pyenv init -)"
+fi
+
+# Poetry
+if [[ ! -f $HOME/.local/bin/poetry ]]; then
+  curl -sSL https://install.python-poetry.org | python3 -
 fi
 
 # Juliaup
@@ -58,6 +56,7 @@ setopt inc_append_history
 
 #------------------------------------------------
 
+fpath+=~/.zfunc
 autoload -Uz compinit && compinit
 bindkey "^p" history-beginning-search-backward
 bindkey "^n" history-beginning-search-forward

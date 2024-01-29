@@ -44,9 +44,11 @@ pacman-contrib
 parallel
 pavucontrol
 perl-rename
-pipewire
-pipewire-pulse
 poppler-data
+pulseaudio
+pulseaudio-alsa
+pulseaudio-bluetooth
+pulseaudio-jack
 r
 rclone
 ripgrep
