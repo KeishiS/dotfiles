@@ -23,6 +23,7 @@ fcitx5-im
 fcitx5-mozc
 fd
 feh
+firefox
 gcc-fortran
 git
 git-lfs
@@ -69,6 +70,7 @@ thunderbird
 thunderbird-i18n-ja
 tk
 tmux
+typst
 unzip
 vlc
 wezterm
