@@ -35,6 +35,12 @@ if [[ `command -v uv` == "" ]]; then
   curl -LsSf https://astral.sh/uv/install.sh | sh
 fi
 
+# rye
+if [[ ! -d $HOME/.rye ]]; then
+  curl -sSf https://rye-up.com/get | bash
+fi
+source $HOME/.rye/env
+
 # Nim
 if [[ ! -d $HOME/.nimble ]]; then
   curl https://nim-lang.org/choosenim/init.sh -sSf | sh
