@@ -30,7 +30,7 @@ nano /etc/ykfde.conf
 > YKFDE_CHALLENGE_PASSWORD_NEEDED="1"
 > KYFDE_CHALLENGE_SLOT="1"
 nano /etc/mkinitcpio.conf
-> `ykfde` を `encrypt` の前に追記
+> `lvm2 ykfde encrypt` を `block` の後に追記
 mkinitcpio -p linux
 passwd
 sudo pacman -S amd-ucode
@@ -49,6 +49,11 @@ nano /etc/mkinitcpio.conf # remove `kms` from HOOKS
 pacman -S mesa xf86-video-amdgpu rocm-opencl-runtime
 
 nano /boot/loader/entries/arch.conf
+> title   ArchLinux
+> linux   /vmlinuz-linux
+> initrd  /amd-ucode.img
+> initrd  /initramfs-linux.img
+> options cryptdevice=/dev/mapper/arch-root:root rw root=/dev/mapper/root
 
 nano /etc/fstab
 # > /dev/mapper/swap none swap sw 0 0

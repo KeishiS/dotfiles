@@ -98,3 +98,13 @@ i3status
 rofi
 picom
 polybar
+sway
+swaylock
+waybar
+wofi
+xorg-xwayland
+qt5-wayland
+qt6-wayland
+foot
+xdg-desktop-portal-gtk
+xdg-desktop-portal-wlr
