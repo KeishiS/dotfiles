@@ -31,6 +31,10 @@ dirs=(
     ".config/gtk-3.0"
     ".config/fontconfig"
     ".config/sheldon"
+    ".config/sway"
+    ".config/swaylock"
+    ".config/waybar"
+    ".config/wofi"
 )
 
 for file in ${files[@]}; do
