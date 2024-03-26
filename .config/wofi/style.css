@@ -1,0 +1,62 @@
+@import url("/home/keishis/.config/waybar/colors.css");
+
+* {
+  font-family: "JetBrainsMono Nerd Font", "Material Icons Round", "Material Symbols Rounded";
+  font-size: 16pt;
+}
+
+window {
+  margin: 0px;
+  border: 2px solid @primary;
+  border-radius: 10px;
+  background-color: @background-variant;
+}
+
+#input {
+  margin: 5px;
+  border: none;
+  color: @background;
+  border-radius: 10px;
+  background-color: @on-surface;
+}
+
+#inner-box {
+  margin: 5px;
+  border: none;
+}
+
+#outer-box {
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: @background;
+}
+
+#scroll {
+  margin: 0px;
+  border: none;
+}
+
+#text {
+  margin: 5px;
+  border: none;
+  color: @foreground;
+}
+
+#entry.activatable #text {
+  color: @background;
+}
+
+#entry>* {
+  color: @foreground;
+}
+
+#entry:selected {
+  background-color: @foreground;
+  border-radius: 10px;
+}
+
+#entry:selected #text {
+  color: @background;
+  font-weight: bold;
+}

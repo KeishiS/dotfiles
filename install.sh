@@ -85,3 +85,5 @@ systemctl enable pcscd
 #---
 nano ~/.vscode/argv.json
 # > "password-store": "gnome"
+
+gpasswd -a keishis vboxusers

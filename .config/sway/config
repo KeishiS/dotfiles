@@ -1,0 +1,72 @@
+set $MOD Mod4
+set $TERM wezterm
+set $DEFAULT_FONT HackGen Console 10
+
+set $WS1 "1"
+set $WS2 "2"
+set $WS3 "3"
+set $WS4 "4"
+set $WS5 "5"
+set $WS6 "6"
+set $WS7 "7"
+set $WS8 "8"
+set $WS9 "9"
+set $WS0 "10"
+
+input * {
+    xkb_layout "jp"
+}
+
+bar {
+    swaybar_command waybar
+}
+
+bindsym $MOD+Return exec $TERM
+bindsym $MOD+Shift+r reload         # Reload Sway
+bindsym $MOD+Shift+q kill           # Kill container
+bindsym $MOD+t layout tabbed        # Change container layout, tabbed
+bindsym $MOD+e layout toggle split  # Switch split layout types
+bindsym $MOD+f fullscreen toggle    # Switch to fullscreen
+
+bindsym $MOD+d exec --no-startup-id "wofi -S run"
+bindsym $MOD+x exec --no-startup-id ~/.config/wofi/powermenu.sh
+
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl s +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl s 5%-
+
+output "*" background ~/dotfiles/wallpaper/wallpaper01.png fill
+
+#--------------------------------------
+# General Settings
+#--------------------------------------
+font pango:$DEFAULT_FONT
+
+# Switch to workspace
+bindsym $MOD+1 workspace number $WS1
+bindsym $MOD+2 workspace number $WS2
+bindsym $MOD+3 workspace number $WS3
+bindsym $MOD+4 workspace number $WS4
+bindsym $MOD+5 workspace number $WS5
+bindsym $MOD+6 workspace number $WS6
+bindsym $MOD+7 workspace number $WS7
+bindsym $MOD+8 workspace number $WS8
+bindsym $MOD+9 workspace number $WS9
+bindsym $MOD+0 workspace number $WS0
+
+# Move focused container to workspace
+bindsym $MOD+Shift+1 move container to workspace number $WS1
+bindsym $MOD+Shift+2 move container to workspace number $WS2
+bindsym $MOD+Shift+3 move container to workspace number $WS3
+bindsym $MOD+Shift+4 move container to workspace number $WS4
+bindsym $MOD+Shift+5 move container to workspace number $WS5
+bindsym $MOD+Shift+6 move container to workspace number $WS6
+bindsym $MOD+Shift+7 move container to workspace number $WS7
+bindsym $MOD+Shift+8 move container to workspace number $WS8
+bindsym $MOD+Shift+9 move container to workspace number $WS9
+bindsym $MOD+Shift+0 move container to workspace number $WS0
+
+#------------------------------------
+# AutoStart
+#------------------------------------
+exec --no-startup-id nm-applet
+exec --no-startup-id fcitx5

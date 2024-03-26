@@ -1,0 +1,48 @@
+@import url("./colors.css");
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", "Material Icons Round", "Material Symbols Rounded";
+    font-size: 12pt;
+    min-height: 0;
+}
+window#waybar {
+    opacity: 0.9;
+    background: @background;
+    color: @foreground;
+    /* border-bottom: 2px solid @background-variant; */
+}
+#workspaces button {
+    padding: 0 10px;
+    background: @background;
+    color: @foreground;
+}
+#workspaces button:hover {
+    box-shadow: inherit;
+    text-shadow: inherit;
+}
+#battery {
+    padding: 0 4px;
+    margin: 0 0.5em 0 0;
+    border-bottom: 3px solid @yellow;
+}
+#memory {
+    padding: 0 4px;
+    margin: 0 0.5em 0 0;
+    border-bottom: 3px solid @blue;
+}
+#cpu {
+    padding: 0 4px;
+    margin: 0 0.5em 0 0;
+    border-bottom: 3px solid @purple;
+}
+#network {
+    padding: 0 4px;
+    margin: 0 0.5em 0 0;
+    border-bottom: 3px solid @red;
+}
+#clock {
+    padding: 0 4px;
+    margin: 0 0.5em 0 0;
+    border-bottom: 3px solid @green;
+}
