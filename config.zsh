@@ -49,7 +49,9 @@ fi
 #------------------------------------------------
 
 if [[ -n $DESKTOP_SESSION ]]; then
-    eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets)
+    # eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+    export GPG_TTY=$(tty)
+    echo UPDATESTARTUPTTY | gpg-connect-agent
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 fi
 

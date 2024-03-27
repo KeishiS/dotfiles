@@ -113,6 +113,7 @@ wofi
 xorg-xwayland
 qt5-wayland
 qt6-wayland
+kwayland-integration
 
 foot
 xdg-desktop-portal-gtk
