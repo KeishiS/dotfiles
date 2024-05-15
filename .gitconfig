@@ -32,4 +32,4 @@ path = ~/.gitconfig_nobuta05
 [lfs "customtransfer.rclone"]
   path = git-lfs-agent-rclone
   args = box:repo-files
-  
+
