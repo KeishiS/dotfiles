@@ -1,6 +1,7 @@
 #------------------------------------------------
 export GNUPGHOME=$HOME/.gnupg
 export JULIA_NUM_THREADS=`cat /proc/cpuinfo | grep "processor" | wc -l`
+export JULIA_PKG_USE_CLI_GIT=true
 export PYENV_ROOT=$HOME/.pyenv
 #------------------------------------------------
 
