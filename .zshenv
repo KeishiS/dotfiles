@@ -26,3 +26,5 @@ setopt no_beep
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'
 alias ll='ls -lah'
+
+if [ -e /home/keishis/.nix-profile/etc/profile.d/nix.sh ]; then . /home/keishis/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

@@ -47,6 +47,11 @@ if [[ ! -d $HOME/.nimble ]]; then
   curl https://nim-lang.org/choosenim/init.sh -sSf | sh
 fi
 
+# nvm
+if [[ -d /usr/share/nvm/ ]]; then
+  source /usr/share/nvm/init-nvm.sh
+fi
+
 #------------------------------------------------
 
 if [[ -n $DESKTOP_SESSION ]]; then
