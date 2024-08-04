@@ -21,6 +21,7 @@ files=(
 )
 
 dirs=(
+    ".config/helix"
     ".config/nvim"
     ".config/i3"
     ".config/dunst"
