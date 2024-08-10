@@ -30,6 +30,7 @@ git-lfs
 glpk
 gnome-keyring
 graphviz
+grim
 http-parser
 jq
 kicad
@@ -55,6 +56,7 @@ rclone
 ripgrep
 rxvt-unicode
 seahorse
+slurp
 starship
 texlive-basic
 texlive-bin
