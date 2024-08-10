@@ -19,7 +19,7 @@
     },
     "additional-repositories": [],
     "audio_config": {
-        "audio": "pulseaudio"
+        "audio": "pipewire"
     },
     "network_config": {
         "type": "nm"
@@ -72,6 +72,7 @@
         "cmake",
         "coin-or-cbc",
         "colordiff",
+        "cronie",
         "dex",
         "discord",
         "docker",
@@ -101,9 +102,6 @@
         "perl-rename",
         "picom",
         "poppler-data",
-        "pulseaudio-alsa",
-        "pulseaudio-bluetooth",
-        "pulseaudio-jack",
         "r",
         "rclone",
         "ripgrep",
@@ -119,6 +117,7 @@
         "unzip",
         "vagrant",
         "virtualbox",
+        "virtualbox-host-modules-arch",
         "vlc",
         "xdg-desktop-portal-gtk",
         "xdg-desktop-portal-wlr",
