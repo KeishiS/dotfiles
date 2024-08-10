@@ -2,9 +2,9 @@
 x-scheme-handler/gitkraken=GitKraken.desktop
 x-scheme-handler/mailspring=Mailspring.desktop
 text/html=google-chrome.desktop
-x-scheme-handler/http=firefox.desktop
-x-scheme-handler/https=firefox.desktop
-text/xml=firefox.desktop
-text/mml=firefox.desktop
-application/xhtml+xml=firefox.desktop
+x-scheme-handler/http=google-chrome.desktop
+x-scheme-handler/https=google-chrome.desktop
+text/xml=google-chrome.desktop
+text/mml=google-chrome.desktop
+application/xhtml+xml=google-chrome.desktop
 x-scheme-handler/postman=Postman.desktop
