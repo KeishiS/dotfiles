@@ -27,6 +27,7 @@ bindsym $MOD+Shift+q kill           # Kill container
 bindsym $MOD+t layout tabbed        # Change container layout, tabbed
 bindsym $MOD+e layout toggle split  # Switch split layout types
 bindsym $MOD+f fullscreen toggle    # Switch to fullscreen
+bindsym $MOD+s exec --no-startup-id "slurp | grim -g - ~/`date +'%Y-%m-%d_%H:%M:%S'.png`"
 
 bindsym $MOD+d exec --no-startup-id "wofi -S run"
 bindsym $MOD+x exec --no-startup-id ~/.config/wofi/powermenu.sh
