@@ -1,7 +1,9 @@
 {
     "hostname": "arch-keishis-home",
     "custom-commands": [
-        "git clone https://github.com/KeishiS/dotfiles && cd dotfiles && pacman --noconfirm -S - < pacman.list"
+        "git clone https://github.com/KeishiS/dotfiles && cd dotfiles && pacman --noconfirm -S - < pacman.list",
+        "su keishis && cd ~ && git clone https://aur.archlinux.org/paru.git && cd paru && makepkg -si --noconfirm",
+        "su keishis && git clone https://github.com/KeishiS/dotfiles && cd dotfiles && paru -S < aur.list"
     ],
     "version": "2.8.1",
     "config_version": "2.8.1",
