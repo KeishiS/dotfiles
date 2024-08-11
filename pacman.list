@@ -79,6 +79,8 @@ i3-wm
 i3status
 polybar
 rofi
+fcitx5-gtk
+fcitx5-qt
 fcitx5-im
 fcitx5-mozc
 fcitx5-configtool
