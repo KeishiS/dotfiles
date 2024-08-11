@@ -1,9 +1,7 @@
 {
     "hostname": "arch-keishis-home",
     "custom-commands": [
-        "git clone https://github.com/KeishiS/dotfiles && cd dotfiles && pacman -S - < pacman.list",
-        "cd dotfiles",
-        "pacman -S - < pacman.list"
+        "git clone https://github.com/KeishiS/dotfiles && cd dotfiles && pacman --noconfirm -S - < pacman.list"
     ],
     "version": "2.8.1",
     "config_version": "2.8.1",
