@@ -23,6 +23,7 @@ with Installer(
     kernels=archinstall.arguments.get("kernels", ["linux"])
 ) as installation:
     installation.sanity_check()
+
     if mirror_config := archinstall.arguments.get("mirror_config", None):
         installation.set_mirrors(mirror_config, on_target=False)
 
