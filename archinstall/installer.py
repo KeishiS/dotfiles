@@ -35,6 +35,14 @@ with Installer(
     installation._hooks.append("ykfde")
     installation._hooks.append("encrypt")
 
+    run_mkinitcpio = not archinstall.arguments.get('uki')
+    locale_config: locale.LocaleConfiguration = archinstall.arguments['locale_config']
+    installation.minimal_installation(
+        mkinitcpio=run_mkinitcpio,
+        hostname=archinstall.arguments.get('hostname', 'archlinux'),
+        locale_config=locale_config
+    )
+
     installation.add_bootloader(
         archinstall.arguments["bootloader"],
         archinstall.arguments.get('uki', False)
@@ -82,11 +90,3 @@ with Installer(
         archinstall.run_custom_user_commands(archinstall.arguments['custom-commands'], installation)
 
     installation.genfstab()
-
-    locale_config: locale.LocaleConfiguration = archinstall.arguments['locale_config']
-
-    installation.minimal_installation(
-        mkinitcpio=run_mkinitcpio,
-        hostname=archinstall.arguments.get('hostname', 'archlinux'),
-        locale_config=locale_config
-    )
