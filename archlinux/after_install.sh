@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/bash -e -x
 
 ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 hwclock --systohc
@@ -12,6 +12,7 @@ systemctl enable NetworkManager
 
 echo "root:${pass}" | chpasswd
 bootctl install
+mv /root/ArchLinux.conf /boot/loader/entries/
 
 pacman --noconfirm -S mesa xf86-video-amdgpu rocm-opencl-runtime
 
