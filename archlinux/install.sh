@@ -12,7 +12,7 @@
 # mount /dev/nvme0n1p1 /mnt/boot
 
 # 1st argument: hostname
-echo "length: ${$#}"
+echo "length: $#"
 hname=$1
 
 echo -n "Password (root): " && read -s pass
