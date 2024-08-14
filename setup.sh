@@ -21,6 +21,7 @@ files=(
 )
 
 dirs=(
+    ".vscode"
     ".config/helix"
     ".config/nvim"
     ".config/i3"
