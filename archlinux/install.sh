@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # pacman -Syy
-# pacman -S yubikey-full-disk-encryption lvm2 --noconfirm
+# pacman --noconfirm -S git yubikey-full-disk-encryption
 # # nano /etc/ykfde.conf
 # # > YKFDE_CHALLENGE_PASSWORD_NEEDED="1"
 # # > YKFDE_CHALLENGE_SLOT="1"
