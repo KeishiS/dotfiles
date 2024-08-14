@@ -1,4 +1,7 @@
-#!/usr/bin/bash -e -x
+#!/usr/bin/bash
+
+set -e
+set -x
 
 ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 hwclock --systohc
