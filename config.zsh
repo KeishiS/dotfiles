@@ -32,10 +32,11 @@ if [[ ! -d $HOME/.cargo ]]; then
 fi
 source $HOME/.cargo/env
 
-# uv
-if [[ `command -v uv` == "" ]]; then
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-fi
+# # uv
+# if [[ `command -v uv` == "" ]]; then
+#   curl -LsSf https://astral.sh/uv/install.sh | sh
+# fi
+
 
 # # rye
 # if [[ ! -d $HOME/.rye ]]; then
