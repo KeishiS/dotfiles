@@ -11,9 +11,6 @@
 # mkdir -p /mnt/boot
 # mount /dev/nvme0n1p1 /mnt/boot
 
-# 1st argument: hostname
-echo "length: $#"
-
 cp ./configs/pacman.conf /etc/
 cp ./configs/mirrorlist /etc/pacman.d/
 
@@ -27,6 +24,7 @@ cp ./configs/ykfde.conf /mnt/etc/
 cp ./configs/mkinitcpio.conf /mnt/etc/
 cp ./configs/ArchLinux.conf /mnt/root/
 cp ./configs/pacman.list /mnt/root/
+cp ./after_install.sh /mnt/
 cp ./configs/aur-cache.list /mnt/
 
 arch-chroot /mnt bash after_install.sh
