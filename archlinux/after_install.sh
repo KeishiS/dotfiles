@@ -50,3 +50,9 @@ echo "3. execute setup.sh in dotfiles"
 echo '4. "localectl set-x11-keymap jp"'
 echo '5. "timedatectl set-ntp true"'
 echo '6. enable sddm'
+
+# gpg --export-secret-keys --armor <id> > private.asc
+# gpg --export --armor <id> > public.asc
+# gpg --import private.asc
+# gpg --import public.asc
+# gpg --card-status
