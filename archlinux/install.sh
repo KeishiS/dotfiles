@@ -27,6 +27,6 @@ cp ./configs/ykfde.conf /mnt/etc/
 cp ./configs/mkinitcpio.conf /mnt/etc/
 cp ./configs/ArchLinux.conf /mnt/root/
 cp ./configs/pacman.list /mnt/root/
-cp ./after_install.sh /mnt/
+cp ./configs/aur-cache.list /mnt/
 
 arch-chroot /mnt bash after_install.sh

@@ -42,14 +42,16 @@ useradd -m -g wheel -s /usr/bin/zsh keishis
 echo "keishis:${user_pass}" | chpasswd
 gpasswd -a keishis vboxusers
 
-echo "1. edit visudo without passwd"
-echo "1. install paru"
-echo "2. install aur pkgs in dotfiles"
-echo "3. 'echo FONT=spleen-16x32 > /etc/vconsole.conf'"
-echo "3. execute setup.sh in dotfiles"
-echo '4. "localectl set-x11-keymap jp"'
-echo '5. "timedatectl set-ntp true"'
-echo '6. enable sddm'
+pacman -S - < /aur-cache.list
+echo "FONT=spleen-16x32" > /etc/vconsole.conf
+
+su - keishis -c "cd ~ && git clone https://github.com/KeishiS/dotfiles && source dotfiles/setup.sh"
+
+echo "1. edit visudo"
+echo "2. install paru"
+echo '3. "localectl set-x11-keymap jp"'
+echo '4. "timedatectl set-ntp true"'
+echo '5. enable sddm'
 
 # gpg --export-secret-keys --armor <id> > private.asc
 # gpg --export --armor <id> > public.asc
