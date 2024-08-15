@@ -44,11 +44,6 @@ source $HOME/.cargo/env
 # fi
 # source $HOME/.rye/env
 
-# Nim
-if [[ ! -d $HOME/.nimble ]]; then
-  curl https://nim-lang.org/choosenim/init.sh -sSf | sh
-fi
-
 # nvm
 if [[ -d /usr/share/nvm/ ]]; then
   source /usr/share/nvm/init-nvm.sh
