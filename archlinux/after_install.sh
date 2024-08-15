@@ -25,6 +25,8 @@ pacman --noconfirm -S mesa xf86-video-amdgpu rocm-opencl-runtime
 
 echo "swap /dev/mapper/arch-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256" >> /etc/crypttab
 echo "/dev/mapper/swap none swap sw 0 0" >> /etc/fstab
+mkdir -p /nfs/archlinux
+echo "192.168.10.17:/export/archlinux /nfs/archlinux nfs defaults 0 0" >> /etc/fstab
 echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
 echo -e "[Theme]\nCurrent=sugar-dark" > /etc/sddm.conf
 
