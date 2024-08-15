@@ -18,6 +18,9 @@ files=(
     ".config/starship.toml"
     ".config/autostart/gnome-keyring-ssh.desktop"
     ".config/autostart/insync.desktop"
+)
+
+cp_files=(
     ".vscode/argv.json"
 )
 
@@ -50,6 +53,20 @@ for file in ${files[@]}; do
         fi
 
         ln -s $HOME/dotfiles/${file} $HOME/${file}
+    fi
+done
+
+for file in ${cp_files[@]}; do
+    if [[ -e $HOME/dotfiles ]]; then
+        if [[ -L $HOME/${file} ]]; then
+            rm $HOME/${file}
+        elif [[ -e $HOME/${file} ]]; then
+            mv $HOME/${file} $HOME/${file}".bak"
+        elif [[ ! -d $(dirname $HOME/${file#/}) ]]; then
+            mkdir -p $(dirname $HOME/${file#/})
+        fi
+
+        cp $HOME/dotfiles/${file} $HOME/${file}
     fi
 done
 
