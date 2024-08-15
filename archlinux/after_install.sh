@@ -45,6 +45,7 @@ gpasswd -a keishis vboxusers
 echo "1. edit visudo without passwd"
 echo "1. install paru"
 echo "2. install aur pkgs in dotfiles"
+echo "3. 'echo FONT=spleen-16x32 > /etc/vconsole.conf'"
 echo "3. execute setup.sh in dotfiles"
 echo '4. "localectl set-x11-keymap jp"'
 echo '5. "timedatectl set-ntp true"'
