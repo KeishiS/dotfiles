@@ -34,8 +34,6 @@ cd /root
 pacman --noconfirm -S - < pacman.list
 pacman --noconfirm -S rust
 
-# localectl set-x11-keymap jp
-# timedatectl set-ntp true
 systemctl enable pcscd
 
 useradd -m -g wheel -s /usr/bin/zsh keishis
@@ -43,7 +41,7 @@ echo "keishis:${user_pass}" | chpasswd
 gpasswd -a keishis vboxusers
 
 pacman -S - < /aur-cache.list
-echo "FONT=spleen-16x32" > /etc/vconsole.conf
+echo "FONT=spleen-16x32" >> /etc/vconsole.conf
 
 su - keishis -c "cd ~ && git clone https://github.com/KeishiS/dotfiles && source dotfiles/setup.sh"
 
