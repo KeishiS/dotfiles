@@ -13,10 +13,6 @@
 
 # 1st argument: hostname
 echo "length: $#"
-hname=$1
-
-echo -n "Password (root): " && read -s pass
-echo -n "Password (keishis): " && read -s user_pass
 
 cp ./configs/pacman.conf /etc/
 cp ./configs/mirrorlist /etc/pacman.d/

@@ -3,6 +3,10 @@
 set -e
 set -x
 
+echo -n "Hostname: " && read hname && echo ""
+echo -n "Password (root): " && read -s pass && echo ""
+echo -n "Password (keishis): " && read -s user_pass && echo ""
+
 ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 hwclock --systohc
 locale-gen
