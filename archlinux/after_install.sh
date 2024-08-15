@@ -45,6 +45,7 @@ echo "FONT=spleen-16x32" >> /etc/vconsole.conf
 
 su - keishis -c "cd ~ && git clone https://github.com/KeishiS/dotfiles && source dotfiles/setup.sh"
 
+echo "0. check amd-ucode"
 echo "1. edit visudo"
 echo "2. install paru"
 echo '3. "localectl set-x11-keymap jp"'
