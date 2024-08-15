@@ -1,5 +1,14 @@
 #!/usr/bin/bash
 
+# iwctl
+# > device list
+# > station <device> scan
+# > station <device> get-networks
+# > station <device> connect <SSID>
+# > station <device> show
+# > exit
+
+# loadkeys jp106
 # pacman -Syy
 # pacman --noconfirm -S helix git yubikey-full-disk-encryption
 # # nano /etc/ykfde.conf
