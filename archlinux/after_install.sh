@@ -21,7 +21,7 @@ echo "root:${pass}" | chpasswd
 bootctl install
 mv /root/ArchLinux.conf /boot/loader/entries/
 
-pacman --noconfirm -S mesa xf86-video-amdgpu rocm-opencl-runtime
+pacman --noconfirm -S mesa xf86-video-amdgpu rocm-opencl-runtime amd-ucode
 
 echo "swap /dev/mapper/arch-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256" >> /etc/crypttab
 echo "/dev/mapper/swap none swap sw 0 0" >> /etc/fstab
@@ -48,3 +48,4 @@ echo "2. install aur pkgs in dotfiles"
 echo "3. execute setup.sh in dotfiles"
 echo '4. "localectl set-x11-keymap jp"'
 echo '5. "timedatectl set-ntp true"'
+echo '6. enable sddm'
