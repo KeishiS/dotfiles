@@ -3,9 +3,9 @@
 set -e
 set -x
 
-echo -n "Hostname: " && read hname && echo ""
-echo -n "Password (root): " && read -s pass && echo ""
-echo -n "Password (keishis): " && read -s user_pass && echo ""
+echo -n "Hostname: " && read hname && echo -e "\n"
+echo -n "Password (root): " && read -s pass && echo -e "\n"
+echo -n "Password (keishis): " && read -s user_pass && echo -e "\n"
 
 ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 hwclock --systohc
