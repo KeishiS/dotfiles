@@ -34,14 +34,16 @@ cd /root
 pacman --noconfirm -S - < pacman.list
 pacman --noconfirm -S rust
 
-localectl set-x11-keymap jp
-timedatectl set-ntp true
+# localectl set-x11-keymap jp
+# timedatectl set-ntp true
 systemctl enable pcscd
 
 useradd -m -g wheel -s /usr/bin/zsh keishis
 echo "keishis:${user_pass}" | chpasswd
 gpasswd -a keishis vboxusers
 
-echo "1. install paru"
-echo "2. install aur pkgs in dotfiles"
-echo "3. execute setup.sh in dotfiles"
+echo "1. `localectl set-x11-keymap jp`"
+echo "2. `timedatectl set-ntp true`"
+echo "3. install paru"
+echo "4. install aur pkgs in dotfiles"
+echo "5. execute setup.sh in dotfiles"
