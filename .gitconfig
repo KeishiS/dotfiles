@@ -1,8 +1,8 @@
 [core]
-editor = nvim
+editor = helix
 quotepath = false
 [merge]
-tool = nvim
+tool = helix
 ff = false
 [push]
 default = simple
