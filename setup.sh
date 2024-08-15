@@ -18,10 +18,10 @@ files=(
     ".config/starship.toml"
     ".config/autostart/gnome-keyring-ssh.desktop"
     ".config/autostart/insync.desktop"
+    ".vscode/argv.json"
 )
 
 dirs=(
-    ".vscode"
     ".config/helix"
     ".config/nvim"
     ".config/i3"
