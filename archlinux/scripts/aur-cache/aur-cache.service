@@ -2,6 +2,6 @@
 Description=Description of aur-cache
 
 [Service]
-ExecStart=source /usr/bin/aur-cache.sh
+ExecStart=/usr/bin/aur-cache.sh
 Type=oneshot
 User=keishis

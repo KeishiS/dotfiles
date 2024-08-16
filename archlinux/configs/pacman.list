@@ -58,6 +58,7 @@ vagrant
 virtualbox
 virtualbox-host-modules-arch
 vlc
+wget
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
 xdg-user-dirs
