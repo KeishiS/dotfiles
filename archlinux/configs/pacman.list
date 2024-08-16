@@ -3,6 +3,7 @@ alacritty
 arandr
 base-devel
 brightnessctl
+blas-openblas
 blueman
 bluez
 bluez-utils
@@ -106,3 +107,8 @@ texlive-latexextra
 texlive-luatex
 texlive-bibtexextra
 texlive-langjapanese
+pipewire
+pipewire-alsa
+pipewire-docs
+pipewire-pulse
+wireplumber

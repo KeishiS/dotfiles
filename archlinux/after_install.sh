@@ -45,6 +45,10 @@ gpasswd -a keishis vboxusers
 pacman -S - < /aur-cache.list
 echo "FONT=spleen-16x32" >> /etc/vconsole.conf
 
+cp /usr/share/pipewire/pipewire-pulse.conf /etc/pipewire/pipewire-pulse.conf
+systemctl enable bluetooth.service
+# check `pactl info`
+
 su - keishis -c "cd ~ && git clone https://github.com/KeishiS/dotfiles && source dotfiles/setup.sh"
 
 echo "0. check amd-ucode"
