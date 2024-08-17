@@ -34,7 +34,6 @@ mkinitcpio -p linux
 
 cd /root
 pacman --noconfirm -S - < pacman.list
-pacman --noconfirm -S rust
 
 systemctl enable pcscd
 

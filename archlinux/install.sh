@@ -22,6 +22,7 @@
 
 cp ./configs/pacman.conf /etc/
 cp ./configs/mirrorlist /etc/pacman.d/
+pacman -Syy
 
 pacstrap -K /mnt base base-devel linux linux-firmware helix git zsh
 genfstab -U /mnt > /mnt/etc/fstab
