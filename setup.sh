@@ -25,8 +25,8 @@ cp_files=(
 )
 
 dirs=(
+    ".config/alacritty"
     ".config/helix"
-    ".config/nvim"
     ".config/i3"
     ".config/dunst"
     ".config/wezterm"
