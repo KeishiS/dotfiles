@@ -83,6 +83,7 @@ pkgs=(
     "xclip"
     "sway"
     "swaybg"
+    "swaync"
     "waybar"
     "wofi"
     "kwayland-integration"
