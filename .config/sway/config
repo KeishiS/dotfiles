@@ -72,3 +72,4 @@ bindsym $MOD+Shift+0 move container to workspace number $WS0
 exec --no-startup-id nm-applet
 exec --no-startup-id fcitx5
 exec --no-startup-id dex -a
+exec --no-startup-id swaync
