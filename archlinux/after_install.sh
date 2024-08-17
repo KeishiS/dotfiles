@@ -62,3 +62,5 @@ echo '5. enable sddm'
 # gpg --import private.asc
 # gpg --import public.asc
 # gpg --card-status
+
+# scp <another machine>:~/.ssh/config .ssh
