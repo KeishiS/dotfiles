@@ -120,6 +120,7 @@ pkgs=(
     "texlive-luatex"
     "texlive-bibtexextra"
     "texlive-langjapanese"
+    "texlive-mathscience"
     "texlive-plaingeneric"
     "pipewire"
     "pipewire-alsa"
