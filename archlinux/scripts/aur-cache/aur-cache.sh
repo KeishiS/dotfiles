@@ -12,6 +12,7 @@ pkgs=(
     "google-chrome"
     "insync"
     "keybase-bin"
+    "mailspring-bin"
     "midori-bin"
     "nomacs-qt6-git"
     "quarto-cli-bin"
