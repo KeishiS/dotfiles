@@ -124,7 +124,6 @@ pkgs=(
     "sddm"
     "seahorse"
     "sheldon"
-    "simplescreenrecorder"
     "starship"
     "systemd"
     "thunderbird"
