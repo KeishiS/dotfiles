@@ -40,7 +40,7 @@ for pkg in ${pkgs[@]}; do
     ls ${OUTDIR}/${pkg}-${pkgver}-${pkgrel}*.pkg.tar.zst > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
         rm ${OUTDIR}/${pkg}*.pkg.tar.zst
-        makepkg -s
+        makepkg -sc
         mv *.pkg.tar.zst ${OUTDIR}/
     fi
     cd ..
