@@ -6,6 +6,7 @@ set -x
 echo -n "Hostname: " && read hname && echo -e "\n"
 echo -n "Password (root): " && read -s pass && echo -e "\n"
 echo -n "Password (keishis): " && read -s user_pass && echo -e "\n"
+pacman -Syy
 
 ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 hwclock --systohc
