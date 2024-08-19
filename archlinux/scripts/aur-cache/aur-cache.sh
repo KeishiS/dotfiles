@@ -36,7 +36,8 @@ for pkg in ${pkgs[@]}; do
     git clone https://aur.archlinux.org/${pkg}.git
     cd ${pkg}
     pkgver=`makepkg --printsrcinfo | grep "pkgver" | awk -F'= ' '{print $2}'`
-    ls ${OUTDIR}/${pkg}-${pkgver}*.pkg.tar.zst > /dev/null 2>&1
+    pkgrel=`makepkg --printsrcinfo | grep "pkgrel" | awk -F'= ' '{print $2}'`
+    ls ${OUTDIR}/${pkg}-${pkgver}-${pkgrel}*.pkg.tar.zst > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
         rm ${OUTDIR}/${pkg}*.pkg.tar.zst
         makepkg -s
