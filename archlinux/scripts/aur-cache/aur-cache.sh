@@ -7,6 +7,7 @@ OUTDIR=/nfs/archlinux/aur-cache
 cd $WORKDIR
 pkgs=(
     "1password"
+    "electron22-bin"
     "freerouting"
     "gitkraken"
     "google-chrome"
