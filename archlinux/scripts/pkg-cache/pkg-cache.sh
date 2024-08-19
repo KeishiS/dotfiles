@@ -14,6 +14,7 @@ pkgs=(
     "adwaita-icon-theme-legacy"
     "alacritty"
     "arandr"
+    "audit"
     "base-devel"
     "binutils"
     "blas-openblas"
@@ -66,15 +67,19 @@ pkgs=(
     "kicad-library-3d"
     "krb5"
     "less"
+    "libedit"
     "libelf"
     "libidn2"
     "libldap"
     "libnghttp2"
     "libnghttp3"
+    "libnsl"
     "libpsl"
     "librsvg"
     "libssh2"
+    "libtirpc"
     "libunistring"
+    "libxcrypt"
     "libx11"
     "llvm"
     "llvm-libs"
@@ -83,6 +88,7 @@ pkgs=(
     "lz4"
     "materia-gtk-theme"
     "mesa"
+    "ncurses"
     "networkmanager"
     "network-manager-applet"
     "nfs-utils"
@@ -91,8 +97,11 @@ pkgs=(
     "ocl-icd"
     "opencascade"
     "opencl-headers"
+    "openssh"
     "openssl"
     "pacman-contrib"
+    "pam"
+    "pambase"
     "parallel"
     "pavucontrol"
     "perl"
@@ -115,6 +124,7 @@ pkgs=(
     "sddm"
     "seahorse"
     "sheldon"
+    "simplescreenrecorder"
     "starship"
     "systemd"
     "thunderbird"
@@ -135,6 +145,7 @@ pkgs=(
     "xdg-desktop-portal-wlr"
     "xdg-user-dirs"
     "xf86-video-amdgpu"
+    "xorg-server"
     "xorg-xwayland"
     "xorg-xrdb"
     "libfido2"
@@ -170,6 +181,7 @@ pkgs=(
     "ttf-iosevka-nerd"
     "ttf-jetbrains-mono"
     "ttf-jetbrains-mono-nerd"
+    "ttf-liberation"
     "ttf-nerd-fonts-symbols-mono"
     "ttf-roboto"
     "biber"
@@ -205,32 +217,28 @@ MIRROR_URLS=(
 )
 n_mirrors=${#MIRROR_URLS[@]}
 idx=$((RANDOM % n_mirrors + 1))
-pacman -Syy
 
-REPOS=("core" "extra" "community")
-for repo in ${REPOS[@]}; do
-    wget --limit-rate=2m \
-        -O ${OUTDIR}/${repo}/x86_64/${repo}.db \
-        ${MIRROR_URLS[idx]}/${repo}/os/x86_64/${repo}.db
-    wget --limit-rate=2m \
-        -O ${OUTDIR}/${repo}/x86_64/${repo}.files \
-        ${MIRROR_URLS[idx]}/${repo}/os/x86_64/${repo}.files
-done
+function fetch_pkg() {
+    # $1 : package name
+    echo "------------------------"
+    echo "[fetch_pkg] pkg: $1"
+    pkg=$1
 
-idx=$((idx % n_mirrors + 1))
-for pkg in ${pkgs[@]}; do
     name=`pacman -Si ${pkg} | grep 'Name' | awk -F': ' '{print $NF}'`
+    if [[ $? -ne 0 ]]; then
+        return 1
+    fi
+    if [[ -z "${name}" ]]; then
+        return 1
+    fi
+
     repo=`pacman -Si ${pkg} | grep 'Repository' | awk -F': ' '{print $NF}'`
     arch=`pacman -Si ${pkg} | grep 'Architecture' | awk -F': ' '{print $NF}'`
     pkgver=`pacman -Si ${pkg} | grep 'Version' | awk -F': ' '{print $NF}'`
     filename="${name}-${pkgver}-${arch}.pkg.tar.zst"
 
-    if [[ -z "${name}" ]]; then
-        continue
-    fi
-
     if [[ -e ${OUTDIR}/${repo}/x86_64/${filename} ]]; then
-        continue
+        return 0
     fi
 
     rm ${OUTDIR}/${repo}/x86_64/${name}-*.pkg.tar.zst*
@@ -244,4 +252,25 @@ for pkg in ${pkgs[@]}; do
         "${MIRROR_URLS[idx]}/${repo}/os/x86_64/${filename}.sig"
     idx=$((idx % n_mirrors + 1))
     sleep 5
+
+    dep_pkgs=(`pacman -Si ${pkg} | grep 'Depends On' | awk -F': ' '{print $NF}'`)
+    for dep in ${dep_pkgs[@]}; do
+        fetch_pkg ${dep}
+    done
+}
+
+pacman -Syy
+REPOS=("core" "extra" "community")
+for repo in ${REPOS[@]}; do
+    wget --limit-rate=2m \
+        -O ${OUTDIR}/${repo}/x86_64/${repo}.db \
+        ${MIRROR_URLS[idx]}/${repo}/os/x86_64/${repo}.db
+    wget --limit-rate=2m \
+        -O ${OUTDIR}/${repo}/x86_64/${repo}.files \
+        ${MIRROR_URLS[idx]}/${repo}/os/x86_64/${repo}.files
+done
+
+idx=$((idx % n_mirrors + 1))
+for package in ${pkgs[@]}; do
+    fetch_pkg ${package}
 done
