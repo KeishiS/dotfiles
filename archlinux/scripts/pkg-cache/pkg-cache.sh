@@ -71,6 +71,7 @@ pkgs=(
     "virtualbox-host-modules-arch"
     "vlc"
     "wget"
+    "whois"
     "xdg-desktop-portal-gtk"
     "xdg-desktop-portal-wlr"
     "xdg-user-dirs"
