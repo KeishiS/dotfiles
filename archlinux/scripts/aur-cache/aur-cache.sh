@@ -12,7 +12,7 @@ pkgs=(
     "google-chrome"
     "insync"
     "keybase-bin"
-    "midori-git"
+    "midori-bin"
     "nomacs-qt6-git"
     "quarto-cli-bin"
     "rstudio-desktop-bin"
