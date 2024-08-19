@@ -1,6 +1,6 @@
 pkgname=pkg-cache
 pkgver=1.0.1
-pkgrel=6
+pkgrel=8
 pkgdesc=""
 arch=('x86_64')
 url=""
