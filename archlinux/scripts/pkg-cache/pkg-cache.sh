@@ -95,6 +95,8 @@ pkgs=(
     "vagrant"
     "virtualbox"
     "virtualbox-host-modules-arch"
+    "vivaldi"
+    "vivaldi-ffmpeg-codecs"
     "vlc"
     "vtk"
     "wget"

@@ -1,10 +1,10 @@
 [Default Applications]
 x-scheme-handler/gitkraken=GitKraken.desktop
 x-scheme-handler/mailspring=org.mozilla.Thunderbird.desktop
-text/html=midori-ng.desktop
-x-scheme-handler/http=midori-ng.desktop
-x-scheme-handler/https=midori-ng.desktop
-text/xml=midori-ng.desktop
-text/mml=midori-ng.desktop
-application/xhtml+xml=midori-ng.desktop
+text/html=vivaldi-stable.desktop
+x-scheme-handler/http=vivaldi-stable.desktop
+x-scheme-handler/https=vivaldi-stable.desktop
+text/xml=vivaldi-stable.desktop
+text/mml=vivaldi-stable.desktop
+application/xhtml+xml=vivaldi-stable.desktop
 x-scheme-handler/postman=Postman.desktop
