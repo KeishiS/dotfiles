@@ -50,6 +50,7 @@ systemctl enable bluetooth.service
 # check `pactl info`
 
 su - keishis -c "cd ~ && git clone https://github.com/KeishiS/dotfiles && source dotfiles/setup.sh"
+su - keishis -c "mkdir -p ~/Gits && cd ~/Gits && git clone https://aur.archlinux.org/paru.git && cd paru && makepkg -sc"
 
 echo "0. check amd-ucode"
 echo "1. edit visudo"
