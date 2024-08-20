@@ -1,10 +1,10 @@
 [Default Applications]
 x-scheme-handler/gitkraken=GitKraken.desktop
-x-scheme-handler/mailspring=Mailspring.desktop
-text/html=google-chrome.desktop
-x-scheme-handler/http=google-chrome.desktop
-x-scheme-handler/https=google-chrome.desktop
-text/xml=google-chrome.desktop
-text/mml=google-chrome.desktop
-application/xhtml+xml=google-chrome.desktop
+x-scheme-handler/mailspring=org.mozilla.Thunderbird.desktop
+text/html=midori-ng.desktop
+x-scheme-handler/http=midori-ng.desktop
+x-scheme-handler/https=midori-ng.desktop
+text/xml=midori-ng.desktop
+text/mml=midori-ng.desktop
+application/xhtml+xml=midori-ng.desktop
 x-scheme-handler/postman=Postman.desktop
