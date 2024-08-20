@@ -113,6 +113,7 @@ pkgs=(
     "qt5-location"
     "qt5-webengine"
     "qt5-declarative"
+    "qt6-tools"
     "r"
     "rclone"
     "readline"
@@ -213,6 +214,9 @@ MIRROR_URLS=(
     # "http://mirror.nishi.network/archlinux"
     "http://www.miraa.jp/archlinux"
     "http://kr.mirrors.cicku.me/archlinux"
+    "http://mirror.funami.tech/arch"
+    "http://mirror.morgan.kr/archlinux"
+    "http://mirror.siwoo.org/archlinux"
 )
 n_mirrors=${#MIRROR_URLS[@]}
 idx=$((RANDOM % n_mirrors + 1))
