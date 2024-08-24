@@ -25,6 +25,7 @@ cp_files=(
 )
 
 dirs=(
+    ".config/rio"
     ".config/alacritty"
     ".config/helix"
     ".config/i3"
