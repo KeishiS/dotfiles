@@ -37,6 +37,7 @@ nfs-utils
 pacman-contrib
 parallel
 pavucontrol
+pdfgrep
 perl-rename
 picom
 poppler-data
