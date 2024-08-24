@@ -4,6 +4,7 @@
 # Default cursor is Block
 # Other available options are: '_' and '|'
 #
+# cursor = '|'
 cursor = '|'
 
 # Blinking Cursor
@@ -124,12 +125,12 @@ args = []
 # • decorations - Set window decorations, options: "Enabled", "Disabled", "Transparent", "Buttonless"
 #
 # Example:
-# [window]
+[window]
 # width = 600
 # height = 400
 # mode = "Windowed"
-# opacity = 1.0
-# blur = false
+opacity = 0.8
+blur = true
 # decorations = "Enabled"
 
 # Renderer
@@ -251,7 +252,7 @@ extras = [{ family = "Noto Sans Mono CJK JP" }]
 #
 # Example:
 # [navigation]
-# mode = "CollapsedTab"
+# mode = "BottomTab"
 # clickable = false
 # hide-if-single = true
 # use-current-path = false
@@ -328,4 +329,3 @@ extras = [{ family = "Noto Sans Mono CJK JP" }]
 # Example:
 # [developer]
 # log-level = "OFF"
-
