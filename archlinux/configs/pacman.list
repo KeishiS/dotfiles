@@ -45,7 +45,6 @@ picom
 poppler-data
 r
 rclone
-rio
 ripgrep
 rxvt-unicode
 seahorse
@@ -63,6 +62,7 @@ virtualbox-host-modules-arch
 vivaldi
 vivaldi-ffmpeg-codecs
 vlc
+wezterm
 wget
 whois
 xdg-desktop-portal-gtk

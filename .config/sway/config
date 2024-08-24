@@ -1,5 +1,5 @@
 set $MOD Mod4
-set $TERM alacritty
+set $TERM wezterm
 set $DEFAULT_FONT HackGen Console 10
 
 set $WS1 "1"
