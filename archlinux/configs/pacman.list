@@ -21,6 +21,7 @@ docker-buildx
 evince
 fd
 feh
+firefox
 gcc-fortran
 git-lfs
 glpk
