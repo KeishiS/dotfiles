@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./sway.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -72,6 +73,10 @@
     keyMap = "jp106";
   #   useXkbConfig = true; # use xkb.options in tty.
   };
+  services.xserver = {
+    xkb.layout = "jp";
+    xkb.model = "jp106";
+  };
 
   # Configure keymap in X11
   # services.xserver.xkb.layout = "us";
@@ -103,7 +108,8 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    git curl wget helix
+    git curl wget
+    helix tmux
   ];
 
   environment.variables.EDITOR = "hx";
