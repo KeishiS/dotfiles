@@ -1,4 +1,4 @@
-theme = "github_dark"
+theme = "tokyonight"
 
 [editor]
 auto-format = true

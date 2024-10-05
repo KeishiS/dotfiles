@@ -13,11 +13,25 @@
 
   # Use the systemd-boot EFI boot loader.
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  nix = {
+    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.auto-optimise-store = true;
+    gc = {
+      dates = "weekly";
+      options = "--delete-older-than 5d";
+      automatic = true;
+    };
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
+    };
+  };
 
   boot = {
     loader = {
       systemd-boot.enable = true;
+      systemd-boot.configurationLimit = 5;
       efi.canTouchEfiVariables = true;
     };
 
@@ -120,7 +134,7 @@
     enableCompletion = true;
     autosuggestions.enable = true;
   };
-  
+
   programs.nano.nanorc = ''
     set softwrap
     set tabsize 4
@@ -144,6 +158,13 @@
       noto-fonts-cjk
       noto-fonts-emoji
       source-han-code-jp
+      (nerdfonts.override {
+        fonts = [
+          "FiraCode"
+          "JetBrainsMono"
+          "Noto"
+        ];
+      })
     ];
   };
 
