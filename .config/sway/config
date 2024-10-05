@@ -13,6 +13,11 @@ set $WS08 "08"
 set $WS09 "09"
 set $WS10 "10"
 
+default_border pixel 1
+smart_gaps on
+gaps inner 3
+gaps outer 1
+
 input "type:keyboard" {
     xkb_layout "jp"
 }

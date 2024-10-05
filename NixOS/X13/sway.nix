@@ -15,10 +15,9 @@
     enable = true;
     wrapperFeatures.gtk = true;
   };
-
   programs.waybar.enable = true;
-  services.gnome.gnome-keyring.enable = true;
 
+  services.gnome.gnome-keyring.enable = true;
   environment.systemPackages = with pkgs; [
     (catppuccin-sddm.override {
       flavor = "mocha";

@@ -110,6 +110,7 @@
   environment.systemPackages = with pkgs; [
     git curl wget
     helix tmux
+    networkmanagerapplet
   ];
 
   environment.variables.EDITOR = "hx";

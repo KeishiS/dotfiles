@@ -9,10 +9,6 @@
     dex # a program to generate and execute DesktopEntry files of the Application type
   ];
 
-  wayland.windowManager.sway = {
-    enable = true;
-  };
-
   programs.starship = {
     enable = true;
   };

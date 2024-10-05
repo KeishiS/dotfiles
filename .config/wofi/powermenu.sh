@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 lock="Lock"
 logout="Logout"
