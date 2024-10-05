@@ -31,10 +31,8 @@ bindsym $MOD+Return exec $TERM
 bindsym $MOD+Shift+r reload
 # Kill container
 bindsym $MOD+Shift+q kill
-## Change container layout, tabbed
-# bindsym $MOD+t layout tabbed
-## Switch split layout types
-# bindsym $MOD+e layout toggle split
+# Change container layout, tabbed
+bindsym $MOD+t layout toggle tabbed splith
 # Switch to fullscreen
 bindsym $MOD+f fullscreen toggle
 bindsym $MOD+s exec --no-startup-id "slurp | grim -g - ~/`date +'%Y-%m-%d_%H:%M:%S'.png`"

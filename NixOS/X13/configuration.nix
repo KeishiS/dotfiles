@@ -125,6 +125,7 @@
     git curl wget
     helix tmux
     networkmanagerapplet
+    gcc gfortran gnumake cmake glibc zlib
   ];
 
   environment.variables.EDITOR = "hx";

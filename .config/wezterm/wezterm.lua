@@ -54,14 +54,28 @@ config.keys = {
     action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
   },
   {
+    --[[ Move to Left Pane ]]
     mods = 'CTRL|SHIFT',
     key = 'h',
     action = wezterm.action.ActivatePaneDirection("Left"),
   },
   {
+    --[[ Move to Right Pane ]]
     mods = 'CTRL|SHIFT',
     key = 'l',
     action = wezterm.action.ActivatePaneDirection("Right"),
+  },
+  {
+    --[[ Move to Down Pane ]]
+    mods = 'CTRL|SHIFT',
+    key = 'j',
+    action = wezterm.action.ActivatePaneDirection("Down"),
+  },
+  {
+    --[[ Move to Up Pane ]]
+    mods = 'CTRL|SHIFT',
+    key = 'k',
+    action = wezterm.action.ActivatePaneDirection("Up"),
   },
   {
     --[[ Activate Copy Mode ]]
