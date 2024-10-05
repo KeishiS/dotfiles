@@ -132,23 +132,21 @@
     enableExtraSocket = true;
   };
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+  fonts = {
+    fontDir.enable = true;
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      fira-code
+      fira-code-symbols
+      jetbrains-mono
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+      source-han-code-jp
+    ];
+  };
 
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
+  nixpkgs.config.allowUnfree = true;
   # networking.firewall.enable = false;
 
   # Copy the NixOS configuration file and link it from the resulting system
