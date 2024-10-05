@@ -7,6 +7,7 @@
       enable = true;
       wayland.enable = true;
       theme = "catppuccin-mocha";
+      package = pkgs.kdePackages.sddm;
     };
   };
 
@@ -19,9 +20,9 @@
   services.gnome.gnome-keyring.enable = true;
 
   environment.systemPackages = with pkgs; [
-    catppuccin-sddm.override {
-      flabor = "mocha";
-    }
+    (catppuccin-sddm.override {
+      flavor = "mocha";
+    })
     swaybg
     swaynotificationcenter
     wofi
