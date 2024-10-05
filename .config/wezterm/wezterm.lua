@@ -54,12 +54,12 @@ config.keys = {
     action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
   },
   {
-    mods = 'CTRL',
+    mods = 'CTRL|SHIFT',
     key = 'h',
     action = wezterm.action.ActivatePaneDirection("Left"),
   },
   {
-    mods = 'CTRL',
+    mods = 'CTRL|SHIFT',
     key = 'l',
     action = wezterm.action.ActivatePaneDirection("Right"),
   },
