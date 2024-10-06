@@ -88,6 +88,10 @@
     };
   };
 
+  programs.gpg.settings = {
+    pinentry-program = "pinentry-gtk2";
+  };
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;

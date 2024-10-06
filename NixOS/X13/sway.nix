@@ -32,6 +32,7 @@
     wezterm
     wdisplays
     brightnessctl
+    pinentry-gtk2
   ];
 
   hardware.bluetooth = {
