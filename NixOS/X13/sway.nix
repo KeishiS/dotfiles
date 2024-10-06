@@ -32,7 +32,6 @@
     wezterm
     wdisplays
     brightnessctl
-    pinentry-gtk2
   ];
 
   hardware.bluetooth = {
@@ -40,4 +39,8 @@
     powerOnBoot = true;
   };
   services.blueman.enable = true;
+
+  programs.gnupg.agent = {
+    pinentryPackage = pkgs.pinentry-gnome3;
+  };
 }

@@ -127,6 +127,7 @@
     networkmanagerapplet
     gcc gfortran gnumake cmake glibc zlib
     unzip
+    pinentry-curses
   ];
 
   environment.variables.EDITOR = "hx";
