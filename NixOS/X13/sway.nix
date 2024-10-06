@@ -23,11 +23,20 @@
       flavor = "mocha";
     })
     swaybg
+    swaylock-effects
     swaynotificationcenter
     wofi
     wl-clipboard
     grim
     slurp
     wezterm
+    wdisplays
+    brightnessctl
   ];
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+  services.blueman.enable = true;
 }

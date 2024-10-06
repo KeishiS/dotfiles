@@ -22,6 +22,22 @@
     firefox
     google-chrome
     _1password-gui
+    cbc
+    glpk
+    discord
+    evince
+    gnome.seahorse
+    nfs-utils
+    pavucontrol
+    pdfgrep
+    R
+    thunderbird
+    typst
+    gitkraken
+    keybase
+    quarto
+    slack
+    zoom-us
   ];
 
   home.pointerCursor = {

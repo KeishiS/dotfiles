@@ -126,6 +126,7 @@
     helix tmux
     networkmanagerapplet
     gcc gfortran gnumake cmake glibc zlib
+    unzip
   ];
 
   environment.variables.EDITOR = "hx";
@@ -155,6 +156,7 @@
       fira-code
       fira-code-symbols
       jetbrains-mono
+      julia-mono
       noto-fonts
       noto-fonts-cjk
       noto-fonts-emoji
