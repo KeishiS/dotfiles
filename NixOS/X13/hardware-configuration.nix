@@ -8,6 +8,15 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
+  boot.initrd.kernelModules = [ "amdgpu" ];
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "amdgpu" ];
+  };
+  environment.systemPackages = with pkgs; [
+    rocmPackages.rocminfo
+  ];
+
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/8e70fdcc-1bdc-4b4c-93eb-765afbc54556";
       fsType = "ext4";

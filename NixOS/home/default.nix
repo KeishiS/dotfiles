@@ -6,6 +6,9 @@
 
   home.sessionVariables = {
     XCURSOR_THEME = "volantes_cursors";
+    GTK_IM_MODULE = "fcitx";
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
   };
 
   home.packages = with pkgs; [

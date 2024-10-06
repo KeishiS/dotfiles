@@ -77,6 +77,10 @@
   # Select internationalisation properties.
   i18n = {
     defaultLocale = "en_US.UTF-8";
+    supportedLocales = [
+      "en_US.UTF-8/UTF-8"
+      "ja_JP.UTF-8/UTF-8"
+    ];
     inputMethod = {
       enabled = "fcitx5";
       fcitx5.addons = with pkgs; [ fcitx5-mozc ];
@@ -128,6 +132,7 @@
     gcc gfortran gnumake cmake glibc zlib
     unzip
     pinentry-curses
+    xkeyboard_config # `sway --debug` `xkbcommon: ERROR: couldn't find a Compose file for locale "en_US.UTF-8"`
   ];
 
   environment.variables.EDITOR = "hx";
