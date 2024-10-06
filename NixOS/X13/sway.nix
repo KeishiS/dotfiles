@@ -41,6 +41,6 @@
   services.blueman.enable = true;
 
   programs.gnupg.agent = {
-    pinentryPackage = pkgs.pinentry-gnome3;
+    pinentryPackage = pkgs.pinentry-gtk2;
   };
 }
