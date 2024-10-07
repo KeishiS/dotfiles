@@ -9,6 +9,8 @@
     GTK_IM_MODULE = "fcitx";
     QT_IM_MODULE = "fcitx";
     XMODIFIERS = "@im=fcitx";
+    XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
+    NIXOS_OZONE_WL = "1"; # for vscode
   };
 
   home.packages = with pkgs; [
@@ -102,7 +104,6 @@
     enable = true;
   };
 
-  home.sessionVariables.NIXOS_OZONE_WL = "1";
   programs.vscode = {
     enable = true;
     package = pkgs.vscode.fhs;
@@ -125,5 +126,6 @@
     ".latexmkrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
   };
 
+  # for discord `--ozone-platform=x11`
   home.stateVersion = "24.05";
 }
