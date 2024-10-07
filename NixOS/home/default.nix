@@ -10,7 +10,7 @@
     QT_IM_MODULE = "fcitx";
     XMODIFIERS = "@im=fcitx";
     XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
-    NIXOS_OZONE_WL = "1"; # for vscode
+    # NIXOS_OZONE_WL = "1"; # これを有効化するとwaylandネイティブなアプリが立ち上がり，日本語入力ができなくなる
   };
 
   home.packages = with pkgs; [
