@@ -1,7 +1,7 @@
 @import url("/home/keishis/.config/waybar/colors.css");
 
 * {
-  font-family: "JetBrainsMono Nerd Font", "Material Icons Round", "Material Symbols Rounded";
+  font-family: "JetBrainsMono Nerd Font", "Material Icons Round", "Material Symbols Rounded", "Noto Sans Mono CJK JP";
   font-size: 16pt;
 }
 
