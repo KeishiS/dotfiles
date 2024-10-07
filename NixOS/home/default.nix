@@ -14,35 +14,40 @@
   };
 
   home.packages = with pkgs; [
+    # basic utilities
+    dex # a program to generate and execute DesktopEntry files of the Application type
     file
     jq
+    nfs-utils
+    pdfgrep
     unzip
-    dex # a program to generate and execute DesktopEntry files of the Application type
-    nixd # Nix language server
-    julia-bin
-    poetry
-    texliveFull
-    gnome.nautilus glib
-    insync
-    firefox
-    google-chrome
-    _1password-gui
-    cbc
-    glpk
+
+    # GUI Apps
     discord
     evince
-    gnome.seahorse
-    nfs-utils
-    pavucontrol
-    pdfgrep
-    R
-    thunderbird
-    typst
+    firefox
     gitkraken
-    keybase
-    quarto
+    gnome.nautilus glib
+    gnome.seahorse
+    google-chrome
+    pavucontrol
     slack
+    thunderbird
     zoom-us
+    _1password-gui
+
+    # Dev tools
+    cbc
+    glpk
+    insync
+    julia-bin
+    keybase
+    nixd # Nix language server
+    poetry
+    quarto
+    R
+    texliveFull
+    typst
   ];
 
   home.pointerCursor = {
