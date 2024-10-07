@@ -44,6 +44,7 @@
     keybase
     nixd # Nix language server
     poetry
+    python3
     quarto
     R
     texliveFull
@@ -103,6 +104,10 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+  };
+
+  programs.nushell = {
+    enable = true;
   };
 
   programs.starship = {
