@@ -14,6 +14,7 @@
       system = "x86_64-linux";
       modules = [
         ./default.nix
+        ./sway.nix
         ./X13/configuration.nix
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
@@ -27,6 +28,7 @@
       system = "x86_64-linux";
       modules = [
         ./default.nix
+        ./sway.nix
         ./home-srv/configuration.nix
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;

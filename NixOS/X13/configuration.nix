@@ -8,7 +8,6 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./sway.nix
     ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
