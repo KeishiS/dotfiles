@@ -14,7 +14,22 @@
       system = "x86_64-linux";
       modules = [
         ./default.nix
+        ./sway.nix
         ./X13/configuration.nix
+        home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.keishis = import ./home/default.nix;
+        }
+      ];
+    };
+
+    nixosConfigurations.NixOS-keishis-home = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./default.nix
+        ./sway.nix
+        ./home-srv/configuration.nix
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
