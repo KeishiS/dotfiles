@@ -8,7 +8,42 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.kernelModules = [ "amdgpu" ];
+  boot = {
+    initrd = {
+      availableKernelModules = [
+        "nvme" "xhci_pci" "thunderbolt"
+        "usb_storage" "sd_mod"
+      ];
+      kernelModules = [
+        "dm_snapshot" "vfat" "nls_cp437"
+        "nls_iso8859-1" "usbhid" "amdgpu"
+      ];
+
+      services.lvm.enable = true;
+
+      luks.yubikeySupport = true;
+      luks.devices."nixos-root" = {
+        device = "/dev/disk/by-uuid/6d5ebf4b-531b-4bf8-93ab-fb44f7a396a4";
+        preLVM = false;
+        yubikey = {
+          slot = 1;
+          twoFactor = true;
+          gracePeriod = 30;
+          keyLength = 64;
+          saltLength = 16;
+          storage = {
+            device = "/dev/nvme0n1p1";
+            fsType = "vfat";
+            path = "/crypt-storage/default";
+          };
+        };
+      };
+    };
+
+    kernelModules = [ "kvm-amd" ];
+    extraModulePackages = [];
+  };
+
   services.xserver = {
     enable = true;
     videoDrivers = [ "amdgpu" ];

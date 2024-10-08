@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 {
   services.displayManager = {
     defaultSession = "sway";
@@ -33,6 +33,7 @@
       wezterm
       wdisplays
       brightnessctl
+      wl-screenrec
     ];
   };
   programs.waybar.enable = true;

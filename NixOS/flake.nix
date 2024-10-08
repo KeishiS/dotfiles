@@ -9,10 +9,11 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
+  outputs = { nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations.NixOS-keishis-X13 = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
+        ./default.nix
         ./X13/configuration.nix
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
