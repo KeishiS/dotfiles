@@ -36,8 +36,14 @@
     };
 
     initrd = {
-      availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "sd_mod" ];
-      kernelModules = [ "dm_snapshot" "vfat" "nls_cp437" "nls_iso8859-1" "usbhid" ];
+      availableKernelModules = [
+        "nvme" "xhci_pci" "thunderbolt"
+        "usb_storage" "sd_mod"
+      ];
+      kernelModules = [
+        "dm_snapshot" "vfat" "nls_cp437"
+        "nls_iso8859-1" "usbhid"
+      ];
 
       services.lvm.enable = true;
 
