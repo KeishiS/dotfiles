@@ -1,8 +1,12 @@
-{ pkgs, ... }:
+{ pkgs, ragenix, my-secrets, ... }:
 {
+  imports = [ ragenix.nixosModules.default ];
+
   nix = {
+    settings.system-features = [ "recursive-nix" ];
     settings.experimental-features = [
-      "nix-command" "flakes" ];
+      "nix-command" "flakes" "recursive-nix"
+    ];
     settings.auto-optimise-store = true;
     gc = {
       dates = "weekly";
@@ -55,8 +59,15 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICLPYWxCTckCVdDiBpiKWE8omDndrvQhWkscX8uIyd1j openpgp:0xD1E438FC"
     ];
   };
+  age.secrets.config = {
+    file = "${my-secrets}/ssh_config.age";
+    path = "/home/keishis/.ssh/config";
+    mode = "0400";
+    owner = "keishis";
+    group = "wheel";
+  };
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = (with pkgs; [
     git curl wget
     helix tmux
     networkmanagerapplet
@@ -64,6 +75,8 @@
     unzip
     pinentry-curses
     xkeyboard_config # `sway --debug` `xkbcommon: ERROR: couldn't find a Compose file for locale "en_US.UTF-8"`
+  ]) ++ [
+    ragenix.packages.x86_64-linux.default
   ];
   environment.variables.EDITOR = "hx";
 
@@ -73,6 +86,12 @@
     set tabstospaces
     set linenumbers
   '';
+
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "no";
+    settings.PasswordAuthentication = false;
+  };
 
   programs.zsh = {
     enable = true;
