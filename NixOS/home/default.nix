@@ -47,6 +47,7 @@
     python3
     quarto
     R
+    rustup
     texliveFull
     typst
   ];
