@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ lib, ... }:
+{ lib, pkgs, ... }:
 
 {
   imports =
@@ -22,6 +22,9 @@
   #   enable = true;
   #   pulse.enable = true;
   # };
+  environment.systemPackages = with pkgs; [
+    asunder
+  ];
 
   services.libinput.enable = true;
   services.openssh = {
