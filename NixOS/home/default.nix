@@ -4,6 +4,10 @@
   home.username = "keishis";
   home.homeDirectory = "/home/keishis";
 
+  home.sessionPath = [
+    "$HOME/.cargo/bin"
+  ];
+
   home.sessionVariables = {
     XCURSOR_THEME = "volantes_cursors";
     GTK_IM_MODULE = "fcitx";
