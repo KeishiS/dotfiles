@@ -24,6 +24,7 @@
     jq
     nfs-utils
     pdfgrep
+    poppler_utils
     unzip
 
     # GUI Apps
@@ -41,6 +42,7 @@
     _1password-gui
 
     # Dev tools
+    cargo-make
     cbc
     glpk
     insync
