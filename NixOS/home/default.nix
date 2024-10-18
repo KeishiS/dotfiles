@@ -126,6 +126,16 @@
     package = pkgs.vscode.fhs;
   };
 
+  programs.obs-studio = {
+    enable = true;
+    plugins = with pkgs.obs-studio-plugins; [
+      wlrobs
+      obs-pipewire-audio-capture
+      obs-webkitgtk
+      advanced-scene-switcher
+    ];
+  };
+
   xdg.configFile = {
     # "gtk-3.0".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/gtk-3.0";
     "helix".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/helix";
