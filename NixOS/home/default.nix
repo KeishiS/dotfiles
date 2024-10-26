@@ -56,6 +56,7 @@
     rustup
     texliveFull
     typst
+    nodejs_18
   ];
 
   home.pointerCursor = {

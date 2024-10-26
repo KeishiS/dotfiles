@@ -14,9 +14,14 @@
       url = "github:KeishiS/my-secrets/main";
       flake = false;
     };
+
+    nix-ld = {
+      url = "github:Mic92/nix-ld";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, home-manager, ... }@inputs: {
+  outputs = { nixpkgs, home-manager, nix-ld, ... }@inputs: {
     nixosConfigurations.NixOS-keishis-X13 = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = inputs;
@@ -29,6 +34,7 @@
           home-manager.useUserPackages = true;
           home-manager.users.keishis = import ./home/default.nix;
         }
+        nix-ld.nixosModules.nix-ld
       ];
     };
 
@@ -44,6 +50,7 @@
           home-manager.useUserPackages = true;
           home-manager.users.keishis = import ./home/default.nix;
         }
+        nix-ld.nixosModules.nix-ld
       ];
     };
   };

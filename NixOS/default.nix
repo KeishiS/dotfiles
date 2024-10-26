@@ -105,6 +105,8 @@
     enableExtraSocket = true;
   };
 
+  programs.nix-ld.dev.enable = true;
+
   fonts = {
     fontDir.enable = true;
     enableDefaultPackages = true;
