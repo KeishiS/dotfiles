@@ -9,6 +9,14 @@
     ];
 
   boot = {
+    kernelModules = [ "kvm-amd" "v4l2loopback" ];
+    extraModulePackages = with config.boot.kernelPackages; [
+      v4l2loopback
+    ];
+    extraModprobeConfig = ''
+      options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+    '';
+
     initrd = {
       availableKernelModules = [
         "nvme" "xhci_pci" "thunderbolt"
@@ -20,7 +28,6 @@
       ];
 
       services.lvm.enable = true;
-
       luks.yubikeySupport = true;
       luks.devices."nixos-root" = {
         device = "/dev/disk/by-uuid/6d5ebf4b-531b-4bf8-93ab-fb44f7a396a4";
@@ -39,14 +46,6 @@
         };
       };
     };
-
-    kernelModules = [ "kvm-amd" "v4l2loopback" ];
-    extraModulePackages = with config.boot.kernelPackages; [
-      v4l2loopback
-    ];
-    extraModprobeConfig = ''
-      options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
-    '';
   };
 
   services.xserver = {

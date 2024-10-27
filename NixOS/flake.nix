@@ -26,6 +26,8 @@
       system = "x86_64-linux";
       specialArgs = inputs;
       modules = [
+        nix-ld.nixosModules.nix-ld
+
         ./default.nix
         ./sway.nix
         ./X13/configuration.nix
@@ -34,7 +36,6 @@
           home-manager.useUserPackages = true;
           home-manager.users.keishis = import ./home/default.nix;
         }
-        nix-ld.nixosModules.nix-ld
       ];
     };
 
@@ -42,6 +43,8 @@
       system = "x86_64-linux";
       specialArgs = inputs;
       modules = [
+        nix-ld.nixosModules.nix-ld
+
         ./default.nix
         ./sway.nix
         ./home-srv/configuration.nix
@@ -50,7 +53,6 @@
           home-manager.useUserPackages = true;
           home-manager.users.keishis = import ./home/default.nix;
         }
-        nix-ld.nixosModules.nix-ld
       ];
     };
   };

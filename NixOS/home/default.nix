@@ -57,6 +57,7 @@
     texliveFull
     typst
     nodejs_18
+    yarn
   ];
 
   home.pointerCursor = {
