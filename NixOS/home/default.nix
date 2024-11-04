@@ -58,7 +58,6 @@
     typst
     nodejs_18
     yarn
-    eternal-terminal
   ];
 
   home.pointerCursor = {
