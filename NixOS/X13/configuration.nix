@@ -29,6 +29,11 @@
     settings.PermitRootLogin = "no";
     settings.PasswordAuthentication = false;
   };
+
+  environment.systemPackages = with pkgs; [
+    mosh
+  ];
+
   # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
   # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
   # to actually do that.
