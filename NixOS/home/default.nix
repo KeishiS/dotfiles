@@ -58,6 +58,7 @@
     typst
     nodejs_18
     yarn
+    mosh
   ];
 
   home.pointerCursor = {
