@@ -50,7 +50,6 @@
     keybase
     nixd # Nix language server
     poetry
-    python3
     quarto
     R
     rustup
@@ -58,6 +57,7 @@
     typst
     nodejs_18
     yarn
+    pipx
   ];
 
   home.pointerCursor = {
