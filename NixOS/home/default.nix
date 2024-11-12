@@ -29,7 +29,7 @@
 
     # GUI Apps
     discord
-    evince
+    kdePackages.okular
     firefox
     gitkraken
     gnome.nautilus glib
@@ -58,6 +58,7 @@
     nodejs_18
     yarn
     pipx
+    cloud-utils
   ];
 
   home.pointerCursor = {
