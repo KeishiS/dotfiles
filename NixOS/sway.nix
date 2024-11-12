@@ -31,6 +31,7 @@
       grim
       slurp
       wezterm
+      foot
       wdisplays
       brightnessctl
       wl-screenrec
