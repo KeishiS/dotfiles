@@ -1,5 +1,5 @@
 set $MOD Mod4
-set $TERM wezterm
+set $TERM foot
 set $DEFAULT_FONT JetBrains Mono 10
 
 set $WS01 "01"
