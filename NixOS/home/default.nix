@@ -32,21 +32,22 @@
     kdePackages.okular
     firefox
     gitkraken
-    gnome.nautilus glib
-    gnome.seahorse
+    nautilus glib
+    seahorse
     google-chrome
     pavucontrol
     slack
     thunderbird
     zoom-us
     _1password-gui
+    zed-editor
 
     # Dev tools
     cargo-make
     cbc
     glpk
     insync
-    julia-bin
+    julia_110-bin
     keybase
     nixd # Nix language server
     poetry
@@ -146,6 +147,7 @@
     "swaylock".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/swaylock";
     "waybar".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/waybar";
     "wezterm".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wezterm";
+    "foot".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/foot";
     "wofi".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wofi";
     "autostart".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/autostart";
 
