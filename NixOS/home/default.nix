@@ -60,6 +60,7 @@
     yarn
     pipx
     cloud-utils
+    gh
   ];
 
   home.pointerCursor = {
