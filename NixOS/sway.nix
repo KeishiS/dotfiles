@@ -10,10 +10,25 @@
       package = pkgs.kdePackages.sddm;
     };
   };
+
+  #　for podman
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     (catppuccin-sddm.override {
       flavor = "mocha";
     })
+
+    #　for podman
+    dive
+    podman-tui
   ];
 
   programs.sway = {

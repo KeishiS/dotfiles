@@ -3,9 +3,10 @@
   imports = [ ragenix.nixosModules.default ];
 
   nix = {
-    settings.system-features = [ "recursive-nix" ];
+    # settings.system-features = [ "recursive-nix" ];
     settings.experimental-features = [
-      "nix-command" "flakes" "recursive-nix"
+      "nix-command" "flakes"
+      # "recursive-nix"
     ];
     settings.auto-optimise-store = true;
     gc = {
@@ -40,8 +41,9 @@
       fcitx5 = {
         # waylandFrontend = true;
         addons = with pkgs; [
-          # fcitx5-mozc
-          fcitx5-anthy
+          fcitx5-mozc
+          # fcitx5-anthy
+          # fcitx5-mozc-ut
           fcitx5-gtk
         ];
       };
