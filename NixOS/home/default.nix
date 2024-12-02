@@ -26,6 +26,7 @@
     pdfgrep
     poppler_utils
     unzip
+    ffmpeg
 
     # GUI Apps
     discord
@@ -41,6 +42,7 @@
     zoom-us
     _1password-gui
     zed-editor
+    vlc
 
     # Dev tools
     cargo-make
