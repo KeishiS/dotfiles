@@ -3,10 +3,8 @@
   imports = [ ragenix.nixosModules.default ];
 
   nix = {
-    # settings.system-features = [ "recursive-nix" ];
     settings.experimental-features = [
       "nix-command" "flakes"
-      # "recursive-nix"
     ];
     settings.auto-optimise-store = true;
     gc = {
@@ -42,17 +40,17 @@
         # waylandFrontend = true;
         addons = with pkgs; [
           fcitx5-mozc
-          # fcitx5-anthy
-          # fcitx5-mozc-ut
           fcitx5-gtk
         ];
       };
     };
   };
   console = {
-    font = "Lat2-Terminus16";
+    earlySetup = true;
+    packages = with pkgs; [ spleen ];
+    font = "${pkgs.spleen}/share/consolefonts/spleen-16x32.psfu";
+    # font = "Lat2-Terminus16";
     keyMap = "jp106";
-  #   useXkbConfig = true; # use xkb.options in tty.
   };
   services.xserver = {
     xkb.layout = "jp";
@@ -68,13 +66,13 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICLPYWxCTckCVdDiBpiKWE8omDndrvQhWkscX8uIyd1j openpgp:0xD1E438FC"
     ];
   };
-  age.secrets.config = {
-    file = "${my-secrets}/ssh_config.age";
-    path = "/home/keishis/.ssh/config";
-    mode = "0400";
-    owner = "keishis";
-    group = "wheel";
-  };
+  # age.secrets.config = {
+  #   file = "${my-secrets}/ssh_config.age";
+  #   path = "/home/keishis/.ssh/config";
+  #   mode = "0400";
+  #   owner = "keishis";
+  #   group = "wheel";
+  # };
 
   environment.systemPackages = (with pkgs; [
     git curl wget
@@ -84,6 +82,7 @@
     unzip
     pinentry-curses
     xkeyboard_config # `sway --debug` `xkbcommon: ERROR: couldn't find a Compose file for locale "en_US.UTF-8"`
+    home-manager
   ]) ++ [
     ragenix.packages.x86_64-linux.default
   ];
@@ -115,28 +114,5 @@
   };
 
   programs.nix-ld.dev.enable = true;
-
-  fonts = {
-    fontDir.enable = true;
-    enableDefaultPackages = true;
-    packages = with pkgs; [
-      fira-code
-      fira-code-symbols
-      jetbrains-mono
-      julia-mono
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      source-han-code-jp
-      (nerdfonts.override {
-        fonts = [
-          "FiraCode"
-          "JetBrainsMono"
-          "Noto"
-        ];
-      })
-    ];
-  };
-
   nixpkgs.config.allowUnfree = true;
 }

@@ -91,4 +91,26 @@
   programs.gnupg.agent = {
     pinentryPackage = pkgs.pinentry-gtk2;
   };
+
+  fonts = {
+    fontDir.enable = true;
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      fira-code
+      fira-code-symbols
+      jetbrains-mono
+      julia-mono
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-emoji
+      source-han-code-jp
+      (nerdfonts.override {
+        fonts = [
+          "FiraCode"
+          "JetBrainsMono"
+          "Noto"
+        ];
+      })
+    ];
+  };
 }

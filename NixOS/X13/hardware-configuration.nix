@@ -29,8 +29,8 @@
 
       services.lvm.enable = true;
       luks.yubikeySupport = true;
-      luks.devices."nixos-root" = {
-        device = "/dev/disk/by-uuid/6d5ebf4b-531b-4bf8-93ab-fb44f7a396a4";
+      luks.devices."unlocked" = {
+        device = "/dev/disk/by-uuid/9bd1e197-8b0d-41c2-96cc-b890965272a8";
         preLVM = false;
         yubikey = {
           slot = 1;
@@ -57,19 +57,19 @@
   ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/8e70fdcc-1bdc-4b4c-93eb-765afbc54556";
+    { device = "/dev/disk/by-uuid/011fbd36-c7d7-4740-a408-22ab0de8438c";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/2BAD-17D6";
+    { device = "/dev/disk/by-uuid/A910-1728";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
 
   swapDevices = [
     {
-      device = "/dev/disk/by-uuid/2cd70796-b39e-4386-a55b-dc277c7674d9";
+      device = "/dev/disk/by-uuid/d99c9086-e0f1-4c53-8c6e-84fce00ec5cb";
     }
   ];
 

@@ -1,4 +1,5 @@
 { config, pkgs, ... }:
+
 {
   programs.home-manager.enable = true;
   home.username = "keishis";
@@ -17,9 +18,10 @@
     # NIXOS_OZONE_WL = "1"; # これを有効化するとwaylandネイティブなアプリが立ち上がり，日本語入力ができなくなる
   };
 
+  nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
-    # basic utilities
-    dex # a program to generate and execute DesktopEntry files of the Application type
+    # Basic utilities
+    dex
     file
     jq
     nfs-utils
@@ -44,15 +46,14 @@
     zed-editor
     vlc
 
-    # Dev tools
+    # Dev Tools
     cargo-make
     cbc
     glpk
     insync
     julia_110-bin
     keybase
-    nixd # Nix language server
-    poetry
+    nixd
     quarto
     R
     rustup
@@ -143,24 +144,28 @@
     ];
   };
 
-  xdg.configFile = {
-    # "gtk-3.0".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/gtk-3.0";
-    "helix".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/helix";
-    "sway".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
-    "swaylock".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/swaylock";
-    "waybar".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/waybar";
-    "wezterm".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wezterm";
-    "foot".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/foot";
-    "wofi".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wofi";
-    "autostart".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/autostart";
-
-    "user-dirs.dirs".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/user-dirs.dirs";
-    "mimeapps.list".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/mimeapps.list";
-  };
   home.file = {
     ".latexmkrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
   };
 
-  # for discord `--ozone-platform=x11`
-  home.stateVersion = "24.11";
+  xdg.configFile = {
+    "foot".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/foot";
+    "helix".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/helix";
+    "home-manager".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/NixOS/user-keishis";
+    "sway".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
+    "swaylock".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/swaylock";
+    "waybar".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/waybar";
+    "wezterm".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wezterm";
+    "wofi".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wofi";
+    "zed".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/zed";
+  };
+
+  # This value determines the Home Manager release that your configuration is
+  # compatible with. This helps avoid breakage when a new Home Manager release
+  # introduces backwards incompatible changes.
+  #
+  # You should not change this value, even if you update Home Manager. If you do
+  # want to update the value, then make sure to first check the Home Manager
+  # release notes.
+  home.stateVersion = "24.11"; # Please read the comment before changing.
 }
