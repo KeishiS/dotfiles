@@ -9,6 +9,10 @@
     "$HOME/.cargo/bin"
   ];
 
+  home.shellAliases = {
+    helix = "hx";
+  };
+
   home.sessionVariables = {
     XCURSOR_THEME = "volantes_cursors";
     GTK_IM_MODULE = "fcitx";
@@ -100,18 +104,15 @@
     diff-so-fancy.stripLeadingSymbols = false;
     extraConfig = {
       core = {
-        editor = "helix";
+        editor = "hx";
         quotepath = false;
       };
-      commit = {
-        gpgsign = true;
-      };
-      github = {
-        user = "KeishiS";
-      };
-      init = {
-        defaultBranch = "main";
-      };
+      commit.gpgsign = true;
+      github.user = "KeishiS";
+      init.defaultBranch = "main";
+      merge.ff = false;
+      push.default = "simple";
+      pull.rebase = true;
     };
   };
 
