@@ -44,6 +44,7 @@
     zoom-us
     _1password-gui
     zed-editor
+    element-desktop
     vlc
 
     # Dev Tools
