@@ -80,6 +80,7 @@
     networkmanagerapplet
     gcc gfortran gnumake cmake glibc zlib
     unzip
+    gptfdisk
     pinentry-curses
     xkeyboard_config # `sway --debug` `xkbcommon: ERROR: couldn't find a Compose file for locale "en_US.UTF-8"`
     home-manager
