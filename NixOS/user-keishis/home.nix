@@ -69,6 +69,7 @@
     pipx
     cloud-utils
     gh
+    hugo
   ];
 
   home.pointerCursor = {
