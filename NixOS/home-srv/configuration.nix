@@ -24,6 +24,7 @@
   # };
   environment.systemPackages = with pkgs; [
     asunder
+    gnome-sound-recorder
   ];
 
   services.libinput.enable = true;

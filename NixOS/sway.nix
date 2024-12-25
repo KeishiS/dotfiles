@@ -102,8 +102,10 @@
       julia-mono
       noto-fonts
       noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
       noto-fonts-emoji
       source-han-code-jp
+      ipaexfont
       (nerdfonts.override {
         fonts = [
           "FiraCode"
