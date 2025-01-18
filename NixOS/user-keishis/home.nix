@@ -50,6 +50,7 @@
     zed-editor
     element-desktop
     vlc
+    freecad-wayland
 
     # Dev Tools
     cargo-make
