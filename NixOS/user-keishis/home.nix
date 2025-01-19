@@ -50,7 +50,7 @@
     zed-editor
     element-desktop
     vlc
-    freecad-wayland
+    freecad
     orca-slicer
 
     # Dev Tools
@@ -71,6 +71,7 @@
     pipx
     cloud-utils
     gh
+    uv
     hugo
   ];
 
