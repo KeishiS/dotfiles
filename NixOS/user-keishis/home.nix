@@ -51,6 +51,7 @@
     element-desktop
     vlc
     freecad-wayland
+    orca-slicer
 
     # Dev Tools
     cargo-make
