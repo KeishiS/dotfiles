@@ -7,10 +7,10 @@ config.color_scheme = 'Tokyo Night'
 config.window_background_opacity = 0.8
 config.use_ime = true
 config.default_cursor_style = 'SteadyBar'
-config.font_size = 14.0
+config.font_size = 16.0
 config.font = wezterm.font_with_fallback {
   {
-    family = "JetBrains Mono"
+    family = "JuliaMono"
   },
   {
     family = "Noto Sans Mono CJK JP"

@@ -36,8 +36,8 @@
 
     # GUI Apps
     discord
-    kdePackages.okular
     firefox
+    evince
     gitkraken
     nautilus glib
     seahorse
@@ -52,6 +52,7 @@
     vlc
     freecad
     orca-slicer
+    postman
 
     # Dev Tools
     cargo-make
