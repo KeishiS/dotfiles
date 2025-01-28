@@ -16,7 +16,7 @@
     };
 
     nix-ld = {
-      url = "github:Mic92/nix-ld";
+      url = "github:Mic92/nix-ld/2.0.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
