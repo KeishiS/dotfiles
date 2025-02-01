@@ -46,6 +46,7 @@
       grim
       slurp
       wezterm
+      ghostty
       foot
       wdisplays
       brightnessctl
