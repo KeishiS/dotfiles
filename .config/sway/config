@@ -1,5 +1,5 @@
 set $MOD Mod4
-set $TERM ghostty
+set $TERM wezterm
 set $DEFAULT_FONT JetBrains Mono 10
 
 set $WS01 "01"
