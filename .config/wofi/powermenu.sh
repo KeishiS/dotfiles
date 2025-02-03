@@ -14,7 +14,7 @@ case ${chosen} in
     swaylock -C ~/.config/swaylock/config
     ;;
   $logout)
-    sway exit
+    swaymsg exit
     ;;
   $suspend)
     ;;
