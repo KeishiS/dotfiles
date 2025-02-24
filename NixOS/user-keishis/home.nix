@@ -44,14 +44,13 @@
     google-chrome
     pavucontrol
     slack
-    thunderbird
+    thunderbird-bin
     zoom-us
     _1password-gui
     zed-editor
-    element-desktop
+    # element-desktop
     vlc
-    freecad
-    orca-slicer
+    # orca-slicer
     postman
 
     # Dev Tools
@@ -67,7 +66,7 @@
     rustup
     texliveFull
     typst
-    nodejs_18
+    # nodejs_18
     yarn
     pipx
     cloud-utils
