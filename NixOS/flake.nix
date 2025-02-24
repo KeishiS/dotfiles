@@ -30,6 +30,7 @@
 
         ./default.nix
         ./sway.nix
+        ./hyprland.nix
         ./X13/configuration.nix
       ];
     };
