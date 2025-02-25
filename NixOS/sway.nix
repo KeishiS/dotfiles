@@ -107,6 +107,7 @@
       noto-fonts-emoji
       source-han-code-jp
       ipaexfont
+      monaspace
       (nerdfonts.override {
         fonts = [
           "FiraCode"

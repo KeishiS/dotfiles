@@ -5,6 +5,10 @@
   home.username = "keishis";
   home.homeDirectory = "/home/keishis";
 
+  imports = [
+    ./i3
+  ];
+
   home.sessionPath = [
     "$HOME/.cargo/bin"
   ];
