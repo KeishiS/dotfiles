@@ -121,6 +121,7 @@
       merge.ff = false;
       push.default = "simple";
       pull.rebase = true;
+      credential.helper = "cache --timeout=3600";
     };
   };
 
