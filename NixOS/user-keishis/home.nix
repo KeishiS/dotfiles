@@ -1,11 +1,19 @@
 { config, pkgs, ... }:
-
-{
+rec {
   programs.home-manager.enable = true;
   home.username = "keishis";
   home.homeDirectory = "/home/keishis";
 
   imports = [
+    ./ghostty
+    ./helix
+    ./sway
+    ./swaylock
+    ./wofi
+    ./waybar
+    ./zed
+    ./wezterm
+    ./foot
     ./i3
   ];
 
@@ -43,7 +51,8 @@
     firefox
     evince
     gitkraken
-    nautilus glib
+    nautilus
+    glib
     seahorse
     google-chrome
     pavucontrol
@@ -52,9 +61,10 @@
     zoom-us
     _1password-gui
     zed-editor
-    # element-desktop
+    nil
+    nixd
+    nixfmt-rfc-style # language server for Nix
     vlc
-    # orca-slicer
     postman
 
     # Dev Tools
@@ -70,7 +80,6 @@
     rustup
     texliveFull
     typst
-    # nodejs_18
     yarn
     pipx
     cloud-utils
@@ -93,8 +102,10 @@
       name = "Orchis-Dark";
     };
     iconTheme = {
-      /* package = pkgs.tokyonight-gtk-theme;
-      name = "Tokyonight-Dark"; */
+      /*
+        package = pkgs.tokyonight-gtk-theme;
+        name = "Tokyonight-Dark";
+      */
       package = pkgs.tela-icon-theme;
       name = "Tela-nord-dark";
     };
@@ -155,25 +166,51 @@
     ];
   };
 
-  home.file = {
-    ".latexmkrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
-  };
+  home.file.".latexmkrc".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
 
   xdg.configFile = {
-    "foot".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/foot";
-    "helix".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/helix";
-    "home-manager".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/NixOS/user-keishis";
-    "sway".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
-    "swaylock".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/swaylock";
-    "waybar".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/waybar";
-    "wezterm".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wezterm";
-    "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/ghostty";
-    "wofi".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wofi";
-    "zed".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/zed";
+    "home-manager".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/NixOS/user-keishis";
+    # "sway".source =
+    #   config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
+  };
 
-    "autostart".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/autostart";
-    "user-dirs.dirs".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/user-dirs.dirs";
-    "mimeapps.list".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/mimeapps.list";
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+
+    desktop = "${home.homeDirectory}/Desktop";
+    documents = "${home.homeDirectory}/Documents";
+    download = "${home.homeDirectory}/Downloads";
+    music = "${home.homeDirectory}/Music";
+    pictures = "${home.homeDirectory}/Pictures";
+    publicShare = "${home.homeDirectory}/Public";
+    templates = "${home.homeDirectory}/Templates";
+    videos = "${home.homeDirectory}/Videos";
+  };
+
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "x-scheme-handler/gitkraken" = "GitKraken.desktop";
+      "x-scheme-handler/mailspring" = "org.mozilla.Thunderbird.desktop";
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
+      "x-scheme-handler/postman" = "Postman.desktop";
+      "text/html" = "firefox.desktop";
+      "text/xml" = "firefox.desktop";
+      "text/mml" = "firefox.desktop";
+      "application/xhtml+xml" = "firefox.desktop";
+    };
+  };
+
+  xdg.autostart = {
+    enable = true;
+    entries = [
+      "${pkgs.insync}/share/applications/insync.desktop"
+      "${pkgs.networkmanagerapplet}/share/applications/nm-applet.desktop"
+    ];
   };
 
   # This value determines the Home Manager release that your configuration is
