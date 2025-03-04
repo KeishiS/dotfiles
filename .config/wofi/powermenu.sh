@@ -7,7 +7,7 @@ reboot="Reboot"
 shutdown="Shutdown"
 
 entries="${lock}\n${logout}\n${suspend}\n${reboot}\n${shutdown}"
-chosen=$(echo -e ${entries} | wofi --conf ~/.config/wofi/powermenu.conf) # --style ~/.config/wofi/style.css
+chosen=$(echo -e ${entries} | wofi --cache-file=/dev/null --dmenu --hide-scroll --insensitive)
 
 case ${chosen} in
   $lock)

@@ -9,8 +9,8 @@ in
       mainBar = {
         layer = "top";
         position = "top";
-        height = 32;
-        spacing = 10;
+        height = 34;
+        spacing = 5;
 
         modules-left = [
           "sway/workspaces"
@@ -64,36 +64,76 @@ in
       }
 
       window#waybar {
-        background: ${theme.bg};
+        background: none;
         color: ${theme.fg};
+      }
+
+      #workspaces button {
+        border: 1px solid ${theme.border};
+        background: ${theme.bg-080};
+        padding: 0 0.3rem;
+        margin: 0.3rem 0.1rem;
+      }
+
+      #workspaces button:hover {
+        background: ${theme.fg};
+        color: ${theme.bg};
+      }
+
+      #workspaces button.focused {
+        background: ${theme.primary};
+        color: ${theme.bg};
+      }
+
+      #workspaces button.urgent {
+        background: ${theme.urgent};
+        color: ${theme.bg};
       }
 
       #battery {
         border: 1px solid ${theme.yellow};
+        border-radius: 0.5rem;
+        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
 
       #memory {
         border: 1px solid ${theme.blue};
+        border-radius: 0.5rem;
+        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
 
       #cpu {
         border: 1px solid ${theme.cyan};
+        border-radius: 0.5rem;
+        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
 
       #network {
         border: 1px solid ${theme.red};
+        border-radius: 0.5rem;
+        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
 
       #clock {
         border: 1px solid ${theme.green};
+        border-radius: 0.5rem;
+        background: ${theme.bg-080};
+        padding: 0 0.5rem;
+        margin: 0.3rem 0;
+      }
+
+      #tray {
+        border: 1px solid ${theme.magenta};
+        border-radius: 0.5rem;
+        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }

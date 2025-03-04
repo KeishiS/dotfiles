@@ -43,8 +43,8 @@ in
       };
 
       gaps = {
-        inner = 10;
-        outer = 5;
+        inner = 2;
+        outer = 3;
         # smartGaps = true;
       };
 

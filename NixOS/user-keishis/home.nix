@@ -8,6 +8,7 @@ rec {
     ./i3
     ./ghostty
     ./helix
+    ./sway
     ./swaylock
     ./wofi
     ./waybar
@@ -165,16 +166,14 @@ rec {
     ];
   };
 
-  home.file = {
-    ".latexmkrc".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
-  };
+  home.file.".latexmkrc".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
 
   xdg.configFile = {
     "home-manager".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/NixOS/user-keishis";
-    "sway".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
+    # "sway".source =
+    #   config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
   };
 
   xdg.userDirs = {
@@ -210,7 +209,7 @@ rec {
     enable = true;
     entries = [
       "${pkgs.insync}/share/applications/insync.desktop"
-      "${pkgs.nm-applet}/share/applications/nm-applet.desktop"
+      "${pkgs.networkmanagerapplet}/share/applications/nm-applet.desktop"
     ];
   };
 
