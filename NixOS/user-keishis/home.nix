@@ -9,6 +9,7 @@ rec {
     ./ghostty
     ./helix
     ./swaylock
+    ./wofi
     ./waybar
     ./zed
     ./wezterm
@@ -49,7 +50,8 @@ rec {
     firefox
     evince
     gitkraken
-    nautilus glib
+    nautilus
+    glib
     seahorse
     google-chrome
     pavucontrol
@@ -58,7 +60,9 @@ rec {
     zoom-us
     _1password-gui
     zed-editor
-    nil nixd nixfmt-rfc-style # language server for Nix
+    nil
+    nixd
+    nixfmt-rfc-style # language server for Nix
     vlc
     postman
 
@@ -97,8 +101,10 @@ rec {
       name = "Orchis-Dark";
     };
     iconTheme = {
-      /* package = pkgs.tokyonight-gtk-theme;
-      name = "Tokyonight-Dark"; */
+      /*
+        package = pkgs.tokyonight-gtk-theme;
+        name = "Tokyonight-Dark";
+      */
       package = pkgs.tela-icon-theme;
       name = "Tela-nord-dark";
     };
@@ -160,13 +166,15 @@ rec {
   };
 
   home.file = {
-    ".latexmkrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
+    ".latexmkrc".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
   };
 
   xdg.configFile = {
-    "home-manager".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/NixOS/user-keishis";
-    "sway".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
-    "wofi".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wofi";
+    "home-manager".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/NixOS/user-keishis";
+    "sway".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
   };
 
   xdg.userDirs = {
@@ -202,9 +210,9 @@ rec {
     enable = true;
     entries = [
       "${pkgs.insync}/share/applications/insync.desktop"
+      "${pkgs.nm-applet}/share/applications/nm-applet.desktop"
     ];
   };
-
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release

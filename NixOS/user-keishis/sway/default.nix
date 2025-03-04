@@ -13,7 +13,7 @@
         "${modifier} + f" = "fullscreen toggle";
         "${modifier} + s" = "exec --no-startup-id \"slurp | grim -g - ~/`date +'%Y-%m-%d_%H:%M:%S'.png`\"";
         "${modifier} + d" = "exec --no-startup-id \"wofi -S run\"";
-        "${modifier} + x" = "exec --no-startup-id ~/.config/wofi/powermenu.sh";
+        # "${modifier} + x" = "exec --no-startup-id ~/.config/wofi/powermenu.sh";
 
         "XF86MonBrightnessUp" = "exec --no-startup-id brightnessctl s +5%";
         "XF86MonBrightnessDown" = "exec --no-startup-id brightnessctl s 5%-";
@@ -42,7 +42,6 @@
       };
 
       startup = [
-        { command = "nm-applet"; }
         { command = "fcitx5"; }
         { command = "dex -a"; }
         { command = "swaync"; }
