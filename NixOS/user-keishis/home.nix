@@ -167,8 +167,6 @@ rec {
     "home-manager".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/NixOS/user-keishis";
     "sway".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
     "wofi".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/wofi";
-
-    # "autostart".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/autostart";
   };
 
   xdg.userDirs = {
@@ -200,12 +198,12 @@ rec {
     };
   };
 
-  # xdg.autostart = {
-  #   enable = true;
-  #   entries = [
-  #     "${pkgs.insync}/share/applications/insync.desktop"
-  #   ];
-  # };
+  xdg.autostart = {
+    enable = true;
+    entries = [
+      "${pkgs.insync}/share/applications/insync.desktop"
+    ];
+  };
 
 
   # This value determines the Home Manager release that your configuration is
