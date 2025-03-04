@@ -7,14 +7,14 @@
 # poweroff=$(echo -ne "\uE8AC")
 # options="${lock}\n${logout}\n${sleep}\n${reboot}\n${poweroff}"
 
-rofi_command="rofi -theme ~/.config/rofi/powermenu.rasi"
+rofi_command="rofi -theme ~/dotfiles/.config/rofi/powermenu.rasi"
 
 # Options
-lock=$(echo -ne "\uE897")
-logout=$(echo -ne "\uE9BA")
-suspend=$(echo -ne "\uEF44")
-reboot=$(echo -ne "\uF053")
-shutdown=$(echo -ne "\uE8AC")
+lock=$(echo -ne "Lock")
+logout=$(echo -ne "Logout")
+suspend=$(echo -ne "Suspend")
+reboot=$(echo -ne "Reboot")
+shutdown=$(echo -ne "Shutdown")
 
 
 options="${lock}\n${logout}\n${suspend}\n${reboot}\n${shutdown}"

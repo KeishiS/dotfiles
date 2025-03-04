@@ -5,7 +5,6 @@ rec {
   home.homeDirectory = "/home/keishis";
 
   imports = [
-    ./i3
     ./ghostty
     ./helix
     ./sway
@@ -15,6 +14,7 @@ rec {
     ./zed
     ./wezterm
     ./foot
+    ./i3
   ];
 
   home.sessionPath = [

@@ -21,7 +21,8 @@ in
         "${modifier}+f" = "fullscreen toggle";
         "${modifier}+s" = "exec --no-startup-id \"slurp | grim -g - ~/`date +'%Y-%m-%d_%H:%M:%S'.png`\"";
         "${modifier}+d" = "exec --no-startup-id \"wofi -S run\"";
-        "${modifier}+x" = "exec --no-startup-id ${config.home.homeDirectory}/.config/wofi/powermenu.sh";
+        "${modifier}+x" =
+          "exec --no-startup-id ${config.home.homeDirectory}/dotfiles/.config/wofi/powermenu.sh";
 
         "XF86MonBrightnessUp" = "exec --no-startup-id brightnessctl s +5%";
         "XF86MonBrightnessDown" = "exec --no-startup-id brightnessctl s 5%-";
@@ -54,7 +55,11 @@ in
         outer = 2;
       };
 
-      bars = [ ];
+      bars = [
+        {
+          command = "waybar";
+        }
+      ];
 
       window.titlebar = false;
       floating.titlebar = false;

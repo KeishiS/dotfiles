@@ -5,9 +5,18 @@ in
 {
   services.polybar = {
     enable = true;
+    script = "polybar";
+
     settings = {
       "bar/example" = {
-        modules-left = "xworkspaces xwindow";
+        height = 34;
+        radius = 6;
+        font-0 = theme.console-font;
+        module-margin = 5;
+        modules-left = "xworkspaces";
+        modules-center = "xwindow";
+        modules-right = "battery";
+        tray-position = "right";
       };
 
       "module/xworkspaces" = {
@@ -22,6 +31,16 @@ in
       "module/xwindow" = {
         type = "internal/xwindow";
         label = "%title:0:60:...%";
+      };
+
+      "module/battery" = {
+        type = "internal/battery";
+        full-at = 99;
+        battery = "BAT0";
+        adapter = "AC";
+
+        format-charging = "IN %percentage%%";
+        format-discharging = "DIS %percentage%%";
       };
     };
   };

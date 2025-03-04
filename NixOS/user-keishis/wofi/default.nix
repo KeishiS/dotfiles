@@ -14,7 +14,8 @@ in
 
       window {
         border: 1px solid ${theme.primary};
-        background-color: ${theme.bg};
+        border-radius: 1rem;
+        background-color: ${theme.bg-090};
       }
 
       #outer-box {

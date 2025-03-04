@@ -1,10 +1,16 @@
-{ pkgs, ragenix, my-secrets, ... }:
+{
+  pkgs,
+  ragenix,
+  my-secrets,
+  ...
+}:
 {
   imports = [ ragenix.nixosModules.default ];
 
   nix = {
     settings.experimental-features = [
-      "nix-command" "flakes"
+      "nix-command"
+      "flakes"
     ];
     settings.auto-optimise-store = true;
     gc = {
@@ -59,7 +65,10 @@
 
   users.users.keishis = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ];
     shell = pkgs.zsh;
     initialHashedPassword = "$6$Rk3ZM8V5JpDmaggo$tADvEPoECdw7PE2JZebqch3rpsrDJAZ40JZt1aK6HpfZ9psXDy7I3XwCtoVCaMhFY8cJt.YVJuFQIExiwJgLs.";
     openssh.authorizedKeys.keys = [
@@ -74,20 +83,30 @@
     group = "wheel";
   };
 
-  environment.systemPackages = (with pkgs; [
-    git curl wget
-    helix tmux
-    networkmanagerapplet
-    gcc gfortran gnumake cmake glibc zlib
-    unzip
-    gptfdisk
-    pinentry-curses
-    xkeyboard_config # `sway --debug` `xkbcommon: ERROR: couldn't find a Compose file for locale "en_US.UTF-8"`
-    home-manager
-    colmena
-  ]) ++ [
-    ragenix.packages.x86_64-linux.default
-  ];
+  environment.systemPackages =
+    (with pkgs; [
+      git
+      curl
+      wget
+      helix
+      tmux
+      networkmanagerapplet
+      gcc
+      gfortran
+      gnumake
+      cmake
+      glibc
+      zlib
+      unzip
+      gptfdisk
+      pinentry-curses
+      xkeyboard_config # `sway --debug` `xkbcommon: ERROR: couldn't find a Compose file for locale "en_US.UTF-8"`
+      home-manager
+      colmena
+    ])
+    ++ [
+      ragenix.packages.x86_64-linux.default
+    ];
   environment.variables.EDITOR = "hx";
 
   programs.nano.nanorc = ''

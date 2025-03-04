@@ -68,10 +68,21 @@ in
         color: ${theme.fg};
       }
 
+      .modules-left, .modules-right, #window {
+        background: ${theme.bg-080};
+        margin: 0.2rem 1rem;
+        padding: 0 1rem;
+        border-radius: 1rem;
+      }
+
+      #workspaces {
+        background: none;
+      }
+
       #workspaces button {
         border: 1px solid ${theme.border};
-        background: ${theme.bg-080};
         padding: 0 0.3rem;
+        background: none;
         margin: 0.3rem 0.1rem;
       }
 
@@ -93,7 +104,6 @@ in
       #battery {
         border: 1px solid ${theme.yellow};
         border-radius: 0.5rem;
-        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
@@ -101,7 +111,6 @@ in
       #memory {
         border: 1px solid ${theme.blue};
         border-radius: 0.5rem;
-        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
@@ -109,7 +118,6 @@ in
       #cpu {
         border: 1px solid ${theme.cyan};
         border-radius: 0.5rem;
-        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
@@ -117,7 +125,6 @@ in
       #network {
         border: 1px solid ${theme.red};
         border-radius: 0.5rem;
-        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
@@ -125,7 +132,6 @@ in
       #clock {
         border: 1px solid ${theme.green};
         border-radius: 0.5rem;
-        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
@@ -133,7 +139,6 @@ in
       #tray {
         border: 1px solid ${theme.magenta};
         border-radius: 0.5rem;
-        background: ${theme.bg-080};
         padding: 0 0.5rem;
         margin: 0.3rem 0;
       }
