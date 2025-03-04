@@ -1,10 +1,13 @@
 { ... }:
+let
+  theme = (import ../theme);
+in
 {
   programs.foot = {
     enable = true;
     settings = {
       main = {
-        font = "Monaspace Krypton:size=16";
+        font = "${theme.console-font}:size=16";
         bold-text-in-bright = "yes";
       };
 

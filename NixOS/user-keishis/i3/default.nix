@@ -1,7 +1,8 @@
 { pkgs, ... }:
 let
   theme = (import ../theme);
-in {
+in
+{
   xsession.windowManager.i3 = {
     enable = true;
     config = rec {
@@ -60,7 +61,7 @@ in {
       bars = [
         {
           fonts = {
-            names = [ "Monaspace Krypton" ];
+            names = [ theme.console-font ];
             style = "Light";
             size = 11.0;
           };

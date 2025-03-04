@@ -1,4 +1,7 @@
 { ... }:
+let
+  theme = (import ../theme);
+in
 {
   programs.ghostty = {
     enable = true;
@@ -7,7 +10,7 @@
 
     settings = {
       font-size = 16;
-      font-family = "Monaspace Krypton";
+      font-family = theme.console-font;
       font-feature = "calt";
       background-opacity = 0.7;
       theme = "tokyonight";

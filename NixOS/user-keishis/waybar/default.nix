@@ -1,6 +1,8 @@
-{ ... }: let
+{ ... }:
+let
   theme = (import ../theme);
-in {
+in
+{
   programs.waybar = {
     enable = true;
     settings = {
@@ -10,9 +12,19 @@ in {
         height = 32;
         spacing = 10;
 
-        modules-left = [ "sway/workspaces" "sway/mode" ];
+        modules-left = [
+          "sway/workspaces"
+          "sway/mode"
+        ];
         modules-center = [ "sway/window" ];
-        modules-right = [ "battery" "memory" "cpu" "network" "clock" "tray" ];
+        modules-right = [
+          "battery"
+          "memory"
+          "cpu"
+          "network"
+          "clock"
+          "tray"
+        ];
 
         "sway/window" = {
           max-length = 60;
@@ -46,7 +58,7 @@ in {
 
     style = ''
       * {
-        font-family: "Monaspace Krypton";
+        font-family: "${theme.console-font}";
         font-size: 1rem;
         border: none;
       }

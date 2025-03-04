@@ -1,4 +1,7 @@
 { ... }:
+let
+  theme = (import ../theme);
+in
 {
   programs.wezterm = {
     enable = true;
@@ -17,7 +20,7 @@
       config.font_size = 16.0
       config.font = wezterm.font_with_fallback {
         {
-          family = "Monaspace Krypton"
+          family = "${theme.console-font}"
         },
         {
           family = "JuliaMono"
