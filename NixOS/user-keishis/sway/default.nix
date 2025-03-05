@@ -56,9 +56,9 @@ in
       };
 
       bars = [
-        {
-          command = "waybar";
-        }
+        # {
+        #   command = "waybar";
+        # }
       ];
 
       window.titlebar = false;
