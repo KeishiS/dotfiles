@@ -13,6 +13,7 @@ rec {
     ./waybar
     ./zed
     ./wezterm
+    ./hyprland
     ./foot
     ./i3
   ];
