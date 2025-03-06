@@ -23,6 +23,7 @@
         show_parameter_hints = true;
         show_other_hints = true;
       };
+      format_on_save = "on";
 
       languages = {
         Nix = {

@@ -13,6 +13,7 @@ in
         spacing = 5;
 
         modules-left = [
+          "clock"
           "sway/workspaces"
           "sway/mode"
         ];
@@ -22,7 +23,6 @@ in
           "memory"
           "cpu"
           "network"
-          "clock"
           "tray"
         ];
 
