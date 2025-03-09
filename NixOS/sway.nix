@@ -65,10 +65,15 @@
     enable = true;
     wlr.enable = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
       xdg-desktop-portal-wlr
-      xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gtk
     ];
+    config.sway = {
+      "org.freedesktop.impl.portal.ScreenCast" = "wlr";
+      "org.freedesktop.impl.portal.Screenshot" = "wlr";
+      "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
+      "org.freedesktop.impl.portal.FileChooser" = "gtk";
+    };
   };
 
   hardware.bluetooth = {

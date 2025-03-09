@@ -6,6 +6,10 @@ in
   wayland.windowManager.sway = {
     enable = true;
     checkConfig = true;
+    systemd = {
+      enable = true;
+      xdgAutostart = true;
+    };
     config = rec {
       modifier = "Mod4";
       terminal = "ghostty";
@@ -104,9 +108,10 @@ in
         { command = "fcitx5"; }
         { command = "dex -a"; }
         { command = "swaync"; }
-        { command = "dbus-update-activation-environment --systemd"; }
+        {
+          command = "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";
+        }
       ];
     };
-    # extraConfig = "WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";
   };
 }
