@@ -1,9 +1,4 @@
-{
-  pkgs,
-  ragenix,
-  my-secrets,
-  ...
-}:
+{ pkgs, ragenix, lib, my-secrets, ... }:
 {
   imports = [ ragenix.nixosModules.default ];
 

@@ -8,6 +8,12 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      rocmPackages.clr.icd
+    ];
+  };
   boot = {
     kernelModules = [ "kvm-amd" "v4l2loopback" ];
     extraModulePackages = with config.boot.kernelPackages; [
