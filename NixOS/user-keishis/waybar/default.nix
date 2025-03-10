@@ -30,6 +30,12 @@ in
           max-length = 60;
           tooltip = false;
         };
+        battery = {
+          states = {
+            warning = 30;
+            critial = 15;
+          };
+        };
         memory = {
           format = "MEM {used:0.1f}G/{total:0.1f}G";
           tooltip = false;
@@ -106,6 +112,17 @@ in
         border-radius: 0.5rem;
         padding: 0 0.5rem;
         margin: 0.3rem 0;
+      }
+
+      #battery.warning {
+        background: ${theme.yellow};
+        color: ${theme.bg};
+      }
+
+      #battery.critial {
+        border: 1px solid ${theme.red};
+        background: ${theme.red};
+        color: ${theme.bg};
       }
 
       #memory {
