@@ -1,9 +1,6 @@
 {
-  config,
   lib,
   pkgs,
-  ragenix,
-  my-secrets,
   ...
 }:
 {
@@ -104,20 +101,19 @@
     settings.PasswordAuthentication = lib.mkDefault false;
   };
 
-  age.secrets."mackerel_apikey" = {
-    file = "${my-secrets}/mackerel_apikey.age";
-    mode = "0400";
-    owner = "root";
-    group = "root";
-  };
-  services.mackerel-agent = {
-    apiKeyFile = config.age.secrets."mackerel_apikey".path;
-    enable = true;
-    runAsRoot = true;
-  };
+  # age.secrets."mackerel_apikey" = {
+  #   file = "${my-secrets}/mackerel_apikey.age";
+  #   mode = "0400";
+  #   owner = "root";
+  #   group = "root";
+  # };
+  # services.mackerel-agent = {
+  #   apiKeyFile = config.age.secrets."mackerel_apikey".path;
+  #   enable = true;
+  #   runAsRoot = true;
+  # };
 
   imports = [
-    ragenix.nixosModules.default
     ./lenovo/config.nix
   ];
 }

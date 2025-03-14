@@ -2,7 +2,6 @@
   lib,
   pkgs,
   vscode-server,
-  ragenix,
   ...
 }:
 
@@ -10,7 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ./nfs.nix
-    ./ldap.nix
+    # ./ldap.nix
     vscode-server.nixosModules.default
   ];
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
