@@ -126,11 +126,11 @@
     "my-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1740627150,
-        "narHash": "sha256-XvG2pGpEKAFPLSpxZHy0rilWOBXviOg7fEPqG/oFU48=",
+        "lastModified": 1742168834,
+        "narHash": "sha256-FEn8qXdh9mc69Cn9PXvKxkWOxXEBThVeW4THwdPkdoY=",
         "owner": "KeishiS",
         "repo": "my-secrets",
-        "rev": "d7039a7181e3c47eadb20e1c2d1a07108dced3e1",
+        "rev": "f68e006793504147a9b89ce0cf47b9844f223d67",
         "type": "github"
       },
       "original": {
