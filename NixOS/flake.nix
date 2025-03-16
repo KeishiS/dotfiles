@@ -21,31 +21,46 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, nix-ld, ... }@inputs: {
-    nixosConfigurations.NixOS-keishis-X13 = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = inputs;
-      modules = [
-        nix-ld.nixosModules.nix-ld
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      nix-ld,
+      ...
+    }@inputs:
+    {
+      nixosConfigurations.NixOS-keishis-X13 = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          nix-ld.nixosModules.nix-ld
 
-        ./default.nix
-        ./sway.nix
-        ./hyprland.nix
-        ./i3.nix
-        ./X13/configuration.nix
-      ];
+          ./default.nix
+          ./sway.nix
+          ./hyprland.nix
+          ./i3.nix
+          ./X13/configuration.nix
+        ];
+      };
+
+      nixosConfigurations.NixOS-keishis-home = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          nix-ld.nixosModules.nix-ld
+
+          ./default.nix
+          ./sway.nix
+          ./home-srv/configuration.nix
+        ];
+      };
+
+      nixosConfigurations.NixOS-sandi-lenovo = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          ./common.nix
+        ];
+      };
     };
-
-    nixosConfigurations.NixOS-keishis-home = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = inputs;
-      modules = [
-        nix-ld.nixosModules.nix-ld
-
-        ./default.nix
-        ./sway.nix
-        ./home-srv/configuration.nix
-      ];
-    };
-  };
 }
