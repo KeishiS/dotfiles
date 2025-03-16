@@ -117,6 +117,5 @@
 
   imports = [
     ragenix.nixosModules.default
-    ./lenovo/config.nix
   ];
 }
