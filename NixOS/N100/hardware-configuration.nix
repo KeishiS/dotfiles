@@ -1,4 +1,9 @@
-{ lib, modulesPath, ... }:
+{
+  config,
+  lib,
+  modulesPath,
+  ...
+}:
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
@@ -16,6 +21,11 @@
         "sdhci_pci"
       ];
       kernelModules = [ ];
+    };
+
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
     };
   };
 
