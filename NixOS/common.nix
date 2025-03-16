@@ -103,6 +103,9 @@
     enable = true;
     settings.PermitRootLogin = "no";
     settings.PasswordAuthentication = lib.mkDefault false;
+    extraConfig = ''
+      AllowAgentForwarding yes
+    '';
   };
 
   age.secrets."mackerel_apikey" = {

@@ -25,10 +25,5 @@
   };
 
   networking.hostName = "NixOS-sandi-N100";
-  services.openssh = {
-    extraConfig = ''
-      AllowAgentForwarding yes
-    '';
-  };
   system.stateVersion = "24.11";
 }
