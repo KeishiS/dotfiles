@@ -60,6 +60,15 @@
         specialArgs = inputs;
         modules = [
           ./common.nix
+          ./lenovo/configuration.nix
+        ];
+      };
+      nixosConfigurations.NixOS-sandi-N100 = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          ./common.nix
+          ./N100/configuration.nix
         ];
       };
     };

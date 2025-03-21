@@ -2,6 +2,8 @@
   lib,
   pkgs,
   ragenix,
+  my-secrets,
+  config,
   ...
 }:
 {
@@ -69,6 +71,7 @@
     helix
     mackerel-agent
     nfs-utils
+    pinentry-curses
   ];
   environment.variables.EDITOR = "hx";
 
@@ -93,30 +96,31 @@
     enable = true;
     enableSSHSupport = true;
     enableExtraSocket = true;
+    pinentryPackage = pkgs.pinentry-curses;
   };
 
   services.openssh = {
     enable = true;
     settings.PermitRootLogin = "no";
     settings.PasswordAuthentication = lib.mkDefault false;
+    extraConfig = ''
+      AllowAgentForwarding yes
+    '';
   };
 
-  /*
-    age.secrets."mackerel_apikey" = {
-      file = "${my-secrets}/mackerel_apikey.age";
-      mode = "0400";
-      owner = "root";
-      group = "root";
-    };
-    services.mackerel-agent = {
-      apiKeyFile = config.age.secrets."mackerel_apikey".path;
-      enable = true;
-      runAsRoot = true;
-    };
-  */
+  age.secrets."mackerel_apikey" = {
+    file = "${my-secrets}/mackerel_apikey.age";
+    mode = "0400";
+    owner = "root";
+    group = "root";
+  };
+  services.mackerel-agent = {
+    apiKeyFile = config.age.secrets."mackerel_apikey".path;
+    enable = true;
+    runAsRoot = true;
+  };
 
   imports = [
     ragenix.nixosModules.default
-    ./lenovo/config.nix
   ];
 }

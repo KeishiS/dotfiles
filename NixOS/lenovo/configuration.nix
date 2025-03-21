@@ -23,33 +23,9 @@
     libarchive # for bsdtar
   ];
 
-  services.openssh = {
-    extraConfig = ''
-      AllowAgentForwarding yes
-      StreamLocalBindUnlink yes
-    '';
-  };
-
   /*
     services.vscode-server = {
       enable = true;
-    };
-  */
-
-  /*
-    nixpkgs.config.allowUnfree = true;
-    services.plex = {
-      enable = true;
-      openFirewall = true;
-      dataDir = "/nfs/plex";
-    };
-  */
-  /*
-    services.nextcloud = {
-      enable = true;
-      hostName = "localhost";
-      config.dbtype = "sqlite";
-      config.adminpassFile = config.age.secrets."mackerel_apikey".path;
     };
   */
 
