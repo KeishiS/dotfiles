@@ -15,9 +15,13 @@ in
         modules-left = [
           "clock"
           "sway/workspaces"
+          "hyprland/workspaces"
           "sway/mode"
         ];
-        modules-center = [ "sway/window" ];
+        modules-center = [
+          "sway/window"
+          "hyprland/window"
+        ];
         modules-right = [
           "battery"
           "memory"
