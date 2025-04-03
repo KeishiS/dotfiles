@@ -7,6 +7,7 @@
       "$terminal" = "ghostty";
       bind = [
         "$mod, Return, exec, ghostty"
+        "$mod, d, exec, wofi -S run"
       ];
 
       input = {
