@@ -14,6 +14,7 @@ rec {
     ./zed
     ./wezterm
     ./hyprland
+    ./hyprlock
     ./foot
     ./i3
   ];
@@ -87,6 +88,7 @@ rec {
     gh
     uv
     hugo
+    shfmt # for shellscript formatter
   ];
 
   home.pointerCursor = {

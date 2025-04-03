@@ -51,6 +51,7 @@
 
           ./default.nix
           ./sway.nix
+          ./hyprland.nix
           ./home-srv/configuration.nix
         ];
       };

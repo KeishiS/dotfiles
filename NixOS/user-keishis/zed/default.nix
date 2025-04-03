@@ -33,6 +33,11 @@
           ];
           formatter.external.command = "nixfmt";
         };
+
+        "Shell Script" = {
+          hard_tabs = false;
+          formatter.external.command = "shfmt";
+        };
       };
     };
   };
