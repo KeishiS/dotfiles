@@ -16,7 +16,7 @@
   users.ldap = {
     enable = true;
     useTLS = false;
-    server = "ldap://192.168.10.25:389";
+    server = "ldap://192.168.10.17:389";
     base = "dc=sandi05,dc=com";
     daemon.enable = true;
     bind = {
