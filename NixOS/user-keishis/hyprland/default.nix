@@ -9,6 +9,7 @@
         "$mod, Return, exec, ghostty"
         "$mod Shift, q, killactive"
         "$mod, d, exec, wofi -S run"
+        "$mod, t, togglegroup"
         "$mod, f, fullscreen"
         "$mod, x, exec, ${config.home.homeDirectory}/dotfiles/.config/wofi/powermenu.sh"
         "$mod, s, exec, slurp | grim -g - ~/`date +'%Y-%m-%d_%H:%M:%S'`.png"
