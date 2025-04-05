@@ -9,6 +9,7 @@
     ./hardware-configuration.nix
     ./nfs.nix
     ./jellyfin.nix
+    ./portunus.nix
     # ./ldap.nix
     # vscode-server.nixosModules.default
   ];

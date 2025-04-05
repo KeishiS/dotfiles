@@ -1,0 +1,55 @@
+{
+  "groups": [
+    {
+      "name": "admin-team",
+      "long_name": "Portunus Admin Team",
+      "members": ["techadmin"],
+      "permissions": {
+        "portunus": {
+          "is_admin": true
+        },
+        "ldap": {
+          "can_read": true
+        }
+      }
+    },
+    {
+      "name": "homelab",
+      "long_name": "Home Laboratory",
+      "members": ["keishis"],
+      "permissions": {
+        "ldap": {
+          "can_read": true
+        }
+      },
+      "posix_gid": 5502
+    }
+  ],
+  "users": [
+    {
+      "login_name": "techadmin",
+      "given_name": "Technical",
+      "family_name": "Administrator",
+      "password": {
+        "from_command": ["cat", "/run/ragenix/homelab/techadmin"]
+      }
+    },
+    {
+      "login_name": "keishis",
+      "given_name": "Keishi",
+      "family_name": "Sando",
+      "password": {
+        "from_command": ["cat", "/run/ragenix/homelab/keishis"]
+      },
+      "ssh_public_keys": [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICLPYWxCTckCVdDiBpiKWE8omDndrvQhWkscX8uIyd1j openpgp:0xD1E438FC"
+      ],
+      "posix": {
+        "uid": 5003,
+        "gid": 5502,
+        "home": "/users/keishis",
+        "shell": "/run/current-system/sw/bin/zsh"
+      }
+    }
+  ]
+}
