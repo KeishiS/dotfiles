@@ -27,7 +27,9 @@ if [[ -n $SWAYSOCK ]]; then
 	esac
 elif [[ -n $HYPRLAND_INSTANCE_SIGNATURE ]]; then
 	case ${chosen} in
-	$lock) ;;
+	$lock)
+		hyprlock
+		;;
 	$logout)
 		hyprctl dispatch exit
 		;;
