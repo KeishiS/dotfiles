@@ -44,6 +44,11 @@
     fsType = "ext4";
   };
 
+  fileSystems."/users" = {
+    device = "192.168.10.17:/export/users";
+    fsType = "nfs";
+  };
+
   swapDevices = [
     { device = "/dev/disk/by-uuid/9684b517-c6f6-4946-9cd0-8e174cf0a056"; }
   ];
