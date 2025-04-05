@@ -1,13 +1,14 @@
 { ... }:
+let
+  theme = (import ../theme);
+in
 {
   programs.hyprlock = {
     enable = true;
     settings = {
       general = {
         disable_loading_bar = true;
-        grace = 300;
         hide_cursor = true;
-        no_fade_in = false;
       };
 
       background = [
@@ -25,11 +26,12 @@
           monitor = "";
           dots_center = true;
           fade_on_empty = false;
-          font_color = "rgb(202, 211, 245)";
-          inner_color = "rgb(91, 96, 120)";
-          outer_color = "rgb(24, 25, 38)";
+          font_color = theme.fg-rgb;
+          inner_color = theme.bg-rgb;
+          outer_color = theme.primary-rgb;
           outline_thickness = 5;
-          shadow_passes = 2;
+          check_color = theme.yellow;
+          fail_color = theme.error;
         }
       ];
     };

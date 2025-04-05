@@ -1,4 +1,10 @@
-{ pkgs, ragenix, lib, my-secrets, ... }:
+{
+  pkgs,
+  ragenix,
+  lib,
+  my-secrets,
+  ...
+}:
 {
   imports = [ ragenix.nixosModules.default ];
 
@@ -92,6 +98,7 @@
       cmake
       glibc
       zlib
+      zip
       unzip
       gptfdisk
       pinentry-curses
