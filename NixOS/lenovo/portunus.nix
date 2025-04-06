@@ -33,6 +33,10 @@
     seedPath = ./portunus.json;
   };
 
+  networking.firewall.allowedTCPPorts = [
+    389
+  ];
+
   users.ldap = {
     enable = true;
     useTLS = false;
