@@ -10,6 +10,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+    };
+
     my-secrets = {
       url = "github:KeishiS/my-secrets/main";
       flake = false;
@@ -25,6 +29,8 @@
     {
       nixpkgs,
       home-manager,
+      sops-nix,
+      ragenix,
       nix-ld,
       ...
     }@inputs:
@@ -34,7 +40,8 @@
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
-
+          sops-nix.nixosModules.sops
+          ragenix.nixosModules.default
           ./default.nix
           ./sway.nix
           ./hyprland.nix
@@ -48,7 +55,8 @@
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
-
+          sops-nix.nixosModules.sops
+          ragenix.nixosModules.default
           ./default.nix
           ./sway.nix
           ./hyprland.nix
@@ -60,6 +68,8 @@
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
+          sops-nix.nixosModules.sops
+          ragenix.nixosModules.default
           ./common.nix
           ./lenovo/configuration.nix
         ];
@@ -68,6 +78,8 @@
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
+          sops-nix.nixosModules.sops
+          ragenix.nixosModules.default
           ./common.nix
           ./N100/configuration.nix
         ];

@@ -16,7 +16,7 @@
     {
       "name": "homelab",
       "long_name": "Home Laboratory",
-      "members": ["keishis"],
+      "members": ["keishi"],
       "permissions": {
         "ldap": {
           "can_read": true
@@ -35,11 +35,11 @@
       }
     },
     {
-      "login_name": "keishis",
+      "login_name": "keishi",
       "given_name": "Keishi",
       "family_name": "Sando",
       "password": {
-        "from_command": ["cat", "/run/ragenix/homelab/keishis"]
+        "from_command": ["cat", "/run/ragenix/homelab/keishi"]
       },
       "ssh_public_keys": [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICLPYWxCTckCVdDiBpiKWE8omDndrvQhWkscX8uIyd1j openpgp:0xD1E438FC"
@@ -47,7 +47,7 @@
       "posix": {
         "uid": 5003,
         "gid": 5502,
-        "home": "/users/keishis",
+        "home": "/users/keishi",
         "shell": "/run/current-system/sw/bin/zsh"
       }
     }

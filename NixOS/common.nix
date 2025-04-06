@@ -7,6 +7,22 @@
   ...
 }:
 {
+  age.secrets = {
+    mackerel_apikey = {
+      file = "${my-secrets}/mackerel_apikey.age";
+      mode = "0400";
+      owner = "root";
+      group = "root";
+    };
+
+    hosts = {
+      file = "${my-secrets}/hosts.age";
+      mode = "0400";
+      owner = "root";
+      group = "root";
+    };
+  };
+
   nix = {
     settings.experimental-features = [
       "nix-command"
@@ -28,6 +44,10 @@
       enable = true;
       allowedTCPPorts = [ 22 ];
     };
+
+    extraHosts = ''
+      192.168.10.4 nixos-keishis-home
+    '';
   };
   time.timeZone = "Asia/Tokyo";
 
@@ -67,6 +87,7 @@
     curl
     lsof
     gcc
+    julia_110-bin
     lapack
     helix
     mackerel-agent
@@ -108,19 +129,9 @@
     '';
   };
 
-  age.secrets."mackerel_apikey" = {
-    file = "${my-secrets}/mackerel_apikey.age";
-    mode = "0400";
-    owner = "root";
-    group = "root";
-  };
   services.mackerel-agent = {
-    apiKeyFile = config.age.secrets."mackerel_apikey".path;
+    apiKeyFile = config.age.secrets.mackerel_apikey.path;
     enable = true;
     runAsRoot = true;
   };
-
-  imports = [
-    ragenix.nixosModules.default
-  ];
 }

@@ -1,13 +1,10 @@
 {
   pkgs,
   ragenix,
-  lib,
   my-secrets,
   ...
 }:
 {
-  imports = [ ragenix.nixosModules.default ];
-
   nix = {
     settings.experimental-features = [
       "nix-command"
@@ -24,6 +21,8 @@
       dates = [ "weekly" ];
     };
   };
+
+  services.pcscd.enable = true;
 
   boot.loader = {
     systemd-boot.enable = true;

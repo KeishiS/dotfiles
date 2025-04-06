@@ -3,6 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     ./ldap.nix
+    ./nginx.nix
   ];
 
   networking.hostName = "NixOS-sandi-N100";

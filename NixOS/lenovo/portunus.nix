@@ -1,6 +1,5 @@
 {
   config,
-  ragenix,
   my-secrets,
   ...
 }:
@@ -14,9 +13,9 @@
       group = "nslcd";
     };
 
-    keishis = {
-      file = "${my-secrets}/homelab/keishis.age";
-      path = "/run/ragenix/homelab/keishis";
+    keishi = {
+      file = "${my-secrets}/homelab/keishi.age";
+      path = "/run/ragenix/homelab/keishi";
       mode = "0440";
       owner = "portunus";
       group = "nslcd";
