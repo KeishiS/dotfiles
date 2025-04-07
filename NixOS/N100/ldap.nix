@@ -1,6 +1,5 @@
 {
   config,
-  ragenix,
   my-secrets,
   ...
 }:
