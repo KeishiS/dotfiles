@@ -68,6 +68,7 @@
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
+          nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
           ragenix.nixosModules.default
           ./common.nix
@@ -78,6 +79,7 @@
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
+          nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
           ragenix.nixosModules.default
           ./common.nix

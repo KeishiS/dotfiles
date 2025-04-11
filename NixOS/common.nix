@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  ragenix,
   my-secrets,
   config,
   ...
@@ -87,6 +86,10 @@
     curl
     lsof
     gcc
+    gfortran
+    gnumake
+    glib
+    glibc
     julia_110-bin
     lapack
     helix
@@ -95,6 +98,7 @@
     mackerel-agent
     nfs-utils
     pinentry-curses
+    uv
   ];
   environment.variables.EDITOR = "hx";
 
@@ -136,4 +140,6 @@
     enable = true;
     runAsRoot = true;
   };
+
+  programs.nix-ld.dev.enable = true;
 }
