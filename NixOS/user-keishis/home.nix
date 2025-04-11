@@ -1,4 +1,8 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 rec {
   programs.home-manager.enable = true;
   home.username = "keishis";
@@ -29,10 +33,12 @@ rec {
 
   home.sessionVariables = {
     XCURSOR_THEME = "volantes_cursors";
-    GTK_IM_MODULE = "fcitx";
+    # GTK_IM_MODULE = "fcitx";
+    GTK_IM_MODULE = "";
     QT_IM_MODULE = "fcitx";
     XMODIFIERS = "@im=fcitx";
     XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
+    ELECTRON_ENABLE_WAYLAND = 0;
     # NIXOS_OZONE_WL = "1"; # これを有効化するとwaylandネイティブなアプリが立ち上がり，日本語入力ができなくなる
   };
 
@@ -62,8 +68,6 @@ rec {
     thunderbird-bin
     zoom-us
     _1password-gui
-    zed-editor
-    nil
     nixd
     nixfmt-rfc-style # language server for Nix
     vlc
@@ -76,7 +80,6 @@ rec {
     insync
     julia_110-bin
     keybase
-    nixd
     quarto
     R
     rustup
@@ -115,6 +118,23 @@ rec {
     cursorTheme = {
       package = pkgs.volantes-cursors;
       name = "volantes_cursors";
+    };
+    gtk3.extraConfig = {
+      gtk-im-module = "fcitx";
+    };
+    gtk4.extraConfig = {
+      gtk-im-module = "fcitx";
+    };
+  };
+
+  editorconfig = {
+    enable = true;
+    settings."*" = {
+      charset = "utf-8";
+      trim_trailing_whitespace = true;
+      indent_style = "space";
+      indent_size = 4;
+      insert_final_newline = true;
     };
   };
 
@@ -175,8 +195,6 @@ rec {
   xdg.configFile = {
     "home-manager".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/NixOS/user-keishis";
-    # "sway".source =
-    #   config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/sway";
   };
 
   xdg.userDirs = {
@@ -216,12 +234,5 @@ rec {
     ];
   };
 
-  # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
   home.stateVersion = "24.11"; # Please read the comment before changing.
 }

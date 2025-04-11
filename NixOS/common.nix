@@ -90,6 +90,8 @@
     julia_110-bin
     lapack
     helix
+    zip
+    unzip
     mackerel-agent
     nfs-utils
     pinentry-curses

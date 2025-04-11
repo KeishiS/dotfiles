@@ -2,6 +2,7 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
+    xwayland.enable = true;
     settings = {
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
@@ -40,6 +41,9 @@
         "$mod Shift, 8, movetoworkspace, 8"
         "$mod Shift, 9, movetoworkspace, 9"
         "$mod Shift, 0, movetoworkspace, 10"
+      ];
+      monitor = [
+        ", preferred, auto, 1.0"
       ];
       exec-once = [
         "fcitx5"

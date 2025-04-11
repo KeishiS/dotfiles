@@ -1,8 +1,10 @@
-{ ... }:
+{ pkgs-unstable, ... }:
 {
   programs.zed-editor = {
     enable = true;
+    package = pkgs-unstable.zed-editor;
     userSettings = {
+      tab_size = 4;
       ui_font_size = 20;
       buffer_font_size = 20;
       buffer_font_family = "JuliaMono";
@@ -17,6 +19,9 @@
         light = "Ayu Mirage";
         dark = "One Dark";
       };
+      features = {
+        edit_prediction_provider = "copilot";
+      };
       inlay_hints = {
         enabled = true;
         show_type_hints = true;
@@ -27,10 +32,7 @@
 
       languages = {
         Nix = {
-          language_servers = [
-            "nil"
-            "!nixd"
-          ];
+          language_servers = [ "nixd" ];
           formatter.external.command = "nixfmt";
         };
 
