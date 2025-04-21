@@ -8,11 +8,20 @@
       ui_font_size = 20;
       buffer_font_size = 20;
       buffer_font_family = "JuliaMono";
-      soft_wrap = "editor_width";
       buffer_font_fallbacks = [
         "JetBrainsMono Nerd Font"
         "Noto Sans Mono CJK JP"
       ];
+      buffer_font_features = {
+        calt = true;
+        liga = true;
+        ss02 = true;
+        ss03 = true;
+        ss04 = true;
+        ss05 = true;
+        zero = true;
+      };
+      soft_wrap = "editor_width";
       vim_mode = true;
       theme = {
         mode = "system";
