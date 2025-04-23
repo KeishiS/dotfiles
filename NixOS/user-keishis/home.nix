@@ -72,6 +72,7 @@ rec {
     nixfmt-rfc-style # language server for Nix
     vlc
     postman
+    insomnia
 
     # Dev Tools
     cargo-make
