@@ -40,6 +40,7 @@ rec {
     XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
     ELECTRON_ENABLE_WAYLAND = 0;
     # NIXOS_OZONE_WL = "1"; # これを有効化するとwaylandネイティブなアプリが立ち上がり，日本語入力ができなくなる
+    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
 
   nixpkgs.config.allowUnfree = true;
@@ -73,6 +74,7 @@ rec {
     vlc
     postman
     insomnia
+    jetbrains.datagrip
 
     # Dev Tools
     cargo-make
@@ -93,6 +95,8 @@ rec {
     uv
     hugo
     shfmt # for shellscript formatter
+    openssl
+    pkg-config # for common library directory path, e.g., openssl
   ];
 
   home.pointerCursor = {
