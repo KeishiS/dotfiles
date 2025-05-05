@@ -18,6 +18,7 @@ rec {
     ./zed
     ./wezterm
     ./hyprland
+    ./hyprpaper
     ./hyprlock
     ./foot
     ./i3
