@@ -6,14 +6,15 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /export/archlinux  192.168.10.0/24(rw,async,all_squash,no_subtree_check)
-      /export/users      192.168.10.0/24(rw,async,no_root_squash,no_subtree_check)
+      /export            192.168.10.0/24(rw,async,fsid=0,no_root_squash,no_subtree_check)
+      /export/keylytix   192.168.10.0/24(rw,nohide,async,no_root_squash,no_subtree_check)
+      /export/users      192.168.10.0/24(rw,nohide,async,no_root_squash,no_subtree_check)
     '';
   };
   networking.firewall.allowedTCPPorts = [ 2049 ];
 
-  fileSystems."/export/archlinux" = {
-    device = "/nfs/archlinux";
+  fileSystems."/export/keylytix" = {
+    device = "/nfs/keylytix";
     options = [ "bind" ];
   };
 

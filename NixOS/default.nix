@@ -104,11 +104,17 @@
       xkeyboard_config # `sway --debug` `xkbcommon: ERROR: couldn't find a Compose file for locale "en_US.UTF-8"`
       home-manager
       colmena
+      pkg-config # for common library directory path, e.g., openssl
+      yubikey-manager
+      yubikey-manager-qt
     ])
     ++ [
       ragenix.packages.x86_64-linux.default
     ];
-  environment.variables.EDITOR = "hx";
+  environment.variables = {
+    EDITOR = "hx";
+    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+  };
 
   programs.nano.nanorc = ''
     set softwrap

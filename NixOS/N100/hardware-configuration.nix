@@ -45,7 +45,12 @@
   };
 
   fileSystems."/users" = {
-    device = "192.168.10.17:/export/users";
+    device = "192.168.10.17:/users";
+    fsType = "nfs";
+  };
+
+  fileSystems."/nfs/keylytix" = {
+    device = "192.168.10.17:/keylytix";
     fsType = "nfs";
   };
 
