@@ -22,13 +22,25 @@
     };
   };
 
-  services.pcscd.enable = true;
-
   boot.loader = {
     systemd-boot.enable = true;
     systemd-boot.configurationLimit = 5;
     efi.canTouchEfiVariables = true;
   };
+
+  # FIDO2デバイスでlogin/sudoできるように
+  security.pam = {
+    services = {
+      login.u2fAuth = true;
+      sudo.u2fAuth = true;
+    };
+    u2f.cue = true;
+  };
+
+  services.pcscd.enable = true;
+  services.udev.extraRules = ''
+    ACTION=="remove", ENV{ID_VENDOR_ID}=="1050", ENV{ID_MODEL_ID}=="0407", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
+  '';
 
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Tokyo";
@@ -106,7 +118,6 @@
       colmena
       pkg-config # for common library directory path, e.g., openssl
       yubikey-manager
-      yubikey-manager-qt
     ])
     ++ [
       ragenix.packages.x86_64-linux.default
