@@ -62,21 +62,45 @@ in
         "usbhid"
       ];
 
-      luks.yubikeySupport = true;
+      luks = {
+        cryptoModules = [
+          "aes"
+          "xts"
+          "sha512"
+        ];
+        yubikeySupport = true;
 
-      luks.devices."nixos-root" = {
-        device = "/dev/disk/by-uuid/e9b3daef-c91f-43a4-aa20-209e6aa645a7";
-        preLVM = false;
-        yubikey = {
-          slot = yubikey_slot;
-          twoFactor = true;
-          gracePeriod = grace_period;
-          keyLength = key_length;
-          saltLength = salt_length;
-          storage = {
-            device = boot_part;
-            fsType = "vfat";
-            path = "/crypt-storage/default";
+        devices."nixos-root-1" = {
+          device = "/dev/disk/by-uuid/924e2503-68f4-47e3-8777-563b6a8163f5";
+          preLVM = false;
+          yubikey = {
+            slot = yubikey_slot;
+            twoFactor = true;
+            gracePeriod = grace_period;
+            keyLength = key_length;
+            saltLength = salt_length;
+            storage = {
+              device = boot_part;
+              fsType = "vfat";
+              path = "/crypt-storage/default";
+            };
+          };
+        };
+
+        devices."nixos-root-2" = {
+          device = "/dev/disk/by-uuid/7a912664-4a09-4115-a3c9-7f3a46103a44";
+          preLVM = false;
+          yubikey = {
+            slot = yubikey_slot;
+            twoFactor = true;
+            gracePeriod = grace_period;
+            keyLength = key_length;
+            saltLength = salt_length;
+            storage = {
+              device = boot_part;
+              fsType = "vfat";
+              path = "/crypt-storage/default";
+            };
           };
         };
       };
@@ -107,7 +131,7 @@ in
   environment.etc."crypttab" = {
     mode = "0600";
     text = ''
-      swap /dev/by-label/crypt-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256
+      swap /dev/disk/by-label/crypt-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256
     '';
   };
 
