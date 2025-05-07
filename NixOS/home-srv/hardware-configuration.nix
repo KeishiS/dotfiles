@@ -8,7 +8,6 @@
   modulesPath,
   ...
 }:
-
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -35,6 +34,7 @@
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
 
+    # supportedFilesystems.btrfs = true;
     initrd = {
       availableKernelModules = [
         "xhci_pci"
@@ -55,16 +55,17 @@
       services.lvm.enable = true;
       luks.yubikeySupport = true;
       luks.devices."root" = {
-        device = "/dev/disk/by-uuid/7c9011ff-50fd-4277-8a45-71a6bcc7ff8e";
+        device = "/dev/disk/by-uuid/ae357fad-313d-4641-96dc-9a92502e9ceb";
+        allowDiscards = true;
         preLVM = false;
         yubikey = {
           slot = 1;
           twoFactor = true;
-          gracePeriod = 60;
+          gracePeriod = 30;
           keyLength = 64;
           saltLength = 16;
           storage = {
-            device = "/dev/disk/by-uuid/F871-3411";
+            device = "/dev/disk/by-uuid/12CE-A600";
             fsType = "vfat";
             path = "/crypt-storage/default";
           };
@@ -73,21 +74,13 @@
     };
   };
 
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "amdgpu" ];
-  };
-  environment.systemPackages = with pkgs; [
-    rocmPackages.rocminfo
-  ];
-
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/b5b0c2b1-5fb4-4184-8288-9d776e99a86a";
+    device = "/dev/disk/by-uuid/a954645a-cb57-4768-a483-36317d348c09";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/F871-3411";
+    device = "/dev/disk/by-uuid/12CE-A600";
     fsType = "vfat";
     options = [
       "fmask=0022"
@@ -95,15 +88,42 @@
     ];
   };
 
-  fileSystems."/users" = {
-    device = "192.168.10.17:/export/users";
-    fsType = "nfs";
-  };
+  /*
+    fileSystems."/data" = {
+      device = "/dev/disk/by-uuid/3b684849-6830-461d-a540-9f23dc750da6";
+      fsType = "btrfs";
+      options = [ "subvol=data" ];
+    };
+  */
+
+  /*
+    environment.etc."crypttab" = {
+      mode = "0600";
+      text = ''
+        swap /dev/mapper/nixos-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256
+      '';
+    };
+  */
 
   swapDevices = [
     {
-      device = "/dev/disk/by-uuid/328fd809-43a2-4bd2-ba3a-2de98f817839";
+      device = "/dev/disk/by-uuid/293672a0-d796-4e5c-b47f-9b001b0ab129";
     }
+  ];
+
+  /*
+    services.btrfs.autoScrub = {
+      enable = true;
+      fileSystems = [ "/" ];
+    };
+  */
+
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "amdgpu" ];
+  };
+  environment.systemPackages = with pkgs; [
+    rocmPackages.rocminfo
   ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

@@ -14,10 +14,12 @@
       url = "github:Mic92/sops-nix";
     };
 
-    my-secrets = {
-      url = "github:KeishiS/my-secrets/main";
-      flake = false;
-    };
+    /*
+      my-secrets = {
+        url = "github:KeishiS/my-secrets/main";
+        flake = false;
+      };
+    */
 
     nix-ld = {
       url = "github:Mic92/nix-ld/2.0.3";
@@ -50,13 +52,13 @@
         ];
       };
 
-      nixosConfigurations.NixOS-keishis-home = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.nixos-keishis-home = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
-          ragenix.nixosModules.default
+          # ragenix.nixosModules.default
           ./default.nix
           ./sway.nix
           ./hyprland.nix

@@ -99,8 +99,12 @@
     nfs-utils
     pinentry-curses
     uv
+    pkg-config # for common library directory path, e.g., openssl
   ];
-  environment.variables.EDITOR = "hx";
+  environment.variables = {
+    EDITOR = "hx";
+    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+  };
 
   programs.nano = {
     nanorc = ''

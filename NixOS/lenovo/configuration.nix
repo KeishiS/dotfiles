@@ -10,6 +10,7 @@
     ./nfs.nix
     ./jellyfin.nix
     ./portunus.nix
+    ./keylytix.nix
     # ./ldap.nix
     # vscode-server.nixosModules.default
   ];
