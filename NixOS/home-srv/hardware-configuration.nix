@@ -34,7 +34,7 @@
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
 
-    supportedFilesystems.btrfs = true;
+    # supportedFilesystems.btrfs = true;
     initrd = {
       availableKernelModules = [
         "xhci_pci"
@@ -52,43 +52,22 @@
         "amdgpu"
       ];
 
-      # services.lvm.enable = true;
-      luks = {
-        yubikeySupport = true;
-
-        devices."root1" = {
-          device = "/dev/disk/by-uuid/aa1b5f1a-f5be-4c5a-af37-0d89a52ae58f";
-          allowDiscards = true;
-          preLVM = false;
-          yubikey = {
-            slot = 1;
-            twoFactor = false;
-            gracePeriod = 30;
-            keyLength = 64;
-            saltLength = 16;
-            storage = {
-              device = "/dev/disk/by-uuid/12CE-A600";
-              fsType = "vfat";
-              path = "/crypt-storage/default";
-            };
-          };
-        };
-
-        devices."root2" = {
-          device = "/dev/disk/by-uuid/04061554-2a43-471a-b834-ee62f93a55e9";
-          allowDiscards = true;
-          preLVM = false;
-          yubikey = {
-            slot = 1;
-            twoFactor = false;
-            gracePeriod = 30;
-            keyLength = 64;
-            saltLength = 16;
-            storage = {
-              device = "/dev/disk/by-uuid/12CE-A600";
-              fsType = "vfat";
-              path = "/crypt-storage/default";
-            };
+      services.lvm.enable = true;
+      luks.yubikeySupport = true;
+      luks.devices."root" = {
+        device = "/dev/disk/by-uuid/ae357fad-313d-4641-96dc-9a92502e9ceb";
+        allowDiscards = true;
+        preLVM = false;
+        yubikey = {
+          slot = 1;
+          twoFactor = true;
+          gracePeriod = 30;
+          keyLength = 64;
+          saltLength = 16;
+          storage = {
+            device = "/dev/disk/by-uuid/12CE-A600";
+            fsType = "vfat";
+            path = "/crypt-storage/default";
           };
         };
       };
@@ -96,9 +75,8 @@
   };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/3b684849-6830-461d-a540-9f23dc750da6";
-    fsType = "btrfs";
-    options = [ "subvol=root" ];
+    device = "/dev/disk/by-uuid/a954645a-cb57-4768-a483-36317d348c09";
+    fsType = "ext4";
   };
 
   fileSystems."/boot" = {
@@ -110,11 +88,13 @@
     ];
   };
 
-  fileSystems."/data" = {
-    device = "/dev/disk/by-uuid/3b684849-6830-461d-a540-9f23dc750da6";
-    fsType = "btrfs";
-    options = [ "subvol=data" ];
-  };
+  /*
+    fileSystems."/data" = {
+      device = "/dev/disk/by-uuid/3b684849-6830-461d-a540-9f23dc750da6";
+      fsType = "btrfs";
+      options = [ "subvol=data" ];
+    };
+  */
 
   /*
     environment.etc."crypttab" = {
@@ -127,14 +107,16 @@
 
   swapDevices = [
     {
-      device = "/dev/disk/by-uuid/1f8483b5-34f7-4ec3-83bf-69af7d7d1677";
+      device = "/dev/disk/by-uuid/293672a0-d796-4e5c-b47f-9b001b0ab129";
     }
   ];
 
-  services.btrfs.autoScrub = {
-    enable = true;
-    fileSystems = [ "/" ];
-  };
+  /*
+    services.btrfs.autoScrub = {
+      enable = true;
+      fileSystems = [ "/" ];
+    };
+  */
 
   services.xserver = {
     enable = true;
