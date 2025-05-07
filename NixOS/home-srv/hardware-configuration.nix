@@ -66,7 +66,7 @@
         yubikeySupport = true;
 
         devices."root" = {
-          device = "/dev/mapper/nixos-root";
+          device = "/dev/disk/by-uuid/fc9ffc33-fe2b-4cc5-a334-8abd73882e04";
           preLVM = false;
           yubikey = {
             slot = 1;
@@ -75,7 +75,7 @@
             keyLength = 64;
             saltLength = 32;
             storage = {
-              device = "/dev/disk/by-label/NIXOSBOOT";
+              device = "/dev/disk/by-uuid/12CE-A600";
               fsType = "vfat";
               path = "/crypt-storage/default";
             };
@@ -86,12 +86,12 @@
   };
 
   fileSystems."/" = {
-    device = "/dev/mapper/root";
+    device = "/dev/disk/by-uuid/4f1f0d84-1d4a-4c0c-a83a-8a331a57f719";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-label/NIXOSBOOT";
+    device = "/dev/disk/by-uuid/12CE-A600";
     fsType = "vfat";
     options = [
       "fmask=0022"
@@ -99,16 +99,18 @@
     ];
   };
 
-  environment.etc."crypttab" = {
-    mode = "0600";
-    text = ''
-      swap /dev/mapper/nixos-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256
-    '';
-  };
+  /*
+    environment.etc."crypttab" = {
+      mode = "0600";
+      text = ''
+        swap /dev/mapper/nixos-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256
+      '';
+    };
+  */
 
   swapDevices = [
     {
-      device = "/dev/mapper/swap";
+      device = "/dev/disk/by-uuid/a01365ba-b6e0-4e68-ad04-adba224ea5c0";
     }
   ];
 
