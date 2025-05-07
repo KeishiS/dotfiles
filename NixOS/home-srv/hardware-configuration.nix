@@ -24,7 +24,6 @@
   };
   boot = {
     kernelModules = [
-      "amdgpu"
       "kvm-amd"
       "v4l2loopback"
     ];
@@ -39,14 +38,11 @@
 
     initrd = {
       availableKernelModules = [
-        "dm-crypt"
-        "nvme"
         "xhci_pci"
         "ahci"
         "usbhid"
         "usb_storage"
         "sd_mod"
-        "thunderbolt"
       ];
       kernelModules = [
         "dm-snapshot"
@@ -54,15 +50,11 @@
         "nls_cp437"
         "nls_iso8859-1"
         "usbhid"
+        "amdgpu"
       ];
 
       services.lvm.enable = true;
       luks = {
-        cryptoModules = [
-          "aes"
-          "xts"
-          "sha512"
-        ];
         yubikeySupport = true;
 
         devices."root" = {
@@ -73,7 +65,7 @@
             twoFactor = true;
             gracePeriod = 30;
             keyLength = 64;
-            saltLength = 32;
+            saltLength = 16;
             storage = {
               device = "/dev/disk/by-uuid/12CE-A600";
               fsType = "vfat";
