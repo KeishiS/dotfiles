@@ -34,7 +34,10 @@
       login.u2fAuth = true;
       sudo.u2fAuth = true;
     };
-    u2f.cue = true;
+    u2f = {
+      enable = true;
+      settings.cue = true;
+    };
   };
 
   services.pcscd.enable = true;

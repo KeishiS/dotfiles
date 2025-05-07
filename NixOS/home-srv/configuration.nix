@@ -7,7 +7,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./ldap.nix
+    # ./ldap.nix
   ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

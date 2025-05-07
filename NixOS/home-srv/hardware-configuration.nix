@@ -139,7 +139,7 @@ in
   };
 
   environment.etc."crypttab" = {
-    mode = 600;
+    mode = "0600";
     text = ''
       swap /dev/by-label/crypt-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256
     '';
