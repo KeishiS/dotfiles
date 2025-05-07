@@ -34,8 +34,7 @@
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
 
-    # supportedFilesystems.btrfs = true;
-
+    supportedFilesystems.btrfs = true;
     initrd = {
       availableKernelModules = [
         "xhci_pci"
@@ -53,12 +52,29 @@
         "amdgpu"
       ];
 
-      services.lvm.enable = true;
+      # services.lvm.enable = true;
       luks = {
         yubikeySupport = true;
 
-        devices."root" = {
-          device = "/dev/disk/by-uuid/fc9ffc33-fe2b-4cc5-a334-8abd73882e04";
+        devices."root1" = {
+          device = "/dev/disk/by-uuid/20e766b2-579c-497a-bab6-8227f749d031";
+          preLVM = false;
+          yubikey = {
+            slot = 1;
+            twoFactor = true;
+            gracePeriod = 30;
+            keyLength = 64;
+            saltLength = 16;
+            storage = {
+              device = "/dev/disk/by-uuid/12CE-A600";
+              fsType = "vfat";
+              path = "/crypt-storage/default";
+            };
+          };
+        };
+
+        devices."root2" = {
+          device = "/dev/disk/by-uuid/21204e1f-7445-4985-a670-d5143eb762ca";
           preLVM = false;
           yubikey = {
             slot = 1;
@@ -78,8 +94,9 @@
   };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/4f1f0d84-1d4a-4c0c-a83a-8a331a57f719";
-    fsType = "ext4";
+    device = "/dev/disk/by-uuid/aefdbaf2-b45a-46f6-a9f6-6c325546f12a";
+    fsType = "btrfs";
+    options = [ "subvol=root" ];
   };
 
   fileSystems."/boot" = {
@@ -89,6 +106,12 @@
       "fmask=0022"
       "dmask=0022"
     ];
+  };
+
+  fileSystems."/data" = {
+    device = "/dev/disk/by-uuid/aefdbaf2-b45a-46f6-a9f6-6c325546f12a";
+    fsType = "btrfs";
+    options = [ "subvol=data" ];
   };
 
   /*
@@ -102,16 +125,14 @@
 
   swapDevices = [
     {
-      device = "/dev/disk/by-uuid/a01365ba-b6e0-4e68-ad04-adba224ea5c0";
+      device = "/dev/disk/by-uuid/1f8483b5-34f7-4ec3-83bf-69af7d7d1677";
     }
   ];
 
-  /*
-    services.btrfs.autoScrub = {
-      enable = true;
-      fileSystems = [ "/" ];
-    };
-  */
+  services.btrfs.autoScrub = {
+    enable = true;
+    fileSystems = [ "/" ];
+  };
 
   services.xserver = {
     enable = true;
