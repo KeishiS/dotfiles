@@ -14,10 +14,12 @@
       url = "github:Mic92/sops-nix";
     };
 
-    my-secrets = {
-      url = "github:KeishiS/my-secrets/main";
-      flake = false;
-    };
+    /*
+      my-secrets = {
+        url = "github:KeishiS/my-secrets/main";
+        flake = false;
+      };
+    */
 
     nix-ld = {
       url = "github:Mic92/nix-ld/2.0.3";
