@@ -46,6 +46,7 @@ in
 
     initrd = {
       availableKernelModules = [
+        "dm-crypt"
         "nvme"
         "xhci_pci"
         "ahci"
@@ -66,6 +67,7 @@ in
           "aes"
           "xts"
           "sha512"
+          "aes_x86_64"
         ];
         yubikeySupport = true;
 
