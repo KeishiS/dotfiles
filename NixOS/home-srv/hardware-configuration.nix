@@ -65,7 +65,7 @@ in
       luks.yubikeySupport = true;
 
       luks.devices."nixos-root-1" = {
-        device = "/dev/disk/by-uuid/1cd97981-1cf2-4613-b1fe-eace7eeb348c";
+        device = "/dev/disk/by-uuid/a379d813-c903-49eb-ba32-64f7eee15a5b";
         preLVM = false;
         yubikey = {
           slot = yubikey_slot;
@@ -82,24 +82,7 @@ in
       };
 
       luks.devices."nixos-root-2" = {
-        device = "/dev/disk/by-uuid/930b7355-44de-478b-8e39-d6189c5d2c39";
-        preLVM = false;
-        yubikey = {
-          slot = yubikey_slot;
-          twoFactor = true;
-          gracePeriod = grace_period;
-          keyLength = key_length;
-          saltLength = salt_length;
-          storage = {
-            device = boot_part;
-            fsType = "vfat";
-            path = "/crypt-storage/default";
-          };
-        };
-      };
-
-      luks.devices."nixos-root-3" = {
-        device = "/dev/disk/by-uuid/93d81d85-2c2b-4bdd-910a-6a1436478a10";
+        device = "/dev/disk/by-uuid/ecb9af11-dc3f-4a5c-b450-dd3ccc129a59";
         preLVM = false;
         yubikey = {
           slot = yubikey_slot;
@@ -133,7 +116,7 @@ in
   };
 
   fileSystems."/data" = {
-    device = "";
+    device = "/dev/disk/by-label/btrfs-root";
     fsType = "btrfs";
     options = [ "subvol=data" ];
   };
