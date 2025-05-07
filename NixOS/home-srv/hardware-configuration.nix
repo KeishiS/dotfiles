@@ -71,7 +71,7 @@ in
         yubikeySupport = true;
 
         devices."nixos-root-1" = {
-          device = "/dev/disk/by-uuid/e131978b-8729-42f0-a601-c70e71c4e6b9";
+          device = "/dev/disk/by-uuid/cdc82474-7f3c-454c-8c6d-c8c315f76fa4";
           preLVM = false;
           yubikey = {
             slot = yubikey_slot;
@@ -88,7 +88,7 @@ in
         };
 
         devices."nixos-root-2" = {
-          device = "/dev/disk/by-uuid/f510d690-d020-48bb-a0e2-0438cde1fda3";
+          device = "/dev/disk/by-uuid/fdc6decc-308f-4bca-a04c-73c7d4da196e";
           preLVM = false;
           yubikey = {
             slot = yubikey_slot;
