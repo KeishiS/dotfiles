@@ -55,14 +55,14 @@
       # services.lvm.enable = true;
       luks = {
         yubikeySupport = true;
-        reusePassphrases = false;
 
         devices."root1" = {
-          device = "/dev/disk/by-uuid/20e766b2-579c-497a-bab6-8227f749d031";
+          device = "/dev/disk/by-uuid/aa1b5f1a-f5be-4c5a-af37-0d89a52ae58f";
+          allowDiscards = true;
           preLVM = false;
           yubikey = {
             slot = 1;
-            twoFactor = true;
+            twoFactor = false;
             gracePeriod = 30;
             keyLength = 64;
             saltLength = 16;
@@ -75,11 +75,12 @@
         };
 
         devices."root2" = {
-          device = "/dev/disk/by-uuid/21204e1f-7445-4985-a670-d5143eb762ca";
+          device = "/dev/disk/by-uuid/04061554-2a43-471a-b834-ee62f93a55e9";
+          allowDiscards = true;
           preLVM = false;
           yubikey = {
             slot = 1;
-            twoFactor = true;
+            twoFactor = false;
             gracePeriod = 30;
             keyLength = 64;
             saltLength = 16;
@@ -95,7 +96,7 @@
   };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/aefdbaf2-b45a-46f6-a9f6-6c325546f12a";
+    device = "/dev/disk/by-uuid/3b684849-6830-461d-a540-9f23dc750da6";
     fsType = "btrfs";
     options = [ "subvol=root" ];
   };
@@ -110,7 +111,7 @@
   };
 
   fileSystems."/data" = {
-    device = "/dev/disk/by-uuid/aefdbaf2-b45a-46f6-a9f6-6c325546f12a";
+    device = "/dev/disk/by-uuid/3b684849-6830-461d-a540-9f23dc750da6";
     fsType = "btrfs";
     options = [ "subvol=data" ];
   };
