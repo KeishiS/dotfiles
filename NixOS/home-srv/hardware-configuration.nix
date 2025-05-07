@@ -35,7 +35,7 @@
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
 
-    supportedFilesystems.btrfs = true;
+    # supportedFilesystems.btrfs = true;
 
     initrd = {
       availableKernelModules = [
@@ -46,6 +46,7 @@
         "usbhid"
         "usb_storage"
         "sd_mod"
+        "thunderbolt"
       ];
       kernelModules = [
         "dm-snapshot"
@@ -55,6 +56,7 @@
         "usbhid"
       ];
 
+      services.lvm.enable = true;
       luks = {
         cryptoModules = [
           "aes"
@@ -63,30 +65,13 @@
         ];
         yubikeySupport = true;
 
-        devices."nixos-root-1" = {
-          device = "/dev/disk/by-uuid/4ea86230-80fa-40a1-90c4-6e3f8c923cf0";
-          preLVM = true;
+        devices."root" = {
+          device = "/dev/mapper/nixos-root";
+          preLVM = false;
           yubikey = {
             slot = 1;
             twoFactor = true;
-            gracePeriod = 60;
-            keyLength = 64;
-            saltLength = 32;
-            storage = {
-              device = "/dev/disk/by-label/NIXOSBOOT";
-              fsType = "vfat";
-              path = "/crypt-storage/default";
-            };
-          };
-        };
-
-        devices."nixos-root-2" = {
-          device = "/dev/disk/by-uuid/a7e4850a-79b2-4b27-bb50-e0a39a6094bc";
-          preLVM = true;
-          yubikey = {
-            slot = 1;
-            twoFactor = true;
-            gracePeriod = 60;
+            gracePeriod = 30;
             keyLength = 64;
             saltLength = 32;
             storage = {
@@ -101,9 +86,8 @@
   };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-label/btrfs-root";
-    fsType = "btrfs";
-    options = [ "subvol=root" ];
+    device = "/dev/mapper/root";
+    fsType = "ext4";
   };
 
   fileSystems."/boot" = {
@@ -115,16 +99,10 @@
     ];
   };
 
-  fileSystems."/data" = {
-    device = "/dev/disk/by-label/btrfs-root";
-    fsType = "btrfs";
-    options = [ "subvol=data" ];
-  };
-
   environment.etc."crypttab" = {
     mode = "0600";
     text = ''
-      swap /dev/disk/by-label/crypt-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256
+      swap /dev/mapper/nixos-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256
     '';
   };
 
@@ -134,10 +112,12 @@
     }
   ];
 
-  services.btrfs.autoScrub = {
-    enable = true;
-    fileSystems = [ "/" ];
-  };
+  /*
+    services.btrfs.autoScrub = {
+      enable = true;
+      fileSystems = [ "/" ];
+    };
+  */
 
   services.xserver = {
     enable = true;
