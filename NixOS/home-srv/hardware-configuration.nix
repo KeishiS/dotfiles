@@ -55,6 +55,7 @@
       # services.lvm.enable = true;
       luks = {
         yubikeySupport = true;
+        reusePassphrases = false;
 
         devices."root1" = {
           device = "/dev/disk/by-uuid/20e766b2-579c-497a-bab6-8227f749d031";
