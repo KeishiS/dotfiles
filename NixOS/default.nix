@@ -118,6 +118,7 @@
       colmena
       pkg-config # for common library directory path, e.g., openssl
       yubikey-manager
+      yubikey-personalization # for using `ykchalresp`
     ])
     ++ [
       ragenix.packages.x86_64-linux.default

@@ -8,7 +8,13 @@
   modulesPath,
   ...
 }:
-
+let
+  boot_part = "/dev/disk/by-label/NIXOSBOOT";
+  yubikey_slot = 1;
+  key_length = 64;
+  salt_length = 32;
+  grace_period = 300;
+in
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -25,6 +31,7 @@
   };
   boot = {
     kernelModules = [
+      "amdgpu"
       "kvm-amd"
       "v4l2loopback"
     ];
@@ -35,8 +42,11 @@
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
 
+    supportedFilesystems.btrfs = true;
+
     initrd = {
       availableKernelModules = [
+        "nvme"
         "xhci_pci"
         "ahci"
         "usbhid"
@@ -48,23 +58,57 @@
         "vfat"
         "nls_cp437"
         "nls_iso8859-1"
+        "nls_utf8"
         "usbhid"
-        "amdgpu"
       ];
 
-      services.lvm.enable = true;
       luks.yubikeySupport = true;
-      luks.devices."root" = {
-        device = "/dev/disk/by-uuid/7c9011ff-50fd-4277-8a45-71a6bcc7ff8e";
+
+      luks.devices."nixos-root-1" = {
+        device = "/dev/disk/by-uuid/1cd97981-1cf2-4613-b1fe-eace7eeb348c";
         preLVM = false;
         yubikey = {
-          slot = 1;
+          slot = yubikey_slot;
           twoFactor = true;
-          gracePeriod = 60;
-          keyLength = 64;
-          saltLength = 16;
+          gracePeriod = grace_period;
+          keyLength = key_length;
+          saltLength = salt_length;
           storage = {
-            device = "/dev/disk/by-uuid/F871-3411";
+            device = boot_part;
+            fsType = "vfat";
+            path = "/crypt-storage/default";
+          };
+        };
+      };
+
+      luks.devices."nixos-root-2" = {
+        device = "/dev/disk/by-uuid/930b7355-44de-478b-8e39-d6189c5d2c39";
+        preLVM = false;
+        yubikey = {
+          slot = yubikey_slot;
+          twoFactor = true;
+          gracePeriod = grace_period;
+          keyLength = key_length;
+          saltLength = salt_length;
+          storage = {
+            device = boot_part;
+            fsType = "vfat";
+            path = "/crypt-storage/default";
+          };
+        };
+      };
+
+      luks.devices."nixos-root-3" = {
+        device = "/dev/disk/by-uuid/93d81d85-2c2b-4bdd-910a-6a1436478a10";
+        preLVM = false;
+        yubikey = {
+          slot = yubikey_slot;
+          twoFactor = true;
+          gracePeriod = grace_period;
+          keyLength = key_length;
+          saltLength = salt_length;
+          storage = {
+            device = boot_part;
             fsType = "vfat";
             path = "/crypt-storage/default";
           };
@@ -73,21 +117,8 @@
     };
   };
 
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "amdgpu" ];
-  };
-  environment.systemPackages = with pkgs; [
-    rocmPackages.rocminfo
-  ];
-
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/b5b0c2b1-5fb4-4184-8288-9d776e99a86a";
-    fsType = "ext4";
-  };
-
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/F871-3411";
+    device = boot_part;
     fsType = "vfat";
     options = [
       "fmask=0022"
@@ -95,15 +126,42 @@
     ];
   };
 
-  fileSystems."/users" = {
-    device = "192.168.10.17:/export/users";
-    fsType = "nfs";
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/btrfs-root";
+    fsType = "btrfs";
+    options = [ "subvol=root" ];
+  };
+
+  fileSystems."/data" = {
+    device = "";
+    fsType = "btrfs";
+    options = [ "subvol=data" ];
+  };
+
+  environment.etc."crypttab" = {
+    mode = 600;
+    text = ''
+      swap /dev/by-label/crypt-swap /dev/urandom swap,cipher=aes-xts-plain64,size=256
+    '';
   };
 
   swapDevices = [
     {
-      device = "/dev/disk/by-uuid/328fd809-43a2-4bd2-ba3a-2de98f817839";
+      device = "/dev/mapper/swap";
     }
+  ];
+
+  services.btrfs.autoScrub = {
+    enable = true;
+    fileSystems = [ "/" ];
+  };
+
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "amdgpu" ];
+  };
+  environment.systemPackages = with pkgs; [
+    rocmPackages.rocminfo
   ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
