@@ -64,25 +64,8 @@ in
 
       luks.yubikeySupport = true;
 
-      luks.devices."nixos-root-1" = {
-        device = "/dev/disk/by-uuid/a379d813-c903-49eb-ba32-64f7eee15a5b";
-        preLVM = false;
-        yubikey = {
-          slot = yubikey_slot;
-          twoFactor = true;
-          gracePeriod = grace_period;
-          keyLength = key_length;
-          saltLength = salt_length;
-          storage = {
-            device = boot_part;
-            fsType = "vfat";
-            path = "/crypt-storage/default";
-          };
-        };
-      };
-
-      luks.devices."nixos-root-2" = {
-        device = "/dev/disk/by-uuid/ecb9af11-dc3f-4a5c-b450-dd3ccc129a59";
+      luks.devices."nixos-root" = {
+        device = "/dev/disk/by-uuid/e9b3daef-c91f-43a4-aa20-209e6aa645a7";
         preLVM = false;
         yubikey = {
           slot = yubikey_slot;
