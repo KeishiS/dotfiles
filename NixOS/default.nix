@@ -1,7 +1,7 @@
 {
   pkgs,
-  ragenix,
-  my-secrets,
+  # ragenix,
+  # my-secrets,
   ...
 }:
 {
@@ -87,42 +87,46 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICLPYWxCTckCVdDiBpiKWE8omDndrvQhWkscX8uIyd1j openpgp:0xD1E438FC"
     ];
   };
-  age.secrets.config = {
-    file = "${my-secrets}/ssh_config.age";
-    path = "/home/keishis/.ssh/config";
-    mode = "0400";
-    owner = "keishis";
-    group = "wheel";
-  };
 
-  environment.systemPackages =
-    (with pkgs; [
-      git
-      curl
-      wget
-      helix
-      tmux
-      networkmanagerapplet
-      gcc
-      gfortran
-      gnumake
-      cmake
-      glibc
-      zlib
-      zip
-      unzip
-      gptfdisk
-      pinentry-curses
-      xkeyboard_config # `sway --debug` `xkbcommon: ERROR: couldn't find a Compose file for locale "en_US.UTF-8"`
-      home-manager
-      colmena
-      pkg-config # for common library directory path, e.g., openssl
-      yubikey-manager
-      yubikey-personalization # for using `ykchalresp`
-    ])
+  /*
+    age.secrets.config = {
+      file = "${my-secrets}/ssh_config.age";
+      path = "/home/keishis/.ssh/config";
+      mode = "0400";
+      owner = "keishis";
+      group = "wheel";
+    };
+  */
+
+  environment.systemPackages = with pkgs; [
+    git
+    curl
+    wget
+    helix
+    tmux
+    networkmanagerapplet
+    gcc
+    gfortran
+    gnumake
+    cmake
+    glibc
+    zlib
+    zip
+    unzip
+    gptfdisk
+    pinentry-curses
+    xkeyboard_config # `sway --debug` `xkbcommon: ERROR: couldn't find a Compose file for locale "en_US.UTF-8"`
+    home-manager
+    colmena
+    pkg-config # for common library directory path, e.g., openssl
+    yubikey-manager
+    yubikey-personalization # for using `ykchalresp`
+  ];
+  /*
     ++ [
       ragenix.packages.x86_64-linux.default
     ];
+  */
   environment.variables = {
     EDITOR = "hx";
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";

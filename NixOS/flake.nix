@@ -50,13 +50,13 @@
         ];
       };
 
-      nixosConfigurations.NixOS-keishis-home = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.nixos-keishis-home = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
-          ragenix.nixosModules.default
+          # ragenix.nixosModules.default
           ./default.nix
           ./sway.nix
           ./hyprland.nix
