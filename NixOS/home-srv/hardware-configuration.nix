@@ -8,13 +8,6 @@
   modulesPath,
   ...
 }:
-let
-  boot_part = "/dev/disk/by-label/NIXOSBOOT";
-  yubikey_slot = 1;
-  key_length = 64;
-  salt_length = 32;
-  grace_period = 60;
-in
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -67,21 +60,20 @@ in
           "aes"
           "xts"
           "sha512"
-          "aes_x86_64"
         ];
         yubikeySupport = true;
 
         devices."nixos-root-1" = {
-          device = "/dev/disk/by-uuid/d2223abf-1181-476e-adb2-8d6d0f9b8ab1";
+          device = "/dev/disk/by-uuid/4ea86230-80fa-40a1-90c4-6e3f8c923cf0";
           preLVM = true;
           yubikey = {
-            slot = yubikey_slot;
+            slot = 1;
             twoFactor = true;
-            gracePeriod = grace_period;
-            keyLength = key_length;
-            saltLength = salt_length;
+            gracePeriod = 60;
+            keyLength = 64;
+            saltLength = 32;
             storage = {
-              device = "${boot_part}";
+              device = "/dev/disk/by-label/NIXOSBOOT";
               fsType = "vfat";
               path = "/crypt-storage/default";
             };
@@ -89,16 +81,16 @@ in
         };
 
         devices."nixos-root-2" = {
-          device = "/dev/disk/by-uuid/2594db3c-f46d-48d0-97d8-6f3ffe8973a2";
+          device = "/dev/disk/by-uuid/a7e4850a-79b2-4b27-bb50-e0a39a6094bc";
           preLVM = true;
           yubikey = {
-            slot = yubikey_slot;
+            slot = 1;
             twoFactor = true;
-            gracePeriod = grace_period;
-            keyLength = key_length;
-            saltLength = salt_length;
+            gracePeriod = 60;
+            keyLength = 64;
+            saltLength = 32;
             storage = {
-              device = "${boot_part}";
+              device = "/dev/disk/by-label/NIXOSBOOT";
               fsType = "vfat";
               path = "/crypt-storage/default";
             };
@@ -115,7 +107,7 @@ in
   };
 
   fileSystems."/boot" = {
-    device = boot_part;
+    device = "/dev/disk/by-label/NIXOSBOOT";
     fsType = "vfat";
     options = [
       "fmask=0022"
