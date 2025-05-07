@@ -12,8 +12,8 @@ let
   boot_part = "/dev/disk/by-label/NIXOSBOOT";
   yubikey_slot = 1;
   key_length = 64;
-  salt_length = 32;
-  grace_period = 300;
+  salt_length = 16;
+  grace_period = 60;
 in
 {
   imports = [
@@ -71,7 +71,7 @@ in
         yubikeySupport = true;
 
         devices."nixos-root-1" = {
-          device = "/dev/disk/by-uuid/33e0df48-86a6-47b7-ad1e-7e525f908d36";
+          device = "/dev/disk/by-uuid/3cb6d1e6-b05a-4150-b0c0-fa586878bb55";
           preLVM = false;
           yubikey = {
             slot = yubikey_slot;
@@ -88,7 +88,7 @@ in
         };
 
         devices."nixos-root-2" = {
-          device = "/dev/disk/by-uuid/7787186e-4aa9-42c6-bab6-ce0499d5ec36";
+          device = "/dev/disk/by-uuid/1cd91ead-ebd8-4685-9884-4605a4c3efaa";
           preLVM = false;
           yubikey = {
             slot = yubikey_slot;
