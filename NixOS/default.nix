@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   ...
 }:
 {
@@ -48,7 +49,7 @@
   '';
 
   networking.hostFiles = [
-    # config.sops.secrets.hosts.path
+    "${config.sops.secrets.hosts.path}"
   ];
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Tokyo";
@@ -85,6 +86,7 @@
 
   users.users.keishis = {
     isNormalUser = true;
+    home = "/home/keishis";
     extraGroups = [
       "wheel"
       "networkmanager"

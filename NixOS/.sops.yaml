@@ -1,2 +1,7 @@
+keys:
+    - &yubikey 11D7A68D97E0C636DF487CA1C55CCC13D8D16739
+    - &nixos-keishis-home age1ne5k3l7qgj6n9yty07vp3xlehx8u29eefkasdxcnkweugvq8s5jsv9hn5t
 creation_rules:
     - pgp: 11D7A68D97E0C636DF487CA1C55CCC13D8D16739
+      age: >-
+          age1ne5k3l7qgj6n9yty07vp3xlehx8u29eefkasdxcnkweugvq8s5jsv9hn5t
