@@ -1,8 +1,13 @@
 {
   pkgs,
+  config,
   ...
 }:
 {
+  imports = [
+    ./sops-nix
+  ];
+
   nix = {
     settings.experimental-features = [
       "nix-command"
@@ -43,6 +48,9 @@
     ACTION=="remove", ENV{ID_VENDOR_ID}=="1050", ENV{ID_MODEL_ID}=="0407", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
   '';
 
+  networking.hostFiles = [
+    config.sops.secrets.hosts.path
+  ];
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Tokyo";
 
@@ -114,11 +122,7 @@
     yubikey-personalization # for using `ykchalresp`
     sops
   ];
-  /*
-    ++ [
-      ragenix.packages.x86_64-linux.default
-    ];
-  */
+
   environment.variables = {
     EDITOR = "hx";
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
