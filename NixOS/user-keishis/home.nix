@@ -22,6 +22,7 @@ rec {
     ./hyprlock
     ./foot
     ./i3
+    ./sops-nix
   ];
 
   home.sessionPath = [

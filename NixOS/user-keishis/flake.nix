@@ -9,6 +9,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix.url = "github:Mic92/sops-nix";
   };
 
   outputs =
@@ -16,6 +17,7 @@
       nixpkgs,
       nixpkgs-unstable,
       home-manager,
+      sops-nix,
       ...
     }:
     let
@@ -30,12 +32,10 @@
           inherit pkgs-unstable;
         };
 
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
-        modules = [ ./home.nix ];
-
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
+        modules = [
+          sops-nix.homeManagerModules.sops
+          ./home.nix
+        ];
       };
     };
 }
