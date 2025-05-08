@@ -124,6 +124,7 @@
     pkg-config # for common library directory path, e.g., openssl
     yubikey-manager
     yubikey-personalization # for using `ykchalresp`
+    sops
   ];
   /*
     ++ [

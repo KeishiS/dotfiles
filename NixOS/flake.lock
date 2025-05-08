@@ -123,23 +123,6 @@
         "type": "github"
       }
     },
-    "my-secrets": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1743966778,
-        "narHash": "sha256-woxPRwz+aXgo/oqtp257Okxox6T6/p1JYZQVLyO5LNc=",
-        "owner": "KeishiS",
-        "repo": "my-secrets",
-        "rev": "c275a71fae010d79f8dde8dd51784c34d838c74a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "KeishiS",
-        "ref": "main",
-        "repo": "my-secrets",
-        "type": "github"
-      }
-    },
     "nix-ld": {
       "inputs": {
         "nixpkgs": [
@@ -234,7 +217,6 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "my-secrets": "my-secrets",
         "nix-ld": "nix-ld",
         "nixpkgs": "nixpkgs",
         "ragenix": "ragenix",
