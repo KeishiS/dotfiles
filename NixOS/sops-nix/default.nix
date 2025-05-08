@@ -1,9 +1,7 @@
 { ... }:
 {
-  sops.secrets = {
-    hosts = {
-      format = "binary";
-      sopsFile = ./hosts.enc;
-    };
+  sops.secrets.hosts = {
+    format = "binary";
+    sopsFile = ./secrets/hosts.enc;
   };
 }
