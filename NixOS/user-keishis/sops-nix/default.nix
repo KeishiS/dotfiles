@@ -2,8 +2,10 @@
 {
   sops.gnupg.home = "${config.home.homeDirectory}/.gnupg";
   sops.secrets = {
-    test = {
-      sopsFile = "./secrets/ssh-config.enc";
+    ssh_config = {
+      format = "binary";
+      sopsFile = ./secrets/ssh-config.enc;
+      path = "${config.home.homeDirectory}/.ssh/config";
     };
   };
 }
