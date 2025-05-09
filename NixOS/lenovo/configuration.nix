@@ -9,8 +9,9 @@
     ./hardware-configuration.nix
     ./nfs.nix
     ./jellyfin.nix
-    ./portunus.nix
+    # ./portunus.nix
     ./keylytix.nix
+    ../pkgs/prometheus
     # ./ldap.nix
     # vscode-server.nixosModules.default
   ];
