@@ -7,6 +7,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ../pkgs/netdata-client
     # ./ldap.nix
   ];
 

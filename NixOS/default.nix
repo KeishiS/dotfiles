@@ -1,10 +1,13 @@
 {
   pkgs,
-  # ragenix,
-  # my-secrets,
+  config,
   ...
 }:
 {
+  imports = [
+    ./pkgs/sops-nix/default.nix
+  ];
+
   nix = {
     settings.experimental-features = [
       "nix-command"
@@ -45,6 +48,9 @@
     ACTION=="remove", ENV{ID_VENDOR_ID}=="1050", ENV{ID_MODEL_ID}=="0407", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
   '';
 
+  networking.hostFiles = [
+    "${config.sops.secrets.hosts.path}"
+  ];
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Tokyo";
 
@@ -80,6 +86,7 @@
 
   users.users.keishis = {
     isNormalUser = true;
+    home = "/home/keishis";
     extraGroups = [
       "wheel"
       "networkmanager"
@@ -90,16 +97,6 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICLPYWxCTckCVdDiBpiKWE8omDndrvQhWkscX8uIyd1j openpgp:0xD1E438FC"
     ];
   };
-
-  /*
-    age.secrets.config = {
-      file = "${my-secrets}/ssh_config.age";
-      path = "/home/keishis/.ssh/config";
-      mode = "0400";
-      owner = "keishis";
-      group = "wheel";
-    };
-  */
 
   environment.systemPackages = with pkgs; [
     git
@@ -126,11 +123,7 @@
     yubikey-personalization # for using `ykchalresp`
     sops
   ];
-  /*
-    ++ [
-      ragenix.packages.x86_64-linux.default
-    ];
-  */
+
   environment.variables = {
     EDITOR = "hx";
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
