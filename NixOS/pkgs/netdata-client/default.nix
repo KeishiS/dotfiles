@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   nixpkgs.config.allowUnfree = true;
 
@@ -11,13 +11,16 @@
       };
       plugins."go.d" = "yes";
     };
-    configDir."stream.conf" = pkgs.writeText "stream.conf" ''
-      [stream]
-        enabled = yes
-        destination = nixos-sandi-lenovo
-        api key = 493e294a-1bcc-45c1-bdd3-e82b8dbc5ff9
-    '';
+    configDir."stream.conf" = config.sops.secrets."stream.conf".path;
   };
+  sops.secrets."stream.conf" = {
+    format = "ini";
+    sopsFile = ./secrets/stream.enc.ini;
+    mode = "0440";
+    owner = "netdata";
+    group = "netdata";
+  };
+
   systemd.services.netdata = {
     path = [ "/run/wrappers" ];
     serviceConfig.CapabilityBoundingSet = "CAP_SYS_RAWIO";
