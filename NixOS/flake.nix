@@ -11,16 +11,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    /*
-      my-secrets = {
-        url = "github:KeishiS/my-secrets/main";
-        flake = false;
-      };
-    */
-
     nix-ld = {
       url = "github:Mic92/nix-ld/2.0.3";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    keylytix-frontend = {
+      url = "github:KeishiS/KeyLytix";
+      flake = false;
     };
   };
 
