@@ -1,6 +1,7 @@
 { lib, ... }:
 {
   networking.firewall.allowedTCPPorts = [ 389 ];
+  # portunus uses 8080 port
 
   sops.secrets.keishi = {
     format = "binary";

@@ -120,13 +120,5 @@
     '';
   };
 
-  /*
-    services.mackerel-agent = {
-      apiKeyFile = config.age.secrets.mackerel_apikey.path;
-      enable = true;
-      runAsRoot = true;
-    };
-  */
-
   programs.nix-ld.dev.enable = true;
 }

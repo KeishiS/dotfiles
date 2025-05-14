@@ -2,7 +2,28 @@ keys:
     - &yubikey 11D7A68D97E0C636DF487CA1C55CCC13D8D16739
     - &nixos-keishis-home age1ne5k3l7qgj6n9yty07vp3xlehx8u29eefkasdxcnkweugvq8s5jsv9hn5t
     - &nixos-sandi-lenovo age1gwp40dc8lus4jrv52u0esmfks8d70cl0xgtr95lkzxvv3fq4f96qkezs7m
+    - &nixos-sandi-n100 age13y4jmw2f9ggr5nd6aze24st9l7xngn60gzt4lrukxukvrty7wfeqh9he66
 creation_rules:
+    - path_regex: ^pkgs/portunus/secrets/techadmin.enc
+      key_groups:
+          - pgp:
+                - *yubikey
+          - age:
+                - *nixos-keishis-home
+                - *nixos-sandi-lenovo
+                - *nixos-sandi-n100
+    - path_regex: ^pkgs/keylytix/secrets/ddns-env
+      key_groups:
+          - pgp:
+                - *yubikey
+            age:
+                - *nixos-sandi-n100
+    - path_regex: ^pkgs/keylytix/secrets/.*
+      key_groups:
+          - pgp:
+                - *yubikey
+            age:
+                - *nixos-sandi-lenovo
     - path_regex: ^pkgs/portunus/secrets/.*
       key_groups:
           - pgp:
@@ -20,3 +41,4 @@ creation_rules:
             age:
                 - *nixos-keishis-home
                 - *nixos-sandi-lenovo
+                - *nixos-sandi-n100

@@ -10,6 +10,10 @@
           addr = "0.0.0.0";
           port = 80;
         }
+        {
+          addr = "[::]";
+          port = 80;
+        }
       ];
       locations."/.well-known/acme-challenge/" = {
         alias = "/var/lib/acme/acme-challenge/.well-known/acme-challenge/";
@@ -28,6 +32,11 @@
           port = 443;
           ssl = true;
         }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
       ];
       addSSL = true;
       enableACME = true;
@@ -38,6 +47,11 @@
       listen = [
         {
           addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
           port = 443;
           ssl = true;
         }
@@ -69,15 +83,20 @@
           proxy_set_header X-Forwarded-Proto $scheme;
           proxy_set_header X-Forwarded-Host $http_host;
         '';
-        proxyPass = "https://192.168.10.17:8096";
+        proxyPass = "http://192.168.10.17:8096";
       };
     };
 
     virtualHosts."keylytix.app-redirect" = {
+      serverName = "keylytix.app";
       root = "/nfs/keylytix";
       listen = [
         {
           addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
           port = 80;
         }
       ];
@@ -98,10 +117,18 @@
           port = 443;
           ssl = true;
         }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
       ];
       addSSL = true;
       enableACME = true;
 
+      locations."/" = {
+        index = "index.html";
+      };
       locations."/api/" = {
         extraConfig = ''
           proxy_http_version 1.1;

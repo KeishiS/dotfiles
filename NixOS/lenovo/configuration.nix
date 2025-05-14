@@ -13,6 +13,7 @@
     ../pkgs/portunus
     ../pkgs/ldap
     ../pkgs/netdata
+    ../pkgs/keylytix
     # ../pkgs/prometheus
     # ./ldap.nix
   ];

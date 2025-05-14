@@ -16,8 +16,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    keylytix-frontend = {
-      url = "github:KeishiS/KeyLytix";
+    keylytix = {
+      url = "github:KeishiS/KeyLytix/main";
       flake = false;
     };
   };
@@ -72,13 +72,12 @@
           ./lenovo/configuration.nix
         ];
       };
-      nixosConfigurations.NixOS-sandi-N100 = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.nixos-sandi-n100 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
-          ragenix.nixosModules.default
           ./common.nix
           ./N100/configuration.nix
         ];

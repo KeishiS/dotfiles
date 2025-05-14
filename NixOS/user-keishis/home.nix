@@ -90,7 +90,7 @@ rec {
     rustup
     texliveFull
     typst
-    yarn
+    yarn-berry
     pipx
     cloud-utils
     gh
