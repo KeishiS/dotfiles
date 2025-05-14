@@ -1,15 +1,5 @@
-{ config, my-secrets, ... }:
+{ ... }:
 {
-  age.secrets = {
-    htpasswd = {
-      file = "${my-secrets}/htpasswd.age";
-      path = "/run/ragenix/htpasswd";
-      mode = "0400";
-      owner = "nginx";
-      group = "nginx";
-    };
-  };
-
   services.nginx = {
     enable = true;
 
@@ -54,7 +44,6 @@
       ];
       addSSL = true;
       enableACME = true;
-      # basicAuthFile = config.age.secrets.htpasswd.path;
 
       locations."/" = {
         extraConfig = ''
