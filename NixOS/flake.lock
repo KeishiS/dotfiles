@@ -123,6 +123,23 @@
         "type": "github"
       }
     },
+    "keylytix": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1747160267,
+        "narHash": "sha256-GbljHO2EGFMoOmdKsFurTH/ngtEwlhXL6f5hgIT50/M=",
+        "owner": "KeishiS",
+        "repo": "KeyLytix",
+        "rev": "86b6d0f131cbb642d29d80a042e968cb4eba78d4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "KeishiS",
+        "ref": "main",
+        "repo": "KeyLytix",
+        "type": "github"
+      }
+    },
     "nix-ld": {
       "inputs": {
         "nixpkgs": [
@@ -217,6 +234,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "keylytix": "keylytix",
         "nix-ld": "nix-ld",
         "nixpkgs": "nixpkgs",
         "ragenix": "ragenix",

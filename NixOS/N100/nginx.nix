@@ -1,15 +1,5 @@
-{ config, my-secrets, ... }:
+{ ... }:
 {
-  age.secrets = {
-    htpasswd = {
-      file = "${my-secrets}/htpasswd.age";
-      path = "/run/ragenix/htpasswd";
-      mode = "0400";
-      owner = "nginx";
-      group = "nginx";
-    };
-  };
-
   services.nginx = {
     enable = true;
 
@@ -18,6 +8,10 @@
       listen = [
         {
           addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
           port = 80;
         }
       ];
@@ -38,6 +32,11 @@
           port = 443;
           ssl = true;
         }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
       ];
       addSSL = true;
       enableACME = true;
@@ -51,10 +50,14 @@
           port = 443;
           ssl = true;
         }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
       ];
       addSSL = true;
       enableACME = true;
-      # basicAuthFile = config.age.secrets.htpasswd.path;
 
       locations."/" = {
         extraConfig = ''
@@ -80,15 +83,20 @@
           proxy_set_header X-Forwarded-Proto $scheme;
           proxy_set_header X-Forwarded-Host $http_host;
         '';
-        proxyPass = "https://192.168.10.17:8096";
+        proxyPass = "http://192.168.10.17:8096";
       };
     };
 
     virtualHosts."keylytix.app-redirect" = {
+      serverName = "keylytix.app";
       root = "/nfs/keylytix";
       listen = [
         {
           addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
           port = 80;
         }
       ];
@@ -109,10 +117,18 @@
           port = 443;
           ssl = true;
         }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
       ];
       addSSL = true;
       enableACME = true;
 
+      locations."/" = {
+        index = "index.html";
+      };
       locations."/api/" = {
         extraConfig = ''
           proxy_http_version 1.1;
