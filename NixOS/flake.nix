@@ -32,7 +32,7 @@
       ...
     }@inputs:
     {
-      nixosConfigurations.NixOS-keishis-X13 = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.nixos-keishis-x13 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [

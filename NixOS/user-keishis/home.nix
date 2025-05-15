@@ -20,9 +20,12 @@ rec {
     ./hyprland
     ./hyprpaper
     ./hyprlock
+    ./hypridle
     ./foot
     ./i3
     ./sops-nix
+    ./yubico
+    ./fcitx5
   ];
 
   home.sessionPath = [
@@ -173,13 +176,9 @@ rec {
     syntaxHighlighting.enable = true;
   };
 
-  programs.nushell = {
-    enable = true;
-  };
+  programs.nushell.enable = true;
 
-  programs.starship = {
-    enable = true;
-  };
+  programs.starship.enable = true;
 
   programs.vscode = {
     enable = true;

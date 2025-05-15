@@ -1,14 +1,22 @@
 keys:
     - &yubikey 11D7A68D97E0C636DF487CA1C55CCC13D8D16739
+    - &nixos-keishis-x13 age1gpnv7cgya70xfz9h0p4ah0wvpl5srq4jktme8v4fwg0m7ljpwyqsh5e5a2
     - &nixos-keishis-home age1ne5k3l7qgj6n9yty07vp3xlehx8u29eefkasdxcnkweugvq8s5jsv9hn5t
     - &nixos-sandi-lenovo age1gwp40dc8lus4jrv52u0esmfks8d70cl0xgtr95lkzxvv3fq4f96qkezs7m
     - &nixos-sandi-n100 age13y4jmw2f9ggr5nd6aze24st9l7xngn60gzt4lrukxukvrty7wfeqh9he66
 creation_rules:
+    - path_regex: ^pkgs/sops-nix/secrets/wireless.conf
+      key_groups:
+          - pgp:
+                - *yubikey
+            age:
+                - *nixos-keishis-x13
+                - *nixos-keishis-home
     - path_regex: ^pkgs/portunus/secrets/techadmin.enc
       key_groups:
           - pgp:
                 - *yubikey
-          - age:
+            age:
                 - *nixos-keishis-home
                 - *nixos-sandi-lenovo
                 - *nixos-sandi-n100
@@ -40,5 +48,6 @@ creation_rules:
                 - *yubikey
             age:
                 - *nixos-keishis-home
+                - *nixos-keishis-x13
                 - *nixos-sandi-lenovo
                 - *nixos-sandi-n100

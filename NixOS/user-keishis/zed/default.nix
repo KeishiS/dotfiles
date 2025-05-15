@@ -3,6 +3,7 @@
   programs.zed-editor = {
     enable = true;
     package = pkgs-unstable.zed-editor;
+    extensions = [ "nix" "ltex" ];
     userSettings = {
       tab_size = 4;
       ui_font_size = 20;
