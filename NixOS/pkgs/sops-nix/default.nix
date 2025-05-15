@@ -14,11 +14,4 @@
   };
   networking.extraHosts = "";
   networking.hostFiles = [ ];
-
-  # wireless
-  sops.secrets.wireless = {
-    format = "binary";
-    sopsFile = ./secrets/wireless.conf;
-    mode = "0400";
-  };
 }

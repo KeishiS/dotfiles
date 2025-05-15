@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -24,8 +25,6 @@ rec {
     ./foot
     ./i3
     ./sops-nix
-    ./yubico
-    # ./fcitx5
   ];
 
   home.sessionPath = [
@@ -39,7 +38,7 @@ rec {
   home.sessionVariables = {
     XCURSOR_THEME = "volantes_cursors";
     # GTK_IM_MODULE = "fcitx";
-    GTK_IM_MODULE = "";
+    GTK_IM_MODULE = lib.mkForce "";
     QT_IM_MODULE = "fcitx";
     XMODIFIERS = "@im=fcitx";
     XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";

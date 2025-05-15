@@ -5,13 +5,6 @@ keys:
     - &nixos-sandi-lenovo age1gwp40dc8lus4jrv52u0esmfks8d70cl0xgtr95lkzxvv3fq4f96qkezs7m
     - &nixos-sandi-n100 age13y4jmw2f9ggr5nd6aze24st9l7xngn60gzt4lrukxukvrty7wfeqh9he66
 creation_rules:
-    - path_regex: ^pkgs/sops-nix/secrets/wireless.conf
-      key_groups:
-          - pgp:
-                - *yubikey
-            age:
-                - *nixos-keishis-x13
-                - *nixos-keishis-home
     - path_regex: ^pkgs/portunus/secrets/techadmin.enc
       key_groups:
           - pgp:

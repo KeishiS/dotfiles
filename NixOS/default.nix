@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   config,
   ...
@@ -53,11 +54,6 @@
   ];
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.macAddress = "random";
-  networking.wireless.secretsFile = config.sops.secrets.wireless.path;
-  networking.wireless.networks."aterm-01ef04-a" = {
-    pskRaw = "ext:psk_aterm-01ef04-a";
-    priority = 10;
-  };
 
   time.timeZone = "Asia/Tokyo";
 
@@ -76,9 +72,20 @@
           fcitx5-mozc
           fcitx5-gtk
         ];
+        settings.inputMethod = {
+          GroupOrder."0" = "Default";
+          "Groups/0" = {
+            Name = "Default";
+            "Default Layout" = "jp106";
+            DefaultIM = "mozc";
+          };
+          "Groups/0/Items/0".Name = "mozc";
+        };
       };
     };
   };
+  environment.variables.GTK_IM_MODULE = lib.mkForce "";
+
   console = {
     earlySetup = true;
     packages = with pkgs; [ spleen ];
