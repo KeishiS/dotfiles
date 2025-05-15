@@ -25,7 +25,7 @@ rec {
     ./i3
     ./sops-nix
     ./yubico
-    ./fcitx5
+    # ./fcitx5
   ];
 
   home.sessionPath = [

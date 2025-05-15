@@ -14,6 +14,6 @@
         };
       };
     */
-    fcitx5.waylandFrontend = true;
+    # fcitx5.waylandFrontend = true;
   };
 }
