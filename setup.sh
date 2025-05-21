@@ -10,9 +10,9 @@ files=(
     ".zprofile"
     ".latexmkrc"
     ".gitconfig"
+    ".gitconfig_nobuta05"
     ".tmux.conf"
     ".Xresources"
-    ".gitconfig_nobuta05"
     ".config/user-dirs.dirs"
     ".config/mimeapps.list"
     ".config/starship.toml"
@@ -21,7 +21,6 @@ files=(
 )
 
 cp_files=(
-    ".vscode/argv.json"
 )
 
 dirs=(
@@ -54,20 +53,6 @@ for file in ${files[@]}; do
         fi
 
         ln -s $HOME/dotfiles/${file} $HOME/${file}
-    fi
-done
-
-for file in ${cp_files[@]}; do
-    if [[ -e $HOME/dotfiles ]]; then
-        if [[ -L $HOME/${file} ]]; then
-            rm $HOME/${file}
-        elif [[ -e $HOME/${file} ]]; then
-            mv $HOME/${file} $HOME/${file}".bak"
-        elif [[ ! -d $(dirname $HOME/${file#/}) ]]; then
-            mkdir -p $(dirname $HOME/${file#/})
-        fi
-
-        cp $HOME/dotfiles/${file} $HOME/${file}
     fi
 done
 
