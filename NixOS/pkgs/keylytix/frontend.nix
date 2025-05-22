@@ -2,7 +2,7 @@
 let
   keylytix-frontend = pkgs.stdenv.mkDerivation rec {
     pname = "keylytix-frontend";
-    version = "0.1.0";
+    version = "0.2.0";
     src = "${keylytix}/frontend";
     meta = {
       description = "Frontend of KeyLytix";
@@ -10,23 +10,24 @@ let
 
     nativeBuildInputs = with pkgs; [
       nodejs_23
-      yarn
+      pnpm_10
       typescript
-      yarnConfigHook
-      yarnInstallHook
-      yarnBuildHook
+      pnpm_10.configHook
     ];
-    yarnConfigHook = pkgs.yarnConfigHook;
-    yarnInstallHook = pkgs.yarnInstallHook;
-    yarnBuildHook = pkgs.yarnBuildHook;
 
-    yarnOfflineCache = pkgs.fetchYarnDeps {
-      yarnLock = "${src}/yarn.lock";
-      hash = "sha256-AcYjIDMvoFcHcYvk5eS9LHnUanbqt8leuKlELs4kFQY=";
+    pnpmDeps = pkgs.pnpm_10.fetchDeps {
+      inherit pname version src;
+      hash = "sha256-1iNNy4aKXTzCkL5LafBq3Q29MulRSYRVuQ1P3XeFYhE=";
     };
 
     patchPhase = ''
       echo "export const API_URL=\"https://keylytix.app\";" > $PWD/env.prod.ts
+    '';
+
+    buildPhase = ''
+      runHook preBuild
+      pnpm build
+      runHook postBuild
     '';
 
     installPhase = ''
