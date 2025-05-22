@@ -17,7 +17,7 @@
     sopsFile = lib.mkDefault ./secrets/techadmin.enc;
     path = "/run/sops-nix/homelab/techadmin";
     mode = "0440";
-    owner = "portunus";
+    owner = lib.mkDefault "portunus";
     group = "nslcd";
   };
 
