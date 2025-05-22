@@ -126,11 +126,11 @@
     "keylytix": {
       "flake": false,
       "locked": {
-        "lastModified": 1747160267,
-        "narHash": "sha256-GbljHO2EGFMoOmdKsFurTH/ngtEwlhXL6f5hgIT50/M=",
+        "lastModified": 1747935039,
+        "narHash": "sha256-xXt4YO5vacbdV49zs2+iPfTGcPYmBd5kc1WAZsvFzpc=",
         "owner": "KeishiS",
         "repo": "KeyLytix",
-        "rev": "86b6d0f131cbb642d29d80a042e968cb4eba78d4",
+        "rev": "f74b4c68b92175d487df5fdfcf566003a15816b8",
         "type": "github"
       },
       "original": {
