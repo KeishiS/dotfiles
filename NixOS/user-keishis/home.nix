@@ -76,7 +76,6 @@ rec {
     nixd
     nixfmt-rfc-style # language server for Nix
     vlc
-    postman
     insomnia
     jetbrains.datagrip
 

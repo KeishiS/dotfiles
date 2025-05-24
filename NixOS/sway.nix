@@ -114,13 +114,9 @@
       source-han-code-jp
       ipaexfont
       monaspace
-      (nerdfonts.override {
-        fonts = [
-          "FiraCode"
-          "JetBrainsMono"
-          "Noto"
-        ];
-      })
+      nerd-fonts.fira-code
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.noto
     ];
   };
 }

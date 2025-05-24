@@ -2,17 +2,17 @@
   description = "A simple NixOS flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     sops-nix.url = "github:Mic92/sops-nix";
     ragenix.url = "github:yaxitech/ragenix";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-ld = {
-      url = "github:Mic92/nix-ld/2.0.3";
+      url = "github:nix-community/nix-ld/2.0.4";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
