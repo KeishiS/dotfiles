@@ -69,7 +69,7 @@
 
           proxy_buffering off;
         '';
-        proxyPass = "http://192.168.10.17:8096";
+        proxyPass = "http://192.168.10.17:32400";
       };
 
       locations."/socket" = {
@@ -83,7 +83,7 @@
           proxy_set_header X-Forwarded-Proto $scheme;
           proxy_set_header X-Forwarded-Host $http_host;
         '';
-        proxyPass = "http://192.168.10.17:8096";
+        proxyPass = "http://192.168.10.17:32400";
       };
     };
 
