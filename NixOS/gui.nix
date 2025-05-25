@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   programs.gnupg.agent = {
-    pinentryPackage = pkgs.pinentry-curses;
+    pinentryPackage = pkgs.pinentry-gnome3;
   };
 
   hardware.bluetooth = {
@@ -41,4 +41,6 @@
 
     wireplumber.enable = true;
   };
+
+  programs.xwayland.enable = true;
 }
