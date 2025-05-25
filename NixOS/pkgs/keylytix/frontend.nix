@@ -9,7 +9,7 @@ let
     };
 
     nativeBuildInputs = with pkgs; [
-      nodejs_23
+      nodejs_24
       pnpm_10
       typescript
       pnpm_10.configHook
