@@ -11,24 +11,10 @@
     };
   };
 
-  #　for podman
-  virtualisation = {
-    containers.enable = true;
-    podman = {
-      enable = true;
-      dockerCompat = true;
-      defaultNetwork.settings.dns_enabled = true;
-    };
-  };
-
   environment.systemPackages = with pkgs; [
     (catppuccin-sddm.override {
       flavor = "mocha";
     })
-
-    #　for podman
-    dive
-    podman-tui
   ];
 
   programs.sway = {
@@ -55,8 +41,6 @@
   };
   programs.waybar.enable = true;
 
-  services.gnome.gnome-keyring.enable = true;
-
   xdg.portal = {
     # [for discord]
     # Failed to call method: org.freedesktop.DBus.Properties.Get:
@@ -74,49 +58,5 @@
       "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
       "org.freedesktop.impl.portal.FileChooser" = "gtk";
     };
-  };
-
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-  };
-  services.blueman.enable = true;
-
-  security = {
-    polkit.enable = true;
-    rtkit.enable = true;
-  };
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-
-    wireplumber.enable = true;
-  };
-
-  programs.gnupg.agent = {
-    pinentryPackage = pkgs.pinentry-gtk2;
-  };
-
-  fonts = {
-    fontDir.enable = true;
-    enableDefaultPackages = true;
-    packages = with pkgs; [
-      fira-code
-      fira-code-symbols
-      jetbrains-mono
-      julia-mono
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-cjk-serif
-      noto-fonts-emoji
-      source-han-code-jp
-      ipaexfont
-      monaspace
-      nerd-fonts.fira-code
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.noto
-    ];
   };
 }

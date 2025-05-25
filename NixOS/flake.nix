@@ -40,6 +40,7 @@
           sops-nix.nixosModules.sops
           ragenix.nixosModules.default
           ./default.nix
+          ./gui.nix
           ./sway.nix
           ./hyprland.nix
           ./i3.nix
@@ -55,6 +56,7 @@
           sops-nix.nixosModules.sops
           # ragenix.nixosModules.default
           ./default.nix
+          ./gui.nix
           ./sway.nix
           ./hyprland.nix
           ./home-srv/configuration.nix

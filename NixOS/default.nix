@@ -44,6 +44,11 @@
     };
   };
 
+  security = {
+    polkit.enable = true;
+    rtkit.enable = true;
+  };
+
   services.pcscd.enable = true;
   services.udev.extraRules = ''
     ACTION=="remove", ENV{ID_VENDOR_ID}=="1050", ENV{ID_MODEL_ID}=="0407", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
@@ -67,10 +72,11 @@
       enable = true;
       type = "fcitx5";
       fcitx5 = {
-        # waylandFrontend = true;
+        waylandFrontend = true;
         addons = with pkgs; [
           fcitx5-mozc
           fcitx5-gtk
+          kdePackages.fcitx5-qt
         ];
         settings.inputMethod = {
           GroupOrder."0" = "Default";
@@ -136,6 +142,10 @@
     yubikey-manager
     yubikey-personalization # for using `ykchalresp`
     sops
+
+    #　for podman
+    dive
+    podman-tui
   ];
 
   environment.variables = {
@@ -166,6 +176,16 @@
     enable = true;
     enableSSHSupport = true;
     enableExtraSocket = true;
+  };
+
+  #　for podman
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
   };
 
   programs.nix-ld.dev.enable = true;
