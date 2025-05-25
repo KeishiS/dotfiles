@@ -8,12 +8,13 @@
   imports = [
     ./hardware-configuration.nix
     ./nfs.nix
-    ./jellyfin.nix
+    # ./jellyfin.nix
     ./keylytix.nix
     ../pkgs/portunus
     ../pkgs/ldap
     ../pkgs/netdata
     ../pkgs/keylytix
+    ../pkgs/plex
     # ../pkgs/prometheus
     # ./ldap.nix
   ];
