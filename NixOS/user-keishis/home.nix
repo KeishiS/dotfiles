@@ -127,12 +127,11 @@ rec {
       package = pkgs.volantes-cursors;
       name = "volantes_cursors";
     };
-    gtk3.extraConfig = {
-      gtk-im-module = "fcitx";
-    };
-    gtk4.extraConfig = {
-      gtk-im-module = "fcitx";
-    };
+    gtk2.extraConfig = ''
+      gtk-im-module = fcitx
+    '';
+    gtk3.extraConfig.gtk-im-module = "fcitx";
+    gtk4.extraConfig.gtk-im-module = "fcitx";
   };
 
   editorconfig = {
