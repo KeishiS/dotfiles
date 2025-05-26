@@ -4,6 +4,9 @@
   pkgs,
   ...
 }:
+let
+  theme = (import ./theme);
+in
 rec {
   programs.home-manager.enable = true;
   home.username = "keishis";
@@ -109,17 +112,21 @@ rec {
     size = 24;
   };
 
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts.monospace = [ "Noto Sans Mono CJK JP" ];
+    defaultFonts.sansSerif = [ "Noto Sans CJK JP" ];
+    defaultFonts.serif = [ "Noto Serif CJK JP" ];
+  };
+
   gtk = {
     enable = true;
+    font.name = theme.console-font;
     theme = {
       package = pkgs.orchis-theme;
       name = "Orchis-Dark";
     };
     iconTheme = {
-      /*
-        package = pkgs.tokyonight-gtk-theme;
-        name = "Tokyonight-Dark";
-      */
       package = pkgs.tela-icon-theme;
       name = "Tela-nord-dark";
     };
