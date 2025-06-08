@@ -81,6 +81,7 @@ rec {
     vlc
     insomnia
     jetbrains.datagrip
+    kicad
 
     # Dev Tools
     cargo-make
