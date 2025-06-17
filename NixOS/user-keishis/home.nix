@@ -82,6 +82,7 @@ rec {
     insomnia
     jetbrains.datagrip
     kicad
+    qmk
 
     # Dev Tools
     cargo-make
