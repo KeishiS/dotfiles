@@ -82,6 +82,7 @@ rec {
     insomnia
     jetbrains.datagrip
     kicad
+    freerouting
     qmk
 
     # Dev Tools
