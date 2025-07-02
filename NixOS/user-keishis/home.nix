@@ -106,6 +106,10 @@ rec {
     shfmt # for shellscript formatter
     openssl
     pkg-config # for common library directory path, e.g., openssl
+    devpod
+    qemu
+    virtiofsd
+    mise
   ];
 
   home.pointerCursor = {
