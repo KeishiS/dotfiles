@@ -40,7 +40,11 @@
     };
     u2f = {
       enable = true;
-      settings.cue = true;
+      settings = {
+        cue = true;
+        pinverification = 1;
+        userpresence = 1;
+      };
     };
   };
 
