@@ -110,6 +110,7 @@ rec {
     qemu
     virtiofsd
     mise
+    terraform
   ];
 
   home.pointerCursor = {
