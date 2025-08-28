@@ -16,10 +16,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    keylytix = {
-      url = "github:KeishiS/KeyLytix/main";
-      flake = false;
-    };
+    # keylytix = {
+    #   url = "github:KeishiS/KeyLytix/main";
+    #   flake = false;
+    # };
   };
 
   outputs =

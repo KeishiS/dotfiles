@@ -108,6 +108,7 @@ rec {
     openssl
     pkg-config # for common library directory path, e.g., openssl
     devpod
+    devpod-desktop
     qemu
     virtiofsd
     mise
