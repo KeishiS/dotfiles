@@ -49,6 +49,7 @@ rec {
     ELECTRON_ENABLE_WAYLAND = 0;
     # NIXOS_OZONE_WL = "1"; # これを有効化するとwaylandネイティブなアプリが立ち上がり，日本語入力ができなくなる
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+    PNPM_HOME = "/home/keishis/.local/share/pnpm";
   };
 
   nixpkgs.config.allowUnfree = true;
