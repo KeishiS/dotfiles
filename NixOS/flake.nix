@@ -15,11 +15,6 @@
       url = "github:nix-community/nix-ld/2.0.4";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # keylytix = {
-    #   url = "github:KeishiS/KeyLytix/main";
-    #   flake = false;
-    # };
   };
 
   outputs =
@@ -54,7 +49,6 @@
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
-          # ragenix.nixosModules.default
           ./default.nix
           ./gui.nix
           ./sway.nix
@@ -69,7 +63,6 @@
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
-          # ragenix.nixosModules.default
           ./common.nix
           ./lenovo/configuration.nix
         ];

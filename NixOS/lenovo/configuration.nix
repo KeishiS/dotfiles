@@ -9,11 +9,11 @@
     ./hardware-configuration.nix
     ./nfs.nix
     # ./jellyfin.nix
-    ./keylytix.nix
+    # ./keylytix.nix
     ../pkgs/portunus
     ../pkgs/ldap
     ../pkgs/netdata
-    ../pkgs/keylytix
+    # ../pkgs/keylytix
     ../pkgs/plex
     # ../pkgs/prometheus
     # ./ldap.nix
