@@ -86,6 +86,7 @@ rec {
     kicad
     freerouting
     qmk
+    kdePackages.kdenlive
 
     # Dev Tools
     cargo-make
