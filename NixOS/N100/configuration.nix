@@ -4,7 +4,6 @@
     ./hardware-configuration.nix
     ./nginx.nix
     ../pkgs/ldap
-    # ../pkgs/keylytix/ddns.nix
   ];
 
   networking.hostName = "NixOS-sandi-N100";

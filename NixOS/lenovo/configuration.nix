@@ -8,15 +8,12 @@
   imports = [
     ./hardware-configuration.nix
     ./nfs.nix
-    # ./jellyfin.nix
-    # ./keylytix.nix
-    ../pkgs/portunus
-    ../pkgs/ldap
+    # ../pkgs/portunus
+    # ../pkgs/ldap
     ../pkgs/netdata
-    # ../pkgs/keylytix
     ../pkgs/plex
-    # ../pkgs/prometheus
     # ./ldap.nix
+    ./nextcloud.nix
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";
