@@ -9,7 +9,7 @@
     path = "/run/sops-nix/homelab/keishi";
     mode = "0440";
     owner = "portunus";
-    group = "nslcd";
+    # group = "nslcd";
   };
 
   sops.secrets.techadmin = {
@@ -18,7 +18,7 @@
     path = "/run/sops-nix/homelab/techadmin";
     mode = "0440";
     owner = lib.mkDefault "portunus";
-    group = "nslcd";
+    # group = "nslcd";
   };
 
   services.portunus = {

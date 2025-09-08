@@ -8,11 +8,10 @@
   imports = [
     ./hardware-configuration.nix
     ./nfs.nix
-    # ../pkgs/portunus
-    # ../pkgs/ldap
+    ../pkgs/portunus
+    ../pkgs/ldap
     ../pkgs/netdata
     ../pkgs/plex
-    # ./ldap.nix
     ./nextcloud.nix
   ];
 

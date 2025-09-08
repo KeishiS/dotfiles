@@ -1,47 +1,17 @@
 { config, pkgs, ... }:
 {
+  users.users.nginx.extraGroups = [ "acme" ];
   services.nginx = {
     enable = true;
+    package = pkgs.nginxQuic;
 
-    virtualHosts."sandi05.com-redirect" = {
-      serverName = "sandi05.com";
-      listen = [
-        {
-          addr = "0.0.0.0";
-          port = 80;
-        }
-        {
-          addr = "[::]";
-          port = 80;
-        }
-      ];
-      locations."/.well-known/acme-challenge/" = {
-        alias = "/var/lib/acme/acme-challenge/.well-known/acme-challenge/";
-      };
-      extraConfig = ''
-        return 301 https://$host$request_uri;
-      '';
-    };
+    recommendedTlsSettings = true;
+    recommendedGzipSettings = true;
+    recommendedZstdSettings = true;
 
-    virtualHosts."sandi05.com" = {
-      serverName = "sandi05.com";
-      root = "/var/www";
-      listen = [
-        {
-          addr = "0.0.0.0";
-          port = 443;
-          ssl = true;
-        }
-        {
-          addr = "[::]";
-          port = 443;
-          ssl = true;
-        }
-      ];
-      addSSL = true;
-      enableACME = true;
-    };
-
+    #---------------------------------------------------------------------
+    # Plex
+    # --------------------------------------------------------------------
     virtualHosts."video.sandi05.com-redirect" = {
       serverName = "video.sandi05.com";
       listen = [
@@ -54,17 +24,12 @@
           port = 80;
         }
       ];
-      locations."/.well-known/acme-challenge/" = {
-        alias = "/var/lib/acme/acme-challenge/.well-known/acme-challenge/";
-      };
+
       extraConfig = ''
         return 301 https://$host$request_uri;
       '';
     };
 
-    #---------------------------------------------------------------------
-    # Plex
-    # --------------------------------------------------------------------
     virtualHosts."video.sandi05.com" = {
       serverName = "video.sandi05.com";
       listen = [
@@ -80,7 +45,7 @@
         }
       ];
       addSSL = true;
-      enableACME = true;
+      useACMEHost = "sandi05.com";
 
       locations."/" = {
         extraConfig = ''
@@ -113,64 +78,102 @@
     #---------------------------------------------------------------------
     # Nextcloud
     # --------------------------------------------------------------------
-    /*
-      virtualHosts."storage.sandi05.com-redirect" = {
-        serverName = "storage.sandi05.com";
-        listen = [
-          {
-            addr = "0.0.0.0";
-            port = 80;
-          }
-          {
-            addr = "[::]";
-            port = 80;
-          }
-        ];
-        locations."/.well-known/acme-challenge/" = {
-          alias = "/var/lib/acme/acme-challenge/.well-known/acme-challenge/";
-        };
+    virtualHosts."storage.sandi05.com-redirect" = {
+      serverName = "storage.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
+          port = 80;
+        }
+      ];
+      extraConfig = ''
+        return 301 https://$host$request_uri;
+      '';
+    };
+
+    virtualHosts."storage.sandi05.com" = {
+      serverName = "storage.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      addSSL = true;
+      useACMEHost = "sandi05.com";
+
+      http2 = true;
+      http3 = true;
+      extraConfig = ''
+        listen 443 quic reuseport;
+        ssl_early_data on;
+      '';
+
+      locations."/" = {
         extraConfig = ''
-          return 301 https://$host$request_uri;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Host $http_host;
+          proxy_buffering off;
+
+          client_max_body_size 2G;
+          proxy_read_timeout    3600s;
+          proxy_send_timeout    3600s;
+          proxy_connect_timeout 3600s;
+          send_timeout          3600s;
         '';
+        proxyPass = "http://192.168.10.17";
+        proxyWebsockets = true;
       };
+    };
 
-      virtualHosts."storage.sandi05.com" = {
-        serverName = "storage.sandi05.com";
-        listen = [
-          {
-            addr = "0.0.0.0";
-            port = 443;
-            ssl = true;
-          }
-          {
-            addr = "[::]";
-            port = 443;
-            ssl = true;
-          }
-        ];
-        addSSL = true;
-        enableACME = true;
+    virtualHosts."sandi05.com-redirect" = {
+      serverName = "sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
+          port = 80;
+        }
+      ];
+      extraConfig = ''
+        return 301 https://$host$request_uri;
+      '';
+    };
 
-        locations."/" = {
-          extraConfig = ''
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Host $http_host;
-            proxy_buffering off;
-
-            client_max_body_size 2G;
-            proxy_read_timeout    3600s;
-            proxy_send_timeout    3600s;
-            proxy_connect_timeout 3600s;
-            send_timeout          3600s;
-          '';
-          proxyPass = "https://192.168.10.17";
-          proxyWebsockets = true;
-        };
-      };
-    */
+    virtualHosts."sandi05.com" = {
+      serverName = "sandi05.com";
+      root = "/var/www";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      addSSL = true;
+      useACMEHost = "sandi05.com";
+    };
   };
 
   sops.secrets."sandi05-cloudflare-acme" = {
@@ -182,22 +185,25 @@
 
   security.acme = {
     acceptTerms = true;
-    defaults = {
-      email = "nobuta05@gmail.com";
-      dnsPropagationCheck = true;
+    defaults.email = "nobuta05@gmail.com";
+
+    certs."sandi05.com" = {
+      domain = "sandi05.com";
+      extraDomainNames = [
+        "video.sandi05.com"
+        "storage.sandi05.com"
+      ];
       dnsProvider = "cloudflare";
-      postRun = "systemctl reload nginx";
       environmentFile = config.sops.secrets."sandi05-cloudflare-acme".path;
+      dnsPropagationCheck = true;
     };
-    certs."sandi05.com" = { };
-    certs."video.sandi05.com" = { };
-    # certs."storage.sandi05.com".email = "nobuta05@gmail.com";
   };
 
   networking.firewall.allowedTCPPorts = [
     80
     443
   ];
+  networking.firewall.allowedUDPPorts = [ 443 ];
 
   #---------------------------------------------------------------------
   # DDNS for IPv6
@@ -240,7 +246,7 @@
       if [[ -n "$RECORD_ID" ]]; then
         if [[ "$RECORD_CONTENT" != "$IPv6_ADDR" ]]; then
           # Record IDがある場合は更新
-          RESP=$(curl -X PATCH "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$RECORD_ID" -H "Content-Type: application/json" -H "X-Auth-Email: $EMAIL" -H "Authorization: Bearer $API_TOKEN" -d '{ "name": "sandi05.com", "proxied": false, "type": "AAAA", "content": "'"$IPv6_ADDR"'" }')
+          RESP=$(curl -X PATCH "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$RECORD_ID" -H "Content-Type: application/json" -H "X-Auth-Email: $EMAIL" -H "Authorization: Bearer $API_TOKEN" -d '{ "name": "*", "proxied": true, "ttl": 3600, "type": "AAAA", "content": "'"$IPv6_ADDR"'" }')
           echo $RESP
           if [[ $(echo $RESP | jq -r '.success') == "true" ]]; then
             # 更新成功
@@ -256,7 +262,7 @@
         fi
       else
         # Record IDがない場合は新規追加
-        RESP=$(curl -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" -H "Content-Type: application/json" -H "X-Auth-Email: $EMAIL" -H "Authorization: Bearer $API_TOKEN" -d '{ "name": "sandi05.com", "proxied": false, "type": "AAAA", "content": "'"$IPv6_ADDR"'" }')
+        RESP=$(curl -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" -H "Content-Type: application/json" -H "X-Auth-Email: $EMAIL" -H "Authorization: Bearer $API_TOKEN" -d '{ "name": "*", "proxied": true, "ttl": 3600, "type": "AAAA", "content": "'"$IPv6_ADDR"'" }')
         echo $RESP
         if [[ $(echo $RESP | jq -r '.success') == "true" ]]; then
           # 新規追加成功
