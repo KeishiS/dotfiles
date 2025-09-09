@@ -25,6 +25,7 @@
       source-han-code-jp
       ipaexfont
       monaspace
+      moralerspace
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.noto

@@ -29,5 +29,5 @@ rec {
 
   primary-rgb = "rgb(122, 162, 247)";
 
-  console-font = "Monaspace Krypton";
+  console-font = "Moralerspace Krypton";
 }
