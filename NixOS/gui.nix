@@ -24,7 +24,6 @@
       noto-fonts-emoji
       source-han-code-jp
       ipaexfont
-      monaspace
       moralerspace
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
