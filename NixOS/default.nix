@@ -150,6 +150,7 @@
     #　for podman
     dive
     podman-tui
+    openblas
   ];
 
   environment.variables = {

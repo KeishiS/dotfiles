@@ -33,6 +33,7 @@ rec {
   home.sessionPath = [
     "$HOME/.cargo/bin"
     "$HOME/.local/bin"
+    "$HOME/.local/share/pnpm"
   ];
 
   home.shellAliases = {

@@ -14,6 +14,7 @@ in
       font-feature = "calt";
       background-opacity = 0.7;
       theme = "tokyonight";
+      clipboard-paste-protection = false;
       keybind = [
         "ctrl+q=new_tab"
         "ctrl+h=new_split:down"
