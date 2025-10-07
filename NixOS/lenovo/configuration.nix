@@ -13,6 +13,9 @@
     ../pkgs/netdata
     ../pkgs/plex
     ./nextcloud.nix
+    ./gotify.nix
+    ./n8n.nix
+    ./vikunja.nix
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";
