@@ -35,6 +35,7 @@
           sops-nix.nixosModules.sops
           ragenix.nixosModules.default
           ./default.nix
+          ./private.nix
           ./gui.nix
           ./sway.nix
           ./hyprland.nix
