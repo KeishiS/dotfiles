@@ -51,6 +51,7 @@
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
           ./default.nix
+          ./private.nix
           ./gui.nix
           ./sway.nix
           ./hyprland.nix
