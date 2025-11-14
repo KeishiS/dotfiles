@@ -9,8 +9,8 @@
     };
 
     pypi = {
-      format = "ini";
-      sopsFile = ./secrets/pypirc.ini.enc;
+      format = "binary";
+      sopsFile = ./secrets/pypirc.enc;
       path = "${config.home.homeDirectory}/.pypirc";
       mode = "0400";
     };
