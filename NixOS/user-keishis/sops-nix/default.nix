@@ -7,5 +7,12 @@
       sopsFile = ./secrets/ssh-config.enc;
       path = "${config.home.homeDirectory}/.ssh/config";
     };
+
+    pypi = {
+      format = "ini";
+      sopsFile = ./secrets/pypirc.ini.enc;
+      path = "${config.home.homeDirectory}/.pypirc";
+      mode = "0400";
+    };
   };
 }
