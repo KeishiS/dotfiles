@@ -167,6 +167,7 @@ rec {
 
   programs.git = {
     enable = true;
+    package = pkgs.git.override { withLibsecret = true; };
     userName = "KeishiS";
     userEmail = "sando.keishi.sp@alumni.tsukuba.ac.jp";
     diff-so-fancy.enable = true;
@@ -182,7 +183,7 @@ rec {
       merge.ff = false;
       push.default = "simple";
       pull.rebase = true;
-      credential.helper = "cache --timeout=3600";
+      credential.helper = "libsecret";
     };
   };
 
