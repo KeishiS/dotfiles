@@ -1,9 +1,12 @@
-{ pkgs-unstable, ... }:
+{ pkgs, pkgs-unstable, ... }:
 {
   programs.zed-editor = {
     enable = true;
     package = pkgs-unstable.zed-editor;
-    extensions = [ "nix" "ltex" ];
+    extensions = [
+      "nix"
+      "ltex"
+    ];
     userSettings = {
       tab_size = 4;
       ui_font_size = 20;
@@ -39,6 +42,9 @@
         show_other_hints = true;
       };
       format_on_save = "on";
+      terminal = {
+        program = pkgs.zsh;
+      };
 
       languages = {
         Nix = {
