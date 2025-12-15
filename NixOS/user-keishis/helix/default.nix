@@ -3,7 +3,7 @@
   programs.helix = {
     enable = true;
     settings = {
-      theme = "tokyonight";
+      theme = "jellybeans";
       editor = {
         auto-format = true;
         insert-final-newline = true;

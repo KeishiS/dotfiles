@@ -61,18 +61,39 @@ in
 
       colors = {
         focused = {
-          background = theme.bg;
-          border = theme.cyan;
-          text = theme.fg;
-          indicator = theme.cyan;
-          childBorder = theme.blue;
+          background = theme.background;
+          border = theme.palette.cyan;
+          text = theme.foreground;
+          indicator = theme.palette.cyan;
+          childBorder = theme.semantic.primary;
+        };
+        unfocused = {
+          background = theme.background-alt;
+          border = theme.border;
+          text = theme.foreground-alt;
+          indicator = theme.border;
+          childBorder = theme.border;
+        };
+        focusedInactive = {
+          background = theme.background-alt;
+          border = theme.border;
+          text = theme.foreground-alt;
+          indicator = theme.border;
+          childBorder = theme.border;
+        };
+        urgent = {
+          background = theme.semantic.urgent;
+          border = theme.semantic.urgent;
+          text = theme.background;
+          indicator = theme.semantic.urgent;
+          childBorder = theme.semantic.urgent;
         };
       };
 
       bars = [
         {
           fonts = {
-            names = [ theme.console-font ];
+            names = [ theme.font.console ];
             style = "Light";
             size = 11.0;
           };
@@ -81,34 +102,34 @@ in
           workspaceButtons = true;
           position = "top";
           colors = {
-            background = theme.bg;
-            statusline = theme.fg;
+            background = theme.background;
+            statusline = theme.foreground;
             separator = theme.border;
 
             focusedWorkspace = {
-              background = theme.primary;
-              border = theme.primary;
-              text = theme.bg;
+              background = theme.semantic.primary;
+              border = theme.semantic.primary;
+              text = theme.background;
             };
             activeWorkspace = {
-              background = theme.bg2;
-              border = theme.primary;
-              text = theme.fg;
+              background = theme.background-highlight;
+              border = theme.semantic.primary;
+              text = theme.foreground;
             };
             inactiveWorkspace = {
-              background = theme.bg;
+              background = theme.background;
               border = theme.border;
-              text = theme.fg2;
+              text = theme.palette.bright-black;
             };
             urgentWorkspace = {
-              background = theme.urgent;
-              border = theme.urgent;
-              text = theme.bg;
+              background = theme.semantic.urgent;
+              border = theme.semantic.urgent;
+              text = theme.background;
             };
             bindingMode = {
-              background = theme.accent;
-              border = theme.primary;
-              text = theme.bg;
+              background = theme.semantic.accent;
+              border = theme.semantic.primary;
+              text = theme.background;
             };
           };
         }

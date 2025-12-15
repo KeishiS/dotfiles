@@ -11,16 +11,14 @@ in
       local wezterm = require 'wezterm'
       local config = wezterm.config_builder()
 
-      --[[ config.color_scheme = 'MaterialDesignColors' ]]
-      config.front_end="WebGpu" -- workaround
-      config.color_scheme = 'Tokyo Night'
+      config.front_end = "WebGpu" -- workaround
       config.window_background_opacity = 0.8
       config.use_ime = true
       config.default_cursor_style = 'SteadyBar'
       config.font_size = 16.0
       config.font = wezterm.font_with_fallback {
         {
-          family = "${theme.console-font}"
+          family = "${theme.font.console}"
         },
         {
           family = "JuliaMono"
@@ -108,18 +106,70 @@ in
         inactive_titlebar_bg = "none"
       }
       config.window_background_gradient = {
-        colors = { "#000000" }
+        colors = { "${theme.background}" }
       }
       config.colors = {
+        -- Base colors
+        foreground = "${theme.foreground}",
+        background = "${theme.background}",
+
+        -- Cursor
+        cursor_bg = "${theme.cursor.normal}",
+        cursor_fg = "${theme.cursor.text}",
+        cursor_border = "${theme.cursor.normal}",
+
+        -- Selection
+        selection_fg = "${theme.selection.foreground}",
+        selection_bg = "${theme.selection.background}",
+
+        -- ANSI colors (0-7)
+        ansi = {
+          "${theme.palette."0"}",  -- black
+          "${theme.palette."1"}",  -- red
+          "${theme.palette."2"}",  -- green
+          "${theme.palette."3"}",  -- yellow
+          "${theme.palette."4"}",  -- blue
+          "${theme.palette."5"}",  -- magenta
+          "${theme.palette."6"}",  -- cyan
+          "${theme.palette."7"}",  -- white
+        },
+
+        -- Bright ANSI colors (8-15)
+        brights = {
+          "${theme.palette."8"}",   -- bright black
+          "${theme.palette."9"}",   -- bright red
+          "${theme.palette."10"}",  -- bright green
+          "${theme.palette."11"}",  -- bright yellow
+          "${theme.palette."12"}",  -- bright blue
+          "${theme.palette."13"}",  -- bright magenta
+          "${theme.palette."14"}",  -- bright cyan
+          "${theme.palette."15"}",  -- bright white
+        },
+
+        -- Tab bar
         tab_bar = {
+          background = "${theme.bar}",
           inactive_tab_edge = "none",
           active_tab = {
-            fg_color = "#16161e",
-            bg_color = "#7aa2f7",
+            bg_color = "${theme.tabs.active.background}",
+            fg_color = "${theme.tabs.active.foreground}",
+            intensity = "Bold",
           },
           inactive_tab = {
-            fg_color = "#545c7e",
-            bg_color = "#292e42",
+            bg_color = "${theme.tabs.background}",
+            fg_color = "${theme.tabs.foreground}",
+          },
+          inactive_tab_hover = {
+            bg_color = "${theme.background-highlight}",
+            fg_color = "${theme.foreground}",
+          },
+          new_tab = {
+            bg_color = "${theme.tabs.background}",
+            fg_color = "${theme.tabs.foreground}",
+          },
+          new_tab_hover = {
+            bg_color = "${theme.tabs.active.highlight}",
+            fg_color = "${theme.background}",
           },
         }
       }

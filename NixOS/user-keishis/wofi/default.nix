@@ -8,14 +8,14 @@ in
     settings = { };
     style = ''
       * {
-        font-family: "${theme.console-font}";
+        font-family: "${theme.font.console}";
         font-size: 1.5rem;
       }
 
       window {
-        border: 1px solid ${theme.primary};
+        border: 1px solid ${theme.semantic.primary};
         border-radius: 1rem;
-        background-color: ${theme.bg-090};
+        background-color: ${theme.rgba.background-90};
       }
 
       #outer-box {
@@ -23,12 +23,12 @@ in
       }
 
       #text {
-        color: ${theme.fg};
+        color: ${theme.foreground};
       }
 
-      #input { // 入力欄
-        color: ${theme.fg};
-        background-color: ${theme.bg2};
+      #input {
+        color: ${theme.foreground};
+        background-color: ${theme.background-alt};
         border: none;
         margin: 1rem;
       }
@@ -43,11 +43,11 @@ in
       }
 
       #entry:selected {
-        background-color: ${theme.bg2};
+        background-color: ${theme.background-highlight};
       }
 
       #text:selected {
-        color: ${theme.highlight};
+        color: ${theme.semantic.highlight};
       }
     '';
   };

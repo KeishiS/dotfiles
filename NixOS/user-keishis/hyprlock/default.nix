@@ -26,12 +26,12 @@ in
           monitor = "";
           dots_center = true;
           fade_on_empty = false;
-          font_color = theme.fg-rgb;
-          inner_color = theme.bg-rgb;
-          outer_color = theme.primary-rgb;
+          font_color = theme.rgb.foreground;
+          inner_color = theme.rgb.background;
+          outer_color = theme.rgb.primary;
           outline_thickness = 5;
-          check_color = theme.yellow;
-          fail_color = theme.error;
+          check_color = theme.semantic.success;
+          fail_color = theme.semantic.error;
         }
       ];
     };

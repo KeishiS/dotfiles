@@ -1,4 +1,7 @@
 { pkgs, pkgs-unstable, ... }:
+let
+  theme = (import ../theme);
+in
 {
   programs.zed-editor = {
     enable = true;
@@ -7,12 +10,19 @@
       "nix"
       "ltex"
     ];
+
+    # Aquarium theme
+    themes = {
+      aquarium = ./aquarium.json;
+    };
+
     userSettings = {
       tab_size = 4;
       ui_font_size = 20;
       buffer_font_size = 20;
-      buffer_font_family = "JuliaMono";
+      buffer_font_family = theme.font.console;
       buffer_font_fallbacks = [
+        "JuliaMono"
         "JetBrainsMono Nerd Font"
         "Noto Sans Mono CJK JP"
       ];
@@ -29,8 +39,8 @@
       vim_mode = true;
       theme = {
         mode = "system";
-        light = "Ayu Mirage";
-        dark = "One Dark";
+        light = "Ayu Light";
+        dark = "Aquarium";
       };
       features = {
         edit_prediction_provider = "copilot";

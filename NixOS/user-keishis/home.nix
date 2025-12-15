@@ -139,7 +139,7 @@ rec {
 
   gtk = {
     enable = true;
-    font.name = theme.console-font;
+    font.name = theme.font.console;
     theme = {
       package = pkgs.orchis-theme;
       name = "Orchis-Dark";

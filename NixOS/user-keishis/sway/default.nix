@@ -69,35 +69,43 @@ in
       floating.titlebar = false;
 
       fonts = {
-        names = [ theme.console-font ];
+        names = [ theme.font.console ];
         size = 11.0;
       };
 
       colors = {
-        background = theme.bg;
+        background = theme.background;
 
         focused = {
-          border = theme.primary;
-          childBorder = theme.primary;
-          background = theme.bg;
-          indicator = theme.secondary;
-          text = theme.fg;
+          border = theme.semantic.primary;
+          childBorder = theme.semantic.primary;
+          background = theme.background;
+          indicator = theme.palette.cyan;
+          text = theme.foreground;
+        };
+
+        focusedInactive = {
+          border = theme.border;
+          childBorder = theme.border;
+          background = theme.background-alt;
+          indicator = theme.border;
+          text = theme.foreground-alt;
         };
 
         unfocused = {
-          border = theme.bg;
-          childBorder = theme.bg;
-          background = theme.bg;
-          indicator = theme.primary;
-          text = theme.fg;
+          border = theme.border;
+          childBorder = theme.border;
+          background = theme.background-alt;
+          indicator = theme.border;
+          text = theme.foreground-alt;
         };
 
         urgent = {
-          border = theme.urgent;
-          childBorder = theme.urgent;
-          background = theme.bg;
-          indicator = theme.bg;
-          text = theme.fg;
+          border = theme.semantic.urgent;
+          childBorder = theme.semantic.urgent;
+          background = theme.semantic.urgent;
+          indicator = theme.semantic.urgent;
+          text = theme.background;
         };
       };
 
