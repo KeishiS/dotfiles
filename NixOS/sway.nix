@@ -1,21 +1,23 @@
 { pkgs, ... }:
 {
-  services.displayManager = {
-    defaultSession = "sway";
+  /*
+      services.displayManager = {
+        defaultSession = "sway";
 
-    sddm = {
-      enable = true;
-      wayland.enable = true;
-      theme = "catppuccin-mocha";
-      package = pkgs.kdePackages.sddm;
-    };
-  };
+        sddm = {
+          enable = true;
+          wayland.enable = true;
+          theme = "catppuccin-mocha";
+          package = pkgs.kdePackages.sddm;
+        };
+      };
 
-  environment.systemPackages = with pkgs; [
-    (catppuccin-sddm.override {
-      flavor = "mocha";
-    })
-  ];
+    environment.systemPackages = with pkgs; [
+      (catppuccin-sddm.override {
+        flavor = "mocha";
+      })
+    ];
+  */
 
   programs.sway = {
     enable = true;

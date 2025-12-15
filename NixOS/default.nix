@@ -153,6 +153,7 @@
     dive
     podman-tui
     openblas
+    gnome-terminal
   ];
 
   environment.variables = {

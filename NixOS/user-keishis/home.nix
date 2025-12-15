@@ -13,21 +13,26 @@ rec {
   home.homeDirectory = "/home/keishis";
 
   imports = [
-    ./ghostty
-    ./helix
     ./sway
     ./swaylock
     ./wofi
     ./waybar
-    ./zed
     ./wezterm
     ./hyprland
     ./hyprpaper
     ./hyprlock
     ./hypridle
-    ./foot
     ./i3
     ./sops-nix
+
+    # terminal
+    ./ghostty
+    ./rio
+    ./foot
+
+    # editor
+    ./helix
+    ./zed
   ];
 
   home.sessionPath = [
@@ -61,7 +66,7 @@ rec {
     jq
     nfs-utils
     pdfgrep
-    poppler_utils
+    poppler-utils
     unzip
     ffmpeg
 
@@ -76,7 +81,7 @@ rec {
     google-chrome
     pavucontrol
     slack
-    thunderbird-bin
+    # thunderbird-bin
     zoom-us
     _1password-gui
     nixd
@@ -84,10 +89,10 @@ rec {
     vlc
     insomnia
     jetbrains.datagrip
-    kicad
-    freerouting
-    qmk
-    kdePackages.kdenlive
+    # kicad
+    # freerouting
+    # qmk
+    # kdePackages.kdenlive
 
     # Dev Tools
     cargo-make
@@ -101,8 +106,8 @@ rec {
     rustup
     texliveFull
     typst
-    yarn-berry
-    pipx
+    # yarn-berry
+    # pipx
     cloud-utils
     gh
     uv
@@ -110,8 +115,8 @@ rec {
     shfmt # for shellscript formatter
     openssl
     pkg-config # for common library directory path, e.g., openssl
-    devpod
-    devpod-desktop
+    # devpod
+    # devpod-desktop
     qemu
     virtiofsd
     mise
@@ -168,11 +173,9 @@ rec {
   programs.git = {
     enable = true;
     package = pkgs.git.override { withLibsecret = true; };
-    userName = "KeishiS";
-    userEmail = "sando.keishi.sp@alumni.tsukuba.ac.jp";
-    diff-so-fancy.enable = true;
-    diff-so-fancy.stripLeadingSymbols = false;
-    extraConfig = {
+    settings = {
+      user.name = "KeishiS";
+      user.email = "sando.keishi.sp@alumni.tsukuba.ac.jp";
       core = {
         editor = "hx";
         quotepath = false;
@@ -185,6 +188,12 @@ rec {
       pull.rebase = true;
       credential.helper = "libsecret";
     };
+  };
+
+  programs.diff-so-fancy = {
+    enable = true;
+    enableGitIntegration = true;
+    settings.stripLeadingSymbols = false;
   };
 
   programs.zsh = {
@@ -208,7 +217,7 @@ rec {
     plugins = with pkgs.obs-studio-plugins; [
       wlrobs
       obs-pipewire-audio-capture
-      obs-webkitgtk
+      # obs-webkitgtk
       advanced-scene-switcher
     ];
   };

@@ -13,7 +13,9 @@ in
       font-family = theme.console-font;
       font-feature = "calt";
       background-opacity = 0.7;
-      theme = "tokyonight";
+      background-blur = true;
+      theme = "Ghostty Default Style Dark";
+      cursor-style = "bar";
       clipboard-paste-protection = false;
       keybind = [
         "ctrl+q=new_tab"

@@ -21,7 +21,7 @@
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       source-han-code-jp
       ipaexfont
       moralerspace
@@ -40,6 +40,15 @@
     pulse.enable = true;
 
     wireplumber.enable = true;
+  };
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time";
+      };
+    };
   };
 
   programs.xwayland.enable = true;
