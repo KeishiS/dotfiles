@@ -13,6 +13,8 @@ rec {
   home.homeDirectory = "/home/keishis";
 
   imports = [
+    ./appearance
+
     ./sway
     ./swaylock
     ./wofi

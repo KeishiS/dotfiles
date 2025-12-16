@@ -24,6 +24,7 @@ in
         ];
         modules-right = [
           "battery"
+          "disk"
           "memory"
           "cpu"
           "network"
@@ -35,13 +36,21 @@ in
           tooltip = false;
         };
         battery = {
+          format = "BAT {capacity}%";
+          format-charging = "CHG {capacity}%";
+          format-plugged = "FULL {capacity}%";
           states = {
             warning = 30;
             critial = 15;
           };
         };
+        disk = {
+          path = "/";
+          format = "DISK {percentage_used}%";
+          tooltip-format = "{used} / {total}";
+        };
         memory = {
-          format = "MEM {used:0.1f}G/{total:0.1f}G";
+          format = "MEM {percentage}%";
           tooltip = false;
         };
         cpu = {
@@ -127,6 +136,13 @@ in
         border: 1px solid ${theme.semantic.error};
         background: ${theme.semantic.error};
         color: ${theme.background};
+      }
+
+      #disk {
+        border: 1px solid ${theme.palette.magenta};
+        border-radius: 0.5rem;
+        padding: 0 0.5rem;
+        margin: 0.3rem 0;
       }
 
       #memory {
