@@ -20,7 +20,7 @@
       automatic = true;
     };
     optimise = {
-      automatics = true;
+      automatic = true;
       dates = [ "daily" ];
     };
   };
@@ -31,7 +31,7 @@
     systemd-boot.configurationLimit = 5;
     efi.canTouchEfiVariables = true;
   };
-  services.logind.lidSwitch = "suspend"; # 蓋を閉じた際の挙動をsuspendに固定
+  services.logind.settings.Login.HandleLidSwitch = "suspend"; # 蓋を閉じた際の挙動をsuspendに固定
   boot.resumeDevice = ""; # ランダムswapを使っているためハイバネーション(resume)を無効化
 
   # FIDO2デバイスでlogin/sudoできるように
