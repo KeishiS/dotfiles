@@ -41,6 +41,7 @@
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
           ./common.nix
+          ./private.nix
           ./P14s/configuration.nix
           ./pkgs/networkmanager
           ./gui.nix
