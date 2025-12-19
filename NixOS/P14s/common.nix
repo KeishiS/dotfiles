@@ -6,7 +6,7 @@
 }:
 {
   imports = [
-    ../pkgs/sops-nix/defaultnix
+    ../pkgs/sops-nix/default.nix
   ];
   nix = {
     settings.experimental-features = [
