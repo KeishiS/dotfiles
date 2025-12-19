@@ -41,6 +41,7 @@
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
           ./P14s/configuration.nix
+          ./pkgs/networkmanager
         ];
       };
 
@@ -58,6 +59,7 @@
           ./hyprland.nix
           ./i3.nix
           ./X13/configuration.nix
+          ./pkgs/networkmanager
         ];
       };
 

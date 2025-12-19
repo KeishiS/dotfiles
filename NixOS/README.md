@@ -23,8 +23,16 @@ tr -dc '[:graph:]' < /dev/urandom | head -c 256 > luks.key
 > cryptsetup luksKillSlot /dev/pool/root <slot-number>
 ```
 
-## sops-nix の鍵追加
+## sops-nix
+
+### 追加する公開鍵情報の取得方法
 
 ```sh
 > ssh-keyscan -t ed25519 <hostname> | ssh-to-age
+```
+
+### 公開鍵情報更新後の各暗号ファイルの更新
+
+```sh
+> sops updatekeys <file>
 ```
