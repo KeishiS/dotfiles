@@ -2,7 +2,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./common.nix
   ];
 
   networking.hostName = "NixOS-keishis-P14s";

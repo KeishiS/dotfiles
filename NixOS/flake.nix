@@ -40,8 +40,11 @@
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
+          ./common.nix
           ./P14s/configuration.nix
           ./pkgs/networkmanager
+          ./gui.nix
+          ./hyprland.nix
         ];
       };
 
@@ -52,7 +55,7 @@
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
           ragenix.nixosModules.default
-          ./default.nix
+          ./common.nix
           ./private.nix
           ./gui.nix
           ./sway.nix
@@ -69,7 +72,7 @@
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
-          ./default.nix
+          ./common.nix
           ./private.nix
           ./gui.nix
           ./sway.nix
@@ -85,6 +88,7 @@
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
           ./common.nix
+          ./srv-common.nix
           ./lenovo/configuration.nix
         ];
       };
@@ -95,6 +99,7 @@
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
           ./common.nix
+          ./srv-common.nix
           ./N100/configuration.nix
         ];
       };
