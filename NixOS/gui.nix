@@ -51,5 +51,26 @@
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    swaynotificationcenter
+    wofi
+    wl-clipboard
+    grim
+    slurp
+    ghostty
+    wdisplays
+    brightnessctl
+  ];
+  programs.waybar.enable = true;
+
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-gtk
+    ];
+  };
+
   programs.xwayland.enable = true;
 }

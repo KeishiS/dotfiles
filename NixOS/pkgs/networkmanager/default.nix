@@ -12,6 +12,9 @@ in
       value = {
         format = "ini";
         sopsFile = connectDir + "/${filename}";
+        path = "/var/lib/iwd/${removeEnc filename}";
+        owner = "root";
+        group = "root";
         mode = "0600";
       };
     }) encFiles

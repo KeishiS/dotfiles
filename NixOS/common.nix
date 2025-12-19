@@ -6,7 +6,7 @@
 }:
 {
   imports = [
-    ../pkgs/sops-nix/default.nix
+    ./pkgs/sops-nix/default.nix
   ];
   nix = {
     settings = {
