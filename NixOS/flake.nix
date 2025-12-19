@@ -11,6 +11,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-ld = {
       url = "github:nix-community/nix-ld/release-2.0.6";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,6 +27,7 @@
       nixpkgs,
       home-manager,
       sops-nix,
+      disko,
       ragenix,
       nix-ld,
       ...
@@ -33,6 +39,7 @@
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
+          disko.nixosModules.disko
           ./P14s/configuration.nix
         ];
       };
