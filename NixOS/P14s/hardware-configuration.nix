@@ -28,15 +28,18 @@
         "thunderbolt"
         "usb_storage"
         "sd_mod"
+        "usbhid"
       ];
       kernelModules = [
         "dm_snapshot"
         "vfat"
         "nls_cp437"
         "nls_iso8859-1"
-        "usbhid"
         "amdgpu"
       ];
+      luks.devices."unlocked" = {
+        crypttabExtraOpts = [ "fido2-device=auto" ];
+      };
     };
   };
 

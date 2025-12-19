@@ -25,11 +25,14 @@
     };
   };
 
+  boot.initrd.systemd.enable = true; # initrdでsystemdを使用(systemd-cryptenroll/FIDO2のため)
   boot.loader = {
     systemd-boot.enable = true;
     systemd-boot.configurationLimit = 5;
     efi.canTouchEfiVariables = true;
   };
+  services.logind.lidSwitch = "suspend"; # 蓋を閉じた際の挙動をsuspendに固定
+  boot.resumeDevice = ""; # ランダムswapを使っているためハイバネーション(resume)を無効化
 
   # FIDO2デバイスでlogin/sudoできるように
   security.pam = {
