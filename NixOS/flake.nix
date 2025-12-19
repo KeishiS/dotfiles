@@ -27,6 +27,16 @@
       ...
     }@inputs:
     {
+      nixosConfigurations.nixos-keishis-p14s = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          nix-ld.nixosModules.nix-ld
+          sops-nix.nixosModules.sops
+          ./P14s/configuration.nix
+        ];
+      };
+
       nixosConfigurations.nixos-keishis-x13 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
