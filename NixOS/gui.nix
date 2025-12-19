@@ -60,6 +60,7 @@
     ghostty
     wdisplays
     brightnessctl
+    networkmanagerapplet
   ];
   programs.waybar.enable = true;
 
