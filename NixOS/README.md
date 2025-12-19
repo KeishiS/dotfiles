@@ -22,3 +22,9 @@ tr -dc '[:graph:]' < /dev/urandom | head -c 256 > luks.key
 > cryptsetup luksDump /dev/pool/root
 > cryptsetup luksKillSlot /dev/pool/root <slot-number>
 ```
+
+## sops-nix の鍵追加
+
+```sh
+> ssh-keyscan -t ed25519 <hostname> | ssh-to-age
+```

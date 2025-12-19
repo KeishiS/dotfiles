@@ -1,5 +1,6 @@
 keys:
     - &yubikey 11D7A68D97E0C636DF487CA1C55CCC13D8D16739
+    - &nixos-keishis-p14s age1v6qf30j89krcstuyp70ugd7vda3wc7q8ztxd6d2dj8rnwcvpna2swcrt6z
     - &nixos-keishis-x13 age1gpnv7cgya70xfz9h0p4ah0wvpl5srq4jktme8v4fwg0m7ljpwyqsh5e5a2
     - &nixos-keishis-home age1ne5k3l7qgj6n9yty07vp3xlehx8u29eefkasdxcnkweugvq8s5jsv9hn5t
     - &nixos-sandi-lenovo age1gwp40dc8lus4jrv52u0esmfks8d70cl0xgtr95lkzxvv3fq4f96qkezs7m
@@ -41,6 +42,7 @@ creation_rules:
                 - *yubikey
             age:
                 - *nixos-keishis-home
+                - *nixos-keishis-p14s
                 - *nixos-keishis-x13
                 - *nixos-sandi-lenovo
                 - *nixos-sandi-n100
