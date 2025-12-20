@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 let
   connectDir = ./secrets;
   encFiles = lib.attrNames (builtins.readDir connectDir);
@@ -16,15 +16,6 @@ in
         owner = "root";
         group = "root";
         mode = "0600";
-      };
-    }) encFiles
-  );
-
-  environment.etc = lib.listToAttrs (
-    map (filename: {
-      name = "NetworkManager/system-connections/${removeEnc filename}";
-      value = {
-        source = config.sops.secrets."${removeEnc filename}".path;
       };
     }) encFiles
   );
