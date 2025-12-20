@@ -29,6 +29,19 @@ tr -dc '[:graph:]' < /dev/urandom | head -c 256 > luks.key
 nixos-rebuild switch --flake .#<remote-machine> --target-host <remote-machine> --build-host <remote-machine> --use-remote-sudo
 ```
 
+## 指紋認証の設定
+
+```sh
+# 指紋を登録(wheelグループのユーザのみ)
+fprintd-enroll
+
+# 登録済みの指紋を確認
+fprintd-list $USER
+
+# 指紋を削除したい場合
+fprintd-delete $USER
+```
+
 ## sops-nix
 
 ### 追加する公開鍵情報の取得方法
