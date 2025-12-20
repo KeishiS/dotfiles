@@ -1,62 +1,45 @@
 {
   config,
-  lib,
   modulesPath,
+  lib,
+  pkgs,
   ...
 }:
 {
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+    ./disk.nix
+  ];
 
   boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
     initrd = {
       availableKernelModules = [
-        "xhci_pci"
         "ahci"
         "nvme"
-        "usb_storage"
-        "usbhid"
         "sd_mod"
         "sdhci_pci"
+        "usb_storage"
+        "usbhid"
+        "xhci_pci"
       ];
       kernelModules = [ ];
     };
+  };
 
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
+  /*
+    fileSystems."/users" = {
+      device = "192.168.10.17:/users";
+      fsType = "nfs";
     };
-  };
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/22d2c614-cbee-4882-8941-b7bfd19fdf2e";
-    fsType = "ext4";
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/1F13-48CA";
-    fsType = "vfat";
-  };
-
-  fileSystems."/data" = {
-    device = "/dev/disk/by-uuid/7c3a9615-f5dd-44ad-ae63-9b124424247e";
-    fsType = "ext4";
-  };
-
-  fileSystems."/users" = {
-    device = "192.168.10.17:/users";
-    fsType = "nfs";
-  };
-
-  fileSystems."/nfs/keylytix" = {
-    device = "192.168.10.17:/keylytix";
-    fsType = "nfs";
-  };
-
-  swapDevices = [
-    { device = "/dev/disk/by-uuid/9684b517-c6f6-4946-9cd0-8e174cf0a056"; }
-  ];
+    fileSystems."/nfs/keylytix" = {
+      device = "192.168.10.17:/keylytix";
+      fsType = "nfs";
+    };
+  */
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

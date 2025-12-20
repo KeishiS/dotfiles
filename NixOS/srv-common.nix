@@ -3,6 +3,7 @@
   ...
 }:
 {
+  security.sudo.wheelNeedsPassword = false;
 
   users.users.sandi = {
     isNormalUser = true;
