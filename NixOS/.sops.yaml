@@ -4,7 +4,7 @@ keys:
     - &nixos-keishis-x13 age1gpnv7cgya70xfz9h0p4ah0wvpl5srq4jktme8v4fwg0m7ljpwyqsh5e5a2
     - &nixos-keishis-home age1ne5k3l7qgj6n9yty07vp3xlehx8u29eefkasdxcnkweugvq8s5jsv9hn5t
     - &nixos-sandi-lenovo age1gwp40dc8lus4jrv52u0esmfks8d70cl0xgtr95lkzxvv3fq4f96qkezs7m
-    - &nixos-sandi-n100 age13y4jmw2f9ggr5nd6aze24st9l7xngn60gzt4lrukxukvrty7wfeqh9he66
+    - &nixos-sandi-n100 age1w0vvgnce5xs2e7fw79tzy2szc0dd7r0c9ekle52vavym5mdl3pesxdscm3
 creation_rules:
     - path_regex: ^pkgs/portunus/secrets/techadmin.enc
       key_groups:

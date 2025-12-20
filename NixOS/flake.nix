@@ -99,9 +99,12 @@
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
+          disko.nixosModules.disko
           ./common.nix
           ./srv-common.nix
           ./N100/configuration.nix
+          ./pkgs/ldap
+          ./pkgs/netdata-client
         ];
       };
     };
