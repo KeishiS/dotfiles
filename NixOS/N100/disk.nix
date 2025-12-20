@@ -1,0 +1,5 @@
+{
+  disko.devices = {
+    disk.main = { };
+  };
+}
