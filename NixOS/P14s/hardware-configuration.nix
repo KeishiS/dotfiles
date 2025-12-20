@@ -2,6 +2,7 @@
   config,
   modulesPath,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -11,6 +12,7 @@
   ];
 
   boot = {
+    kernelPackages = pkgs.linuxPackages_latest; # use latest linux kernel
     kernelModules = [
       "kvm-amd"
       "v4l2loopback"
