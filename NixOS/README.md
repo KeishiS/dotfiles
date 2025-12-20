@@ -23,6 +23,12 @@ tr -dc '[:graph:]' < /dev/urandom | head -c 256 > luks.key
 > cryptsetup luksKillSlot /dev/pool/root <slot-number>
 ```
 
+### リモート更新
+
+```sh
+nixos-rebuild switch --flake .#<remote-machine> --target-host <remote-machine> --build-host <remote-machine> --use-remote-sudo
+```
+
 ## sops-nix
 
 ### 追加する公開鍵情報の取得方法

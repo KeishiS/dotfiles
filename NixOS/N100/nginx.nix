@@ -3,11 +3,9 @@
   users.users.nginx.extraGroups = [ "acme" ];
   services.nginx = {
     enable = true;
-    package = pkgs.nginxQuic;
 
     recommendedTlsSettings = true;
     recommendedGzipSettings = true;
-    recommendedZstdSettings = true;
 
     #---------------------------------------------------------------------
     # Plex
