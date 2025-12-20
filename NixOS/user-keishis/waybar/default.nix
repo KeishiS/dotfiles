@@ -51,7 +51,7 @@ in
         };
         memory = {
           format = "MEM {percentage}%";
-          tooltip = false;
+          tooltip-format = "{used:0.1f}GiB / {total:0.1f}GiB";
         };
         cpu = {
           format = "CPU {usage}%";
