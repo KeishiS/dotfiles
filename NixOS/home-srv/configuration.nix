@@ -26,6 +26,7 @@
   environment.systemPackages = with pkgs; [
     asunder
     gnome-sound-recorder
+    kdePackages.kdenlive
   ];
 
   services.libinput.enable = true;
