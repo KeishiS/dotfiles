@@ -123,6 +123,9 @@ rec {
     virtiofsd
     mise
     terraform
+
+    rustdesk
+    scrcpy
   ];
 
   home.pointerCursor = {
