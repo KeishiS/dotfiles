@@ -55,7 +55,7 @@
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
-          ragenix.nixosModules.default
+          disko.nixosModules.disko
           ./common.nix
           ./private.nix
           ./gui.nix

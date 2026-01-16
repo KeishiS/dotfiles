@@ -5,7 +5,7 @@
       device = "";
       content = {
         type = "gpt";
-        partions = {
+        partitions = {
           ESP = {
             size = "1G";
             type = "EF00";
@@ -65,7 +65,7 @@
             settings.allowDiscards = true;
             passwordFile = "";
             content = {
-              type = "filename";
+              type = "filesystem";
               format = "ext4";
               mountpoint = "/";
               mountOptions = [ "noatime" ];

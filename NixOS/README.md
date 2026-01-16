@@ -8,6 +8,12 @@
 tr -dc '[:graph:]' < /dev/urandom | head -c 256 > luks.key
 ```
 
+diskoの適用
+
+```sh
+nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount <path-to-disk.nix>
+```
+
 ## インストール手順
 
 ```sh
