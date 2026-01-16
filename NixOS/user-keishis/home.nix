@@ -126,6 +126,7 @@ rec {
 
     rustdesk
     scrcpy
+    lean4
   ];
 
   home.pointerCursor = {
