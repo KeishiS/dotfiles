@@ -29,6 +29,11 @@
     kdePackages.kdenlive
   ];
 
+  services.rustdesk-server = {
+    enable = true;
+    openFirewall = true;
+  };
+
   services.libinput.enable = true;
   services.openssh = {
     enable = true;

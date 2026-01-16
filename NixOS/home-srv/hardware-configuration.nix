@@ -57,7 +57,7 @@
       luks.devices."root" = {
         device = "/dev/disk/by-uuid/ae357fad-313d-4641-96dc-9a92502e9ceb";
         allowDiscards = true;
-        preLVM = false;
+        # preLVM = false;
         yubikey = {
           slot = 1;
           twoFactor = true;
