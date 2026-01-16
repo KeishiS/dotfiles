@@ -11,8 +11,6 @@
     # ./ldap.nix
   ];
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-
   networking.hostName = "nixos-keishis-home";
   # networking.firewall.enable = true;
 
@@ -41,5 +39,5 @@
     settings.PasswordAuthentication = false;
   };
 
-  system.stateVersion = "24.11"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 }
