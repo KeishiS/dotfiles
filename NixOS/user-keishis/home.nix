@@ -124,7 +124,6 @@ rec {
     mise
     terraform
 
-    rustdesk
     scrcpy
     lean4
   ];
