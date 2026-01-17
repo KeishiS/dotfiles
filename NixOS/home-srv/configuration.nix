@@ -27,7 +27,7 @@
     kdePackages.kdenlive
   ];
 
-  services.rustdesk-server = {
+  services.tailscale = {
     enable = true;
     openFirewall = true;
   };
