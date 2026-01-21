@@ -14,6 +14,7 @@
     ../pkgs/plex
     ./nextcloud.nix
     ./gotify.nix
+    ./keylytix.nix
     # ./n8n.nix
     # ./vikunja.nix
   ];

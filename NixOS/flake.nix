@@ -20,6 +20,29 @@
       url = "github:nix-community/nix-ld/release-2.0.6";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    keylytix = {
+      url = "github:sandybox05/KeyLytix";
+      flake = false;
+    };
+
+    pyproject-nix = {
+      url = "github:pyproject-nix/pyproject.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    uv2nix = {
+      url = "github:pyproject-nix/uv2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+    };
+
+    build-system-pkgs = {
+      url = "github:pyproject-nix/build-system-pkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.uv2nix.follows = "uv2nix";
+    };
   };
 
   outputs =
@@ -28,8 +51,13 @@
       home-manager,
       sops-nix,
       disko,
-      ragenix,
       nix-ld,
+      keylytix,
+
+      # for keylytix-workspace
+      pyproject-nix,
+      uv2nix,
+      build-system-pkgs,
       ...
     }@inputs:
     {

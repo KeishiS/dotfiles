@@ -6,6 +6,12 @@ keys:
     - &nixos-sandi-lenovo age1gwp40dc8lus4jrv52u0esmfks8d70cl0xgtr95lkzxvv3fq4f96qkezs7m
     - &nixos-sandi-n100 age1w0vvgnce5xs2e7fw79tzy2szc0dd7r0c9ekle52vavym5mdl3pesxdscm3
 creation_rules:
+    - path_regex: ^lenovo/secrets/.*
+      key_groups:
+          - pgp:
+                - *yubikey
+            age:
+                - *nixos-sandi-lenovo
     - path_regex: ^pkgs/portunus/secrets/techadmin.enc
       key_groups:
           - pgp:
@@ -13,12 +19,6 @@ creation_rules:
             age:
                 - *nixos-keishis-home
                 - *nixos-sandi-lenovo
-                - *nixos-sandi-n100
-    - path_regex: ^pkgs/keylytix/secrets/ddns-env
-      key_groups:
-          - pgp:
-                - *yubikey
-            age:
                 - *nixos-sandi-n100
     - path_regex: ^pkgs/keylytix/secrets/.*
       key_groups:
