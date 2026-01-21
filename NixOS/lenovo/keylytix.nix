@@ -1,63 +1,133 @@
 {
   config,
   pkgs,
+  lib,
   keylytix,
+  uv2nix,
+  pyproject-nix,
+  build-system-pkgs,
   ...
 }:
 let
-  keylytixSrc = pkgs.stdenv.mkDerivation {
-    name = "keylytix-src";
-    src = keylytix;
+  workspace = uv2nix.lib.workspace.loadWorkspace {
+    workspaceRoot = "${keylytix}/algorithm";
+  };
+  overlay = workspace.mkPyprojectOverlay {
+    sourcePreference = "wheel";
+  };
+  pythonSet =
+    (pkgs.callPackage pyproject-nix.build.packages {
+      python = pkgs.python312;
+    }).overrideScope
+      (
+        lib.composeManyExtensions [
+          build-system-pkgs.overlays.wheel
+          overlay
+        ]
+      );
+  preprocessWorkerEnv = pythonSet.mkVirtualEnv "preprocess-worker-env" {
+    keylytix-preprocess = [ ];
+  };
 
-    dontBuild = true;
-    dontConfigure = true;
+  optimizerWorkerEnv = pythonSet.mkVirtualEnv "optimizer-worker-env" {
+    keylytix-optimizer = [ ];
+  };
 
-    installPhase = ''
-      mkdir -p $out
-      cp -r algorithm $out/
-    '';
+  commonServiceConfig = {
+    Type = "simple";
+    Restart = "always";
+    DynamicUser = true;
+
+    StateDirectoryMode = "0750";
+    CacheDirectoryMode = "0750";
+
+    LoadCredential = [
+      "aws-credentials:${config.sops.secrets."keylytix/aws-credentials".path}"
+      "aws-config:${config.sops.secrets."keylytix/aws-config".path}"
+    ];
+    Environment = [
+      "AWS_SHARED_CREDENTIALS_FILE=%d/aws-credentials"
+      "AWS_CONFIG_FILE=%d/aws-config"
+    ];
+
+    NoNewPrivileges = true;
+    PrivateTmp = true;
+    ProtectSystem = "strict";
+    ProtectHome = true;
+  };
+
+  commonEnv = {
+    PYTHONUNBUFFERED = "1";
+    PYTHONDONTWRITEBYTECODE = "1";
+
+    AWS_PROFILE = "default";
+    LOG_LEVEL = "INFO";
+    ENVIRONMENT = "prod";
   };
 in
 {
-  sops.secrets."keylytix/aws-access-key-id" = {
+  sops.secrets."keylytix/aws-config" = {
     sopsFile = ./secrets/keylytix.enc.yaml;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+    restartUnits = [
+      "keylytix-preprocess-worker.target"
+      "keylytix-optimizer-worker.target"
+    ];
   };
-  sops.secrets."keylytix/aws-secret-access-key" = {
+  sops.secrets."keylytix/aws-credentials" = {
     sopsFile = ./secrets/keylytix.enc.yaml;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+    restartUnits = [
+      "keylytix-preprocess-worker.target"
+      "keylytix-optimizer-worker.target"
+    ];
   };
 
-  systemd.services.keylytix-preprocess-worker = {
-    enable = true;
+  systemd.services."keylytix-preprocess-worker@" = {
+    description = "KeyLytix Preprocess Worker, instance %i";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
 
-    path = [ pkgs.python312 ];
-    environment = {
-      PYTHONUNBUFFERED = "1";
-      PYTHONDONTWRITEBYTECODE = "1";
-
-      UV_PYTHON_DOWNLOADS = "never";
-      UV_SYSTEM_PYTHON = "true";
-      UV_CACHE_DIR = "/var/cache/keylytix/uv";
-      UV_PROJECT_ENVIRONMENT = "/var/lib/keylytix/.venv";
+    environment = commonEnv;
+    serviceConfig = commonServiceConfig // {
+      StateDirectory = "keylytix-preprocess";
+      CacheDirectory = "keylytix-preprocess";
+      ExecStart = "${preprocessWorkerEnv}/bin/preprocess-worker";
     };
+  };
 
-    serviceConfig = {
-      Type = "simple";
-      Restart = "always";
+  systemd.targets.keylytix-preprocess-worker = {
+    description = "KeyLytix Preprocess Worker (all instances)";
+    wants = [
+      "keylytix-preprocess-worker@1.service"
+      "keylytix-preprocess-worker@2.service"
+    ];
+    wantedBy = [ "multi-user.target" ];
+  };
 
-      DynamicUser = true;
-      StateDirectory = "keylytix";
-      StateDirectoryMode = "0750";
-      CacheDirectory = "keylytix";
-      CacheDirectoryMode = "0750";
+  systemd.services."keylytix-optimizer-worker@" = {
+    description = "KeyLytix Optimizer Worker, instance %i";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
 
-      LoadCredential = [
-        "aws-access-key-id:${config.sops.secrets."keylytix/aws-access-key-id".path}"
-        "aws-secret-access-key:${config.sops.secrets."keylytix/aws-secret-access-key".path}"
-      ];
-
-      WorkingDirectory = "${keylytixSrc}/algorithm/";
-      # ExecStartPre = [ ];
-      ExecStart = "${pkgs.uv}/bin/uv sync --frozen";
+    environment = commonEnv;
+    serviceConfig = commonServiceConfig // {
+      StateDirectory = "keylytix-optimizer";
+      CacheDirectory = "keylytix-optimizer";
+      ExecStart = "${optimizerWorkerEnv}/bin/optimizer-worker";
     };
+  };
+
+  systemd.targets.keylytix-optimizer-worker = {
+    description = "KeyLytix Optimizer Worker (all instances)";
+    wants = [
+      "keylytix-optimizer-worker@1.service"
+      "keylytix-optimizer-worker@2.service"
+    ];
+    wantedBy = [ "multi-user.target" ];
   };
 }
