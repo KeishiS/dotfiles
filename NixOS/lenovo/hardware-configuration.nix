@@ -12,7 +12,7 @@
   ];
 
   boot = {
-    kernelPackages = pkgs.zfs.latestCompatibleLinuxPackages;
+    kernelPackages = pkgs.linuxPackages_6_12;
     kernelModules = [ "kvm-amd" ];
     extraModulePackages = [ ];
     supportedFilesystems = [ "zfs" ];

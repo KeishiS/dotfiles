@@ -9,7 +9,7 @@
 
   services.nextcloud = {
     enable = true;
-    package = pkgs.nextcloud31;
+    package = pkgs.nextcloud32;
     hostName = "storage.sandi05.com";
     config.adminpassFile = config.sops.secrets."nextcloud-adminpwd".path;
     config.dbtype = "sqlite";

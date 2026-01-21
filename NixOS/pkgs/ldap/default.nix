@@ -1,11 +1,11 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   sops.secrets.techadmin = {
     format = "binary";
     sopsFile = ../portunus/secrets/techadmin.enc;
     path = "/run/sops-nix/homelab/techadmin";
     mode = "0440";
-    owner = "root";
+    owner = lib.mkDefault "root";
     group = "nslcd";
   };
 
