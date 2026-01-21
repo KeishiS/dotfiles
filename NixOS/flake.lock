@@ -143,6 +143,22 @@
         "type": "github"
       }
     },
+    "keylytix": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1768996540,
+        "narHash": "sha256-J0vOtjAUrzfxd95fKKY7f2c7aqHby0xKrpBSPzWOvNQ=",
+        "owner": "sandybox05",
+        "repo": "KeyLytix",
+        "rev": "1a7ea55836336fb3d18b89a58fa193b14367d76e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sandybox05",
+        "repo": "KeyLytix",
+        "type": "github"
+      }
+    },
     "nix-ld": {
       "inputs": {
         "nixpkgs": [
@@ -238,6 +254,7 @@
       "inputs": {
         "disko": "disko",
         "home-manager": "home-manager",
+        "keylytix": "keylytix",
         "nix-ld": "nix-ld",
         "nixpkgs": "nixpkgs",
         "ragenix": "ragenix",

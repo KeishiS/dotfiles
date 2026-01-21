@@ -20,6 +20,11 @@
       url = "github:nix-community/nix-ld/release-2.0.6";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    keylytix = {
+      url = "github:sandybox05/KeyLytix";
+      flake = false;
+    };
   };
 
   outputs =
@@ -28,8 +33,8 @@
       home-manager,
       sops-nix,
       disko,
-      ragenix,
       nix-ld,
+      keylytix,
       ...
     }@inputs:
     {
