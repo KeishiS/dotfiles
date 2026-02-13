@@ -77,6 +77,10 @@
       enable = true;
       wifi.macAddress = "random";
       wifi.backend = "iwd";
+      plugins = with pkgs; [
+        networkmanager-openvpn
+        networkmanager-vpnc
+      ];
     };
     firewall = {
       enable = true;
