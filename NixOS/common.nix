@@ -199,6 +199,8 @@
     settings.PasswordAuthentication = false;
   };
 
+  services.hardware.bolt.enable = true;
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
