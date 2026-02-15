@@ -7,16 +7,14 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./nfs.nix
+    # ./nfs.nix
     ../pkgs/portunus
     ../pkgs/ldap
     ../pkgs/netdata
-    ../pkgs/plex
+    # ../pkgs/plex
     ./nextcloud.nix
-    ./gotify.nix
-    ./keylytix.nix
-    # ./n8n.nix
-    # ./vikunja.nix
+    # ./gotify.nix
+    # ./keylytix.nix
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";
@@ -24,7 +22,6 @@
 
   environment.systemPackages = with pkgs; [
     gptfdisk
-    # zfs
     libarchive # for bsdtar
   ];
 
