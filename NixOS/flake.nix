@@ -117,6 +117,7 @@
         modules = [
           nix-ld.nixosModules.nix-ld
           sops-nix.nixosModules.sops
+          disko.nixosModules.disko
           ./common.nix
           ./srv-common.nix
           ./lenovo/configuration.nix
