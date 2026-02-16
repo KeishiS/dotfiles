@@ -14,7 +14,7 @@
     # ../pkgs/plex
     ./nextcloud.nix
     # ./gotify.nix
-    # ./keylytix.nix
+    ./keylytix.nix
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";

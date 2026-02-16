@@ -32,7 +32,7 @@ nix --experimental-features "nix-command flakes" run github:nix-community/disko/
 ### リモート更新
 
 ```sh
-nixos-rebuild switch --flake .#<remote-machine> --target-host <remote-machine> --build-host <remote-machine> --use-remote-sudo
+nixos-rebuild switch --flake .#<remote-machine> --target-host <remote-machine> --build-host <remote-machine> --sudo
 ```
 
 ## 指紋認証の設定
