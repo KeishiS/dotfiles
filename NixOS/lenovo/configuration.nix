@@ -15,6 +15,7 @@
     ./nextcloud.nix
     # ./gotify.nix
     ./keylytix.nix
+    ./scrutiny.nix
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";
