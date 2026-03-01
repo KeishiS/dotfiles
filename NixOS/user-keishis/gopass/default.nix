@@ -1,0 +1,6 @@
+{ ... }:
+{
+  programs.gopass = {
+    enable = true;
+  };
+}
