@@ -11,7 +11,7 @@
     ../pkgs/portunus
     ../pkgs/ldap
     ../pkgs/netdata
-    # ../pkgs/plex
+    ../pkgs/vaultwarden
     ./nextcloud.nix
     # ./gotify.nix
     ./keylytix.nix

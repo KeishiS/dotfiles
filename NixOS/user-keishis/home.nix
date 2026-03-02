@@ -86,6 +86,7 @@ rec {
     # thunderbird-bin
     zoom-us
     _1password-gui
+    bitwarden-desktop
     nixd
     nixfmt-rfc-style # language server for Nix
     vlc

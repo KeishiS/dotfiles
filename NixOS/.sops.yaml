@@ -32,6 +32,12 @@ creation_rules:
                 - *yubikey
             age:
                 - *nixos-sandi-lenovo
+    - path_regex: ^pkgs/vaultwarden/secrets/.*
+      key_groups:
+          - pgp:
+                - *yubikey
+            age:
+                - *nixos-sandi-lenovo
     - path_regex: ^user-keishis/.*
       key_groups:
           - pgp:
