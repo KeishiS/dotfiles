@@ -16,6 +16,9 @@
     # ./gotify.nix
     ./keylytix.nix
     ./scrutiny.nix
+
+    ./prometheus.nix
+    ./yace.nix
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";

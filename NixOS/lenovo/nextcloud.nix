@@ -3,7 +3,7 @@
   sops.secrets."nextcloud-adminpwd" = {
     format = "binary";
     sopsFile = ./secrets/nextcloud-adminpwd.enc;
-    mode = "400";
+    mode = "0400";
     owner = "nextcloud";
   };
 
