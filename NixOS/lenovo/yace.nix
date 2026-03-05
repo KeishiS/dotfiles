@@ -77,6 +77,44 @@ let
             }
           ];
         }
+        {
+          type = "AWS/Cognito";
+          regions = [ "ap-northeast-1" ];
+          searchTags = [
+            {
+              key = "Environment";
+              value = "prod";
+            }
+          ];
+          period = 300; # 5分間隔でメトリクスを収集
+          length = 900; # 15分間隔でメトリクスを保持
+          metrics = [
+            {
+              name = "SignUpSuccesses";
+              statistics = [ "Sum" ];
+            }
+            {
+              name = "SignUpThrottles";
+              statistics = [ "Sum" ];
+            }
+            {
+              name = "SignInSuccesses";
+              statistics = [ "Sum" ];
+            }
+            {
+              name = "SignInThrottles";
+              statistics = [ "Sum" ];
+            }
+            {
+              name = "TokenRefreshSuccesses";
+              statistics = [ "Sum" ];
+            }
+            {
+              name = "TokenRefreshThrottles";
+              statistics = [ "Sum" ];
+            }
+          ];
+        }
       ];
     };
   };
