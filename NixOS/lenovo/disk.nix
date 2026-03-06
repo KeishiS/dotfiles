@@ -71,6 +71,14 @@ in
                   # "degraded"
                 ];
               };
+              "/users" = {
+                mountpoint = "/users";
+                mountOptions = [
+                  "noatime"
+                  "ssd"
+                  "space_cache=v2"
+                ];
+              };
             };
           };
         };

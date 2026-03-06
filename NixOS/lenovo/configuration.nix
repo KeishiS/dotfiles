@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   # vscode-server,
   ...
@@ -28,6 +29,36 @@
     gptfdisk
     libarchive # for bsdtar
   ];
+
+  # [START] sssd
+  sops.secrets.sssd-env = {
+    format = "binary";
+    sopsFile = ./secrets/sssd-env.enc;
+    mode = "0400";
+  };
+  services.sssd = {
+    enable = true;
+    sshAuthorizedKeysIntegration = true;
+    environmentFile = config.sops.secrets.sssd-env.path;
+    settings = {
+      sssd = {
+        config_file_version = 2;
+        services = "nss, pam, ssh";
+        domains = "portunus";
+      };
+      "domain/portunus" = {
+        auth_provider = "ldap";
+        id_provider = "ldap";
+        ldap_uri = "ldap://localhost:389";
+        ldap_search_base = "dc=sandi05,dc=com";
+        ldap_default_bind_dn = "uid=techadmin,ou=users,dc=sandi05,dc=com";
+        ldap_default_authtok_type = "password";
+        ldap_default_authtok = "$SSSD_LDAP_DEFAULT_AUTHTOK";
+        ldap_id_use_start_tls = false;
+      };
+    };
+  };
+  # [END] sssd
 
   system.stateVersion = "25.11";
 }
