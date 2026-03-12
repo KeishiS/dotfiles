@@ -10,6 +10,7 @@
     ../pkgs/netdata-client
     # ./ldap.nix
     ./grafana.nix
+    ./cloudflared.nix
   ];
 
   networking.hostName = "nixos-keishis-home";
