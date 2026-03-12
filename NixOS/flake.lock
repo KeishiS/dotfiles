@@ -172,15 +172,16 @@
     "keylytix": {
       "flake": false,
       "locked": {
-        "lastModified": 1772706797,
-        "narHash": "sha256-ckFRj8rhxkJNhDXQ/SmBPE0Tn+bKtmJTUm7xPFn5N+I=",
+        "lastModified": 1773276245,
+        "narHash": "sha256-p+cdYR3OdhCxT+dLf5f7sSNIzinwRbYW8g51RXrDRDo=",
         "owner": "sandybox05",
         "repo": "KeyLytix",
-        "rev": "38c424e73bb9b016716a7c58bb4e2e3a9affa2db",
+        "rev": "64d11b559ccc6ac5c18c40f9e004b7e77ff77d1c",
         "type": "github"
       },
       "original": {
         "owner": "sandybox05",
+        "ref": "issue_140",
         "repo": "KeyLytix",
         "type": "github"
       }
