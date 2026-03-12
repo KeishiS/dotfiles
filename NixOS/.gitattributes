@@ -1,3 +1,4 @@
 private.nix filter=git-crypt diff=git-crypt
 home-srv/myserv/default.nix filter=git-crypt diff=git-crypt
 home-srv/myserv/secrets/credentials.enc.yml filter=git-crypt diff=git-crypt
+home-srv/myserv/ filter=git-crypt diff=git-crypt
