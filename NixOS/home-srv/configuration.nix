@@ -11,6 +11,8 @@
     # ./ldap.nix
     ./grafana.nix
     ./cloudflared.nix
+    ./nginx.nix
+    ./myserv
   ];
 
   networking.hostName = "nixos-keishis-home";

@@ -1,1 +1,2 @@
 private.nix filter=git-crypt diff=git-crypt
+home-srv/myserv/** filter=git-crypt diff=git-crypt
