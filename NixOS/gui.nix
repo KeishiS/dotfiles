@@ -50,6 +50,7 @@
       };
     };
   };
+  security.pam.services.greetd.enableGnomeKeyring = true;
 
   environment.systemPackages = with pkgs; [
     swaynotificationcenter
@@ -64,11 +65,21 @@
   ];
   programs.waybar.enable = true;
 
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [
+      "keishis"
+      "sandybox"
+    ];
+  };
+
   xdg.portal = {
     enable = true;
     wlr.enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-wlr
+      xdg-desktop-portal-hyprland
       xdg-desktop-portal-gtk
     ];
   };

@@ -101,7 +101,6 @@ rec {
     cargo-make
     cbc
     glpk
-    insync
     julia_110-bin
     keybase
     quarto
@@ -268,7 +267,6 @@ rec {
   xdg.autostart = {
     enable = true;
     entries = [
-      "${pkgs.insync}/share/applications/insync.desktop"
       "${pkgs.networkmanagerapplet}/share/applications/nm-applet.desktop"
     ];
   };

@@ -22,7 +22,7 @@
     };
 
     keylytix = {
-      url = "github:sandybox05/KeyLytix/issue_140";
+      url = "github:sandybox05/KeyLytix";
       flake = false;
     };
 
