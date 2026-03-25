@@ -172,11 +172,11 @@
     "keylytix": {
       "flake": false,
       "locked": {
-        "lastModified": 1774201921,
-        "narHash": "sha256-zrv0UeAkkM25OR2GBAWMFezygnObJJC/1JyE4K72Iis=",
+        "lastModified": 1774441616,
+        "narHash": "sha256-DS0AtQR0RjexkmNuXpfYEuVtMYIrch9HbgPtXEChnfw=",
         "owner": "sandybox05",
         "repo": "KeyLytix",
-        "rev": "46bb16c730834c73dacf37891578330c4729949c",
+        "rev": "943cf2f3c42acc63869f0ab4c9be138bbc5ab91c",
         "type": "github"
       },
       "original": {
