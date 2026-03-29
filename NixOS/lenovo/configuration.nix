@@ -15,11 +15,11 @@
     ../pkgs/vaultwarden
     ./nextcloud.nix
     # ./gotify.nix
-    ./keylytix.nix
     ./scrutiny.nix
 
     ./prometheus.nix
     ./yace.nix
+    ./myserv
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";
