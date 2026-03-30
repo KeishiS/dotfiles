@@ -164,6 +164,49 @@
     };
 
     #---------------------------------------------------------------------
+    # Monitoring
+    # --------------------------------------------------------------------
+    virtualHosts."monitor.sandi05.com-redirect" = {
+      serverName = "monitor.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
+          port = 80;
+        }
+      ];
+      extraConfig = ''
+        return 301 https://$host$request_uri;
+      '';
+    };
+
+    virtualHosts."monitor.sandi05.com" = {
+      serverName = "monitor.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      addSSL = true;
+      useACMEHost = "sandi05.com";
+
+      locations."/" = {
+        proxyPass = "http://192.168.10.17:3000";
+        proxyWebsockets = true;
+      };
+    };
+
+    #---------------------------------------------------------------------
     # Root
     # --------------------------------------------------------------------
     virtualHosts."sandi05.com-redirect" = {
@@ -220,6 +263,7 @@
         "storage.sandi05.com"
         "notify.sandi05.com"
         "key.sandi05.com"
+        "monitor.sandi05.com"
       ];
       dnsProvider = "cloudflare";
       environmentFile = config.sops.secrets."sandi05-cloudflare-acme".path;
