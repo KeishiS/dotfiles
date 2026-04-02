@@ -61,3 +61,12 @@ fprintd-delete $USER
 ```sh
 > sops updatekeys <file>
 ```
+
+### 復号後ファイルの掃除
+
+`secrets/` 配下で `*.enc` と `*.enc.*` 以外の通常ファイルを検出・削除するスクリプトを置いている。
+
+```sh
+> clean-secrets
+> clean-secrets --delete
+```

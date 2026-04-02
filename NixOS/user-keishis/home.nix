@@ -92,9 +92,10 @@ rec {
     vlc
     insomnia
     jetbrains.datagrip
-    # kicad
-    # freerouting
-    # qmk
+
+    kicad
+    freerouting
+    qmk
     # kdePackages.kdenlive
 
     # Dev Tools

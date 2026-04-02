@@ -60,9 +60,21 @@
       build-system-pkgs,
       ...
     }@inputs:
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+      };
+    in
     {
+      devShells.${system}.default = pkgs.mkShellNoCC {
+        shellHook = ''
+          export PATH="$PWD/scripts:$PATH"
+        '';
+      };
+
       nixosConfigurations.nixos-keishis-p14s = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
@@ -78,7 +90,7 @@
       };
 
       nixosConfigurations.nixos-keishis-x13 = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
@@ -96,7 +108,7 @@
       };
 
       nixosConfigurations.nixos-keishis-home = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
@@ -112,7 +124,7 @@
       };
 
       nixosConfigurations.nixos-sandi-lenovo = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
@@ -124,7 +136,7 @@
         ];
       };
       nixosConfigurations.nixos-sandi-n100 = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
         specialArgs = inputs;
         modules = [
           nix-ld.nixosModules.nix-ld
