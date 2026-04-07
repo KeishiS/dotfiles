@@ -25,6 +25,7 @@ rec {
     ./hyprlock
     ./hypridle
     ./i3
+    # ./mail-notify
     ./sops-nix
 
     # terminal

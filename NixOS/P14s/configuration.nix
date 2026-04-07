@@ -24,6 +24,8 @@
     });
   '';
 
+  hardware.keyboard.qmk.enable = true;
+
   services.tailscale = {
     enable = true;
     openFirewall = true;
