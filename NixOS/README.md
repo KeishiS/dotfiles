@@ -70,3 +70,30 @@ fprintd-delete $USER
 > clean-secrets
 > clean-secrets --delete
 ```
+
+## Mail Notify
+
+Home Manager に `services.mailNotify` モジュールを追加している。アカウントごとに `sops-nix` で秘密情報を復号し、`goimapnotify` を `systemd --user` で常駐させて新着時に `notify-send` を呼ぶ。OAuth2 を有効にした場合は、`refresh_token` から `access_token` を都度取得する。
+
+```nix
+services.mailNotify = {
+  enable = true;
+  accounts.personal = {
+    email = "me@example.com";
+    host = "imap.gmail.com";
+    xoAuth2 = true;
+    oauth2 = {
+      enable = true;
+      clientIdFile = ./sops-nix/secrets/mail-personal-oauth-client-id.enc;
+      clientSecretFile = ./sops-nix/secrets/mail-personal-oauth-client-secret.enc;
+      refreshTokenFile = ./sops-nix/secrets/mail-personal-oauth-refresh-token.enc;
+    };
+  };
+};
+```
+
+OAuth2 で使う暗号化ファイルの中身はそれぞれ 1 行の平文を想定する。
+
+- `clientIdFile`: OAuth client ID
+- `clientSecretFile`: OAuth client secret
+- `refreshTokenFile`: OAuth refresh token

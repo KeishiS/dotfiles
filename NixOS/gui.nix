@@ -19,8 +19,8 @@
       jetbrains-mono
       julia-mono
       noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-cjk-serif
+      noto-fonts-cjk-sans-static
+      noto-fonts-cjk-serif-static
       noto-fonts-color-emoji
       source-han-code-jp
       ipaexfont
@@ -28,6 +28,8 @@
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.noto
+
+      vollkorn # for basic-report in typst
     ];
   };
 
