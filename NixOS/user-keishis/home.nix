@@ -87,6 +87,7 @@ rec {
     # thunderbird-bin
     zoom-us
     _1password-gui
+    bitwarden-cli
     bitwarden-desktop
     nixd
     nixfmt-rfc-style # language server for Nix
@@ -229,8 +230,8 @@ rec {
     ];
   };
 
-  home.file.".latexmkrc".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
+  # home.file.".latexmkrc".source =
+  #   config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.latexmkrc";
 
   xdg.configFile = {
     "home-manager".source =
@@ -272,6 +273,23 @@ rec {
       "${pkgs.networkmanagerapplet}/share/applications/nm-applet.desktop"
     ];
   };
+
+  /*
+    services.mailNotify = {
+      enable = true;
+      accounts.personal = {
+        email = "nobuta05@gmail.com";
+        host = "imap.gmail.com";
+        xoAuth2 = true;
+        oauth2 = {
+          enable = true;
+          clientIdFile = ./sops-nix/secrets/mail-personal-oauth-client-id.enc;
+          clientSecretFile = ./sops-nix/secrets/mail-personal-oauth-client-secret.enc;
+          refreshTokenFile = ./sops-nix/secrets/mail-personal-oauth-refresh-token.enc;
+        };
+      };
+    };
+  */
 
   home.stateVersion = "24.11"; # Please read the comment before changing.
 }
