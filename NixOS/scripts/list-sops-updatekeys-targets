@@ -14,7 +14,7 @@ Matched files:
 
 Examples:
   list-sops-updatekeys-targets
-  list-sops-updatekeys-targets ./home-srv
+  list-sops-updatekeys-targets ./hosts/home-srv
 EOF
 }
 

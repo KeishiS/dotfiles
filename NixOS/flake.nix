@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     sops-nix.url = "github:Mic92/sops-nix";
-    ragenix.url = "github:yaxitech/ragenix";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
@@ -92,6 +91,20 @@
           ${builtins.readFile ./flake-config/sandbox-enter.sh}
         '';
       };
+
+      mkHost =
+        modules:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = inputs;
+          modules = [
+            nix-ld.nixosModules.nix-ld
+            sops-nix.nixosModules.sops
+            disko.nixosModules.disko
+            ./modules/base
+          ]
+          ++ modules;
+        };
     in
     {
       devShells.${system}.default = pkgs.mkShellNoCC {
@@ -110,81 +123,47 @@
         '';
       };
 
-      nixosConfigurations.nixos-keishis-p14s = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = inputs;
-        modules = [
-          nix-ld.nixosModules.nix-ld
-          sops-nix.nixosModules.sops
-          disko.nixosModules.disko
-          ./common.nix
-          ./private.nix
-          ./P14s/configuration.nix
-          ./pkgs/networkmanager
-          ./gui.nix
-          ./hyprland.nix
-        ];
-      };
+      nixosConfigurations.nixos-keishis-p14s = mkHost [
+        ./private.nix
+        ./hosts/p14s/configuration.nix
+        ./modules/services/networkmanager
+        ./modules/profiles/laptop.nix
+        ./modules/profiles/desktop.nix
+        ./modules/profiles/hyprland.nix
+      ];
 
-      nixosConfigurations.nixos-keishis-x13 = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = inputs;
-        modules = [
-          nix-ld.nixosModules.nix-ld
-          sops-nix.nixosModules.sops
-          disko.nixosModules.disko
-          ./common.nix
-          ./private.nix
-          ./gui.nix
-          ./sway.nix
-          ./hyprland.nix
-          ./i3.nix
-          ./X13/configuration.nix
-          ./pkgs/networkmanager
-        ];
-      };
+      nixosConfigurations.nixos-keishis-x13 = mkHost [
+        ./private.nix
+        ./modules/profiles/desktop.nix
+        ./modules/profiles/sway.nix
+        ./modules/profiles/hyprland.nix
+        ./modules/profiles/i3.nix
+        ./hosts/x13/configuration.nix
+        ./modules/services/networkmanager
+        ./modules/profiles/laptop.nix
+      ];
 
-      nixosConfigurations.nixos-keishis-home = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = inputs;
-        modules = [
-          nix-ld.nixosModules.nix-ld
-          sops-nix.nixosModules.sops
-          disko.nixosModules.disko
-          ./common.nix
-          ./private.nix
-          ./gui.nix
-          ./sway.nix
-          ./hyprland.nix
-          ./home-srv/configuration.nix
-        ];
-      };
+      nixosConfigurations.nixos-keishis-home = mkHost [
+        ./private.nix
+        ./modules/profiles/desktop.nix
+        ./modules/profiles/sway.nix
+        ./modules/profiles/hyprland.nix
+        ./hosts/home-srv/configuration.nix
+        ./modules/services/networkmanager
+      ];
 
-      nixosConfigurations.nixos-sandi-lenovo = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = inputs;
-        modules = [
-          nix-ld.nixosModules.nix-ld
-          sops-nix.nixosModules.sops
-          disko.nixosModules.disko
-          ./common.nix
-          ./srv-common.nix
-          ./lenovo/configuration.nix
-        ];
-      };
-      nixosConfigurations.nixos-sandi-n100 = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = inputs;
-        modules = [
-          nix-ld.nixosModules.nix-ld
-          sops-nix.nixosModules.sops
-          disko.nixosModules.disko
-          ./common.nix
-          ./srv-common.nix
-          ./N100/configuration.nix
-          ./pkgs/ldap
-          ./pkgs/netdata-client
-        ];
-      };
+      nixosConfigurations.nixos-sandi-lenovo = mkHost [
+        ./modules/users/sandi.nix
+        ./modules/profiles/server.nix
+        ./hosts/lenovo/configuration.nix
+      ];
+
+      nixosConfigurations.nixos-sandi-n100 = mkHost [
+        ./modules/users/sandi.nix
+        ./modules/profiles/server.nix
+        ./hosts/n100/configuration.nix
+        ./modules/services/ldap
+        ./modules/services/netdata-client
+      ];
     };
 }

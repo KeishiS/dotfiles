@@ -2,6 +2,15 @@
 
 自宅サーバの環境構築ファイル群
 
+## ディレクトリ構成
+
+- `hosts/`: マシンごとの差分。hostname、hardware configuration、disk、host 固有サービスを置く。
+- `modules/base/`: すべての NixOS host に入れる基礎設定。
+- `modules/profiles/`: desktop、server、window manager など用途別の組み合わせ。
+- `modules/services/`: 再利用する NixOS service module。
+- `home/keishis/`: Home Manager configuration。
+- `scripts/`: 運用補助スクリプト。
+
 一時的な鍵生成
 
 ```sh
@@ -62,7 +71,7 @@ fprintd-delete $USER
 
 ```sh
 > list-sops-updatekeys-targets
-> list-sops-updatekeys-targets ./home-srv
+> list-sops-updatekeys-targets ./hosts/home-srv
 ```
 
 表示されたファイルを対象に `sops updatekeys` を実行する。
