@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+Usage: list-sops-updatekeys-targets [root]
+
+Print SOPS-encrypted files that may need sops updatekeys.
+
+Matched files:
+  - *.enc
+  - *.enc.*
+
+Examples:
+  list-sops-updatekeys-targets
+  list-sops-updatekeys-targets ./home-srv
+EOF
+}
+
+root="."
+
+while (($# > 0)); do
+    case "$1" in
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    -*)
+        echo "Unknown option: $1" >&2
+        usage >&2
+        exit 1
+        ;;
+    *)
+        if [[ "$root" != "." ]]; then
+            echo "Only one root path can be specified." >&2
+            usage >&2
+            exit 1
+        fi
+        root="$1"
+        ;;
+    esac
+    shift
+done
+
+repo_root="$PWD"
+while [[ "$repo_root" != "/" && ! -f "$repo_root/.sops.yaml" ]]; do
+    repo_root="$(dirname "$repo_root")"
+done
+
+if [[ ! -f "$repo_root/.sops.yaml" ]]; then
+    echo "Could not find .sops.yaml in the current directory or its parents." >&2
+    exit 1
+fi
+
+case "$root" in
+/*)
+    search_root="$root"
+    ;;
+*)
+    search_root="$PWD/$root"
+    ;;
+esac
+
+if [[ ! -d "$search_root" ]]; then
+    echo "Root path does not exist: $root" >&2
+    exit 1
+fi
+
+repo_root="$(realpath "$repo_root")"
+search_root="$(realpath "$search_root")"
+
+case "$search_root" in
+"$repo_root")
+    search_root="."
+    ;;
+"$repo_root"/*)
+    search_root="${search_root#"$repo_root"/}"
+    ;;
+*)
+    echo "Root path must be inside the directory containing .sops.yaml: $repo_root" >&2
+    exit 1
+    ;;
+esac
+
+cd "$repo_root"
+
+matches=()
+while IFS= read -r -d '' path; do
+    path="${path#./}"
+    matches+=("$path")
+done < <(
+    find "$search_root" -type f \( -name '*.enc' -o -name '*.enc.*' \) -print0
+)
+
+if ((${#matches[@]} == 0)); then
+    echo "No SOPS-encrypted files found."
+    exit 0
+fi
+
+printf '%s\n' "${matches[@]}"

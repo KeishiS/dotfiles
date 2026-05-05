@@ -1,0 +1,28 @@
+export HOME=/home/agent
+export XDG_CACHE_HOME=/home/agent/.cache
+export XDG_CONFIG_HOME=/home/agent/.config
+export XDG_DATA_HOME=/home/agent/.local/share
+export PNPM_HOME=/home/agent/.local/share/pnpm
+export GIT_CONFIG_GLOBAL=/dev/null
+export STARSHIP_CONFIG=/home/agent/.config/starship.toml
+export PATH="/home/agent/.local/bin:$PNPM_HOME:$PATH"
+
+bind 'set completion-ignore-case on'
+bind 'set show-all-if-ambiguous on'
+bind 'TAB:menu-complete'
+
+alias ls='eza --group-directories-first --icons=auto'
+alias ll='eza -lh --group-directories-first --icons=auto'
+alias la='eza -lah --group-directories-first --icons=auto'
+alias cat='bat --paging=never'
+
+if [ -r "$BASH_COMPLETION_PATH" ]; then
+    . "$BASH_COMPLETION_PATH"
+fi
+
+eval "$("$STARSHIP_BIN" init bash)"
+cd /workspace
+
+pnpm install -g @openai/codex
+pnpm install -g @google/gemini-cli
+curl -fsSL https://claude.ai/install.sh | bash

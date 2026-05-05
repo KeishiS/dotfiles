@@ -58,6 +58,15 @@ fprintd-delete $USER
 
 ### 公開鍵情報更新後の各暗号ファイルの更新
 
+更新対象の暗号ファイル一覧は以下で確認できる。
+
+```sh
+> list-sops-updatekeys-targets
+> list-sops-updatekeys-targets ./home-srv
+```
+
+表示されたファイルを対象に `sops updatekeys` を実行する。
+
 ```sh
 > sops updatekeys <file>
 ```

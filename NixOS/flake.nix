@@ -65,11 +65,48 @@
       pkgs = import nixpkgs {
         inherit system;
       };
+
+      projectName = "dotfiles";
+      entrypoint = pkgs.writeShellApplication {
+        name = "sandbox-enter";
+        runtimeInputs = with pkgs; [
+          bashInteractive
+          bash-completion
+          bat
+          bubblewrap
+          coreutils
+          eza
+          fd
+          fzf
+          ripgrep
+          starship
+        ];
+        text = ''
+          export SANDBOX_BASH=${pkgs.bashInteractive}/bin/bash
+          export PROJECT_NAME=${projectName}
+          export SANDBOX_BASHRC_TEMPLATE=${./flake-config/bashrc}
+          export SANDBOX_STARSHIP_TEMPLATE=${./flake-config/starship.toml}
+          export SANDBOX_CACERT=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
+          export BASH_COMPLETION_PATH=${pkgs.bash-completion}/share/bash-completion/bash_completion
+          export STARSHIP_BIN=${pkgs.starship}/bin/starship
+          ${builtins.readFile ./flake-config/sandbox-enter.sh}
+        '';
+      };
     in
     {
       devShells.${system}.default = pkgs.mkShellNoCC {
+        packages = with pkgs; [
+          nodejs_24
+          pnpm
+          ripgrep
+          starship
+          uv
+        ];
         shellHook = ''
-          export PATH="$PWD/scripts:$PATH"
+          # export PATH="$PWD/scripts:$PATH"
+          if [ -z "''${SKIP_AGENT_BWRAP:-}" ]; then
+            exec ${entrypoint}/bin/sandbox-enter
+          fi
         '';
       };
 
