@@ -30,6 +30,7 @@
     bitwarden-desktop
     nixd
     nixfmt-rfc-style # language server for Nix
+    nil # another nix language server
     vlc
     insomnia
     jetbrains.datagrip

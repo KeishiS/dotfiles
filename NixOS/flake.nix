@@ -129,12 +129,18 @@
         ./modules/services/networkmanager
         ./modules/profiles/laptop.nix
         ./modules/profiles/desktop.nix
+        ./modules/profiles/bluetooth.nix
+        ./modules/profiles/japanese.nix
+        ./modules/profiles/yubikey.nix
         ./modules/profiles/hyprland.nix
       ];
 
       nixosConfigurations.nixos-keishis-x13 = mkHost [
         ./private.nix
         ./modules/profiles/desktop.nix
+        ./modules/profiles/bluetooth.nix
+        ./modules/profiles/japanese.nix
+        ./modules/profiles/yubikey.nix
         ./modules/profiles/sway.nix
         ./modules/profiles/hyprland.nix
         ./modules/profiles/i3.nix
@@ -146,6 +152,9 @@
       nixosConfigurations.nixos-keishis-home = mkHost [
         ./private.nix
         ./modules/profiles/desktop.nix
+        ./modules/profiles/bluetooth.nix
+        ./modules/profiles/japanese.nix
+        ./modules/profiles/yubikey.nix
         ./modules/profiles/sway.nix
         ./modules/profiles/hyprland.nix
         ./hosts/home-srv/configuration.nix

@@ -1,8 +1,4 @@
 { ... }:
 {
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestions.enable = true;
-  };
+  programs.zsh.enable = true;
 }

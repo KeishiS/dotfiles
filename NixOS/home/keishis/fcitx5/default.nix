@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 {
   i18n.inputMethod = {
     fcitx5.settings = {
@@ -12,6 +12,19 @@
         "Groups/0/Items/0".Name = "mozc";
       };
     };
-    fcitx5.waylandFrontend = false;
+  };
+
+  home.sessionVariables = {
+    GTK_IM_MODULE = lib.mkForce "";
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
+  };
+
+  gtk = {
+    gtk2.extraConfig = ''
+      gtk-im-module = fcitx
+    '';
+    gtk3.extraConfig.gtk-im-module = "fcitx";
+    gtk4.extraConfig.gtk-im-module = "fcitx";
   };
 }

@@ -12,6 +12,12 @@ creation_rules:
                 - *yubikey
             age:
                 - *nixos-sandi-lenovo
+    - path_regex: ^modules/services/sssd/secrets/.*
+      key_groups:
+          - pgp:
+                - *yubikey
+            age:
+                - *nixos-sandi-lenovo
     - path_regex: ^modules/services/portunus/secrets/techadmin.enc
       key_groups:
           - pgp:

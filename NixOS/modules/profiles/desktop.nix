@@ -1,43 +1,8 @@
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 {
   programs.gnupg.agent = {
     pinentryPackage = pkgs.pinentry-gnome3;
   };
-
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-  };
-  services.blueman.enable = true;
-
-  i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
-    fcitx5 = {
-      waylandFrontend = true;
-      addons = with pkgs; [
-        fcitx5-mozc
-        fcitx5-gtk
-        kdePackages.fcitx5-qt
-      ];
-      settings.inputMethod = {
-        GroupOrder."0" = "Default";
-        "Groups/0" = {
-          Name = "Default";
-          "Default Layout" = "jp106";
-          DefaultIM = "mozc";
-        };
-        "Groups/0/Items/0".Name = "mozc";
-      };
-    };
-  };
-  environment.variables.GTK_IM_MODULE = lib.mkForce "";
-
-  services.pcscd.enable = true;
-  # YubiKeyが抜かれた際に画面ロック
-  services.udev.extraRules = ''
-    ACTION=="remove", ENV{ID_VENDOR_ID}=="1050", ENV{ID_MODEL_ID}=="0407", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
-  '';
 
   fonts = {
     fontDir.enable = true;

@@ -15,12 +15,6 @@
 
   programs.starship.enable = true;
 
-  /*
-    programs.gnupg.agent = {
-      pinentryPackage = pkgs.pinentry-curses;
-    };
-  */
-
   services.fail2ban = {
     enable = true;
     ignoreIP = [

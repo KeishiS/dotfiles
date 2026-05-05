@@ -32,10 +32,12 @@ in
       package = pkgs.volantes-cursors;
       name = "volantes_cursors";
     };
-    gtk2.extraConfig = ''
-      gtk-im-module = fcitx
-    '';
-    gtk3.extraConfig.gtk-im-module = "fcitx";
-    gtk4.extraConfig.gtk-im-module = "fcitx";
+  };
+
+  # FreeDesktop portal / GTK / browsers へ dark mode を伝える
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
   };
 }
