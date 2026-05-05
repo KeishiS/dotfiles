@@ -1,3 +1,11 @@
 **/secrets/*
 !**/secrets/*.enc
 !**/secrets/*.enc.*
+
+**/.terraform/
+**/.terraform.lock.hcl
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+**/*.tfvars.json
+**/*.tfplan
