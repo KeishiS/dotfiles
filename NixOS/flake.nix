@@ -107,20 +107,38 @@
         };
     in
     {
-      devShells.${system}.default = pkgs.mkShellNoCC {
-        packages = with pkgs; [
-          nodejs_24
-          pnpm
-          ripgrep
-          starship
-          uv
-        ];
-        shellHook = ''
-          # export PATH="$PWD/scripts:$PATH"
-          if [ -z "''${SKIP_AGENT_BWRAP:-}" ]; then
-            exec ${entrypoint}/bin/sandbox-enter
-          fi
-        '';
+      devShells.${system} = {
+        default = pkgs.mkShellNoCC {
+          packages = with pkgs; [
+            nodejs_24
+            pnpm
+            ripgrep
+            starship
+            uv
+          ];
+          shellHook = ''
+            # export PATH="$PWD/scripts:$PATH"
+            if [ -z "''${SKIP_AGENT_BWRAP:-}" ]; then
+              exec ${entrypoint}/bin/sandbox-enter
+            fi
+          '';
+        };
+
+        plain = pkgs.mkShellNoCC {
+          packages = with pkgs; [
+            nodejs_24
+            pnpm
+            ripgrep
+            starship
+            uv
+
+            age-plugin-yubikey
+            rage
+          ];
+          shellHook = ''
+            export PATH="$PWD/scripts:$PATH"
+          '';
+        };
       };
 
       nixosConfigurations.nixos-keishis-p14s = mkHost [

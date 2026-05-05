@@ -13,6 +13,18 @@
 
 ## よく使うコマンド
 
+通常の開発用 shell に入る。
+
+```sh
+nix develop .#plain
+```
+
+`nix develop` は sandbox 用 entrypoint に入る。`shellHook` を抑止したい場合は以下を使う。
+
+```sh
+SKIP_AGENT_BWRAP=1 nix develop
+```
+
 一時的な鍵生成
 
 ```sh
