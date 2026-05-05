@@ -11,6 +11,8 @@
 - `home/keishis/`: Home Manager configuration。
 - `scripts/`: 運用補助スクリプト。
 
+## よく使うコマンド
+
 一時的な鍵生成
 
 ```sh
@@ -59,6 +61,10 @@ fprintd-delete $USER
 
 ## sops-nix
 
+暗号化ルールは root の `.sops.yaml` に置いている。
+age recipient は各 `nixosConfigurations` 名に対応しており、
+host 別の `secrets/` と共有 service module 用の `secrets/` を path regex で分けている。
+
 ### 追加する公開鍵情報の取得方法
 
 ```sh
@@ -87,6 +93,7 @@ fprintd-delete $USER
 ```sh
 > clean-secrets
 > clean-secrets --delete
+> clean-secrets --delete ./hosts/home-srv
 ```
 
 ## Mail Notify
