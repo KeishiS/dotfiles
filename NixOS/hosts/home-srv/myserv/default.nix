@@ -54,8 +54,6 @@ let
 in
 {
   imports = [
-    ./db.nix
-    ./pool.nix
     ./monitoring
   ];
 
@@ -137,9 +135,6 @@ in
       "${servName}-user-query-service@2.service"
     ];
     wantedBy = [ "multi-user.target" ];
-
-    after = [ "pgbouncer.service" ];
-    requires = [ "pgbouncer.service" ];
   };
 
   #--------------------------------------
@@ -172,11 +167,9 @@ in
 
     after = [
       "${servName}-auth-service.target"
-      "pgbouncer.service"
     ];
     requires = [
       "${servName}-auth-service.target"
-      "pgbouncer.service"
     ];
   };
 

@@ -3,11 +3,12 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/services/netdata-client
-    ./grafana.nix
+    # ../../modules/services/netdata-client
+    # ./grafana.nix
     ./cloudflared.nix
-    ./nginx.nix
-    ./myserv
+    # ./nginx.nix
+    ./postgresql
+    # ./myserv
   ];
 
   networking.hostName = "nixos-keishis-home";
