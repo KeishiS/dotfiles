@@ -11,6 +11,9 @@
   ];
 
   networking.hostName = "nixos-keishis-home";
+  networking.hostFiles = [
+    ./hosts.local
+  ];
 
   environment.systemPackages = with pkgs; [
     asunder

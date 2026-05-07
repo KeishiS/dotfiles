@@ -1,5 +1,7 @@
 private.nix filter=git-crypt diff=git-crypt
 credentials.nix filter=git-crypt diff=git-crypt
+modules/base/hosts filter=git-crypt diff=git-crypt
+hosts/*/hosts.local filter=git-crypt diff=git-crypt
 hosts/home-srv/postgresql/apps/** filter=git-crypt diff=git-crypt
 home-srv/myserv/** filter=git-crypt diff=git-crypt
 lenovo/myserv/** filter=git-crypt diff=git-crypt

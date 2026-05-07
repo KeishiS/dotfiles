@@ -1,8 +1,8 @@
-{ config, ... }:
+{ ... }:
 {
   networking = {
     hostFiles = [
-      "${config.sops.secrets.hosts.path}"
+      ./hosts
     ];
     firewall = {
       enable = true;
