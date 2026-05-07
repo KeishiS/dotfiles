@@ -5,6 +5,7 @@ in
 {
   imports = [
     ./server.nix
+    ./apps
     ./backup.nix
   ];
 
