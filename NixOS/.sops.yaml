@@ -26,6 +26,12 @@ creation_rules:
                 - *nixos-keishis-home
                 - *nixos-sandi-lenovo
                 - *nixos-sandi-n100
+    - path_regex: ^hosts/home-srv/.*
+      key_groups:
+          - pgp:
+                - *yubikey
+            age:
+                - *nixos-keishis-home
     - path_regex: ^hosts/lenovo/myserv/secrets/.*
       key_groups:
           - pgp:

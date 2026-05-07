@@ -8,7 +8,6 @@
     ./hardware-configuration.nix
     ../../modules/services/portunus
     ../../modules/services/ldap
-    ../../modules/services/netdata
     ../../modules/services/sssd
     ../../modules/services/vaultwarden
     ./nextcloud.nix

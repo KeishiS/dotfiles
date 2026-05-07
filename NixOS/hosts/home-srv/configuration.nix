@@ -3,9 +3,8 @@
 {
   imports = [
     ./hardware-configuration.nix
-    # ../../modules/services/netdata-client
     # ./grafana.nix
-    ./cloudflared.nix
+    # ./cloudflared.nix
     # ./nginx.nix
     ./postgresql
     # ./myserv

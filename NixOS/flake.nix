@@ -190,7 +190,6 @@
         ./modules/profiles/server.nix
         ./hosts/n100/configuration.nix
         ./modules/services/ldap
-        ./modules/services/netdata-client
       ];
     };
 }
