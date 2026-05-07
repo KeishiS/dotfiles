@@ -11,11 +11,13 @@
     ../../modules/services/sssd
     ../../modules/services/vaultwarden
     ./nextcloud.nix
-    ./scrutiny.nix
+    ./jellyfin.nix
+    ./nextcloud-media-archive.nix
+    # ./scrutiny.nix
 
-    ./prometheus.nix
-    ./yace.nix
-    ./myserv
+    # ./prometheus.nix
+    # ./yace.nix
+    # ./myserv
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";

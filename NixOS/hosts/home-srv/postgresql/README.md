@@ -115,9 +115,10 @@ credential file の形式は以下の通り．
 ```sh
 B2_APPLICATION_KEY_ID=...
 B2_APPLICATION_KEY=...
-B2_BUCKET=...
-B2_PREFIX=home-srv/postgresql
 ```
+
+bucket と prefix は `credentials.nix` の `sandi.backup.b2.targets.postgresql`
+で管理する。credential file には application key のみを入れる。
 
 sops-nix で復号した env file を使う場合の設定例:
 
@@ -133,6 +134,8 @@ sops.secrets.postgresql-backup-b2-env = {
 services.homePostgresqlBackup.upload = {
   enable = true;
   environmentFile = config.sops.secrets.postgresql-backup-b2-env.path;
+  bucket = config.sandi.backup.b2.targets.postgresql.bucket;
+  prefix = config.sandi.backup.b2.targets.postgresql.prefix;
 };
 ```
 
@@ -142,8 +145,8 @@ B2 から対象ファイルを取得する。
 
 ```sh
 b2v4 file download \
-  keishis-psql-backups \
-  home-srv/postgresql/<timestamp>/<database>.dump.zst.age \
+  <bucket> \
+  <prefix>/<timestamp>/<database>.dump.zst.age \
   /tmp/<database>.dump.zst.age
 ```
 

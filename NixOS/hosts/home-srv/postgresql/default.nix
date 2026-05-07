@@ -1,4 +1,7 @@
 { config, ... }:
+let
+  b2Target = config.sandi.backup.b2.targets.postgresql;
+in
 {
   imports = [
     ./server.nix
@@ -26,13 +29,13 @@
     databases = [
       "postgres"
     ];
-    ageRecipients = [
-      "age1yubikey1qgauag3cngkm8u23h4r42ekn5ng2a7rmqqpspurz6kcuu9sqkhhgg62m0dc"
-    ];
+    ageRecipients = config.sandi.backup.ageRecipients;
     calendar = "Sun 02:00";
     upload = {
       enable = true;
       environmentFile = config.sops.secrets.postgresql-backup-b2-env.path;
+      bucket = b2Target.bucket;
+      prefix = b2Target.prefix;
     };
   };
 }

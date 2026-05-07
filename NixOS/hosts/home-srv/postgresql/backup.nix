@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.services.homePostgresqlBackup;
+  b2Cli = config.sandi.backup.b2.cliPackage;
   recipientArgs = lib.concatMapStringsSep " " (
     recipient: "-r ${lib.escapeShellArg recipient}"
   ) cfg.ageRecipients;
@@ -58,9 +59,20 @@ in
         type = lib.types.nullOr lib.types.path;
         default = null;
         description = ''
-          Environment file containing B2_APPLICATION_KEY_ID, B2_APPLICATION_KEY,
-          B2_BUCKET, and B2_PREFIX.
+          Environment file containing B2_APPLICATION_KEY_ID and B2_APPLICATION_KEY.
         '';
+      };
+
+      bucket = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Backblaze B2 bucket name.";
+      };
+
+      prefix = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Backblaze B2 object prefix.";
       };
     };
   };
@@ -84,6 +96,14 @@ in
       {
         assertion = !cfg.upload.enable || cfg.upload.environmentFile != null;
         message = "services.homePostgresqlBackup.upload.environmentFile must be set when upload is enabled.";
+      }
+      {
+        assertion = !cfg.upload.enable || cfg.upload.bucket != "";
+        message = "services.homePostgresqlBackup.upload.bucket must be set when upload is enabled.";
+      }
+      {
+        assertion = !cfg.upload.enable || cfg.upload.prefix != "";
+        message = "services.homePostgresqlBackup.upload.prefix must be set when upload is enabled.";
       }
     ];
 
@@ -119,7 +139,7 @@ in
           age-plugin-yubikey
         ]
         ++ lib.optionals cfg.upload.enable [
-          backblaze-b2
+          b2Cli
         ];
 
       script = ''
@@ -142,16 +162,14 @@ in
         ${lib.optionalString cfg.upload.enable ''
           : "''${B2_APPLICATION_KEY_ID:?B2_APPLICATION_KEY_ID is required}"
           : "''${B2_APPLICATION_KEY:?B2_APPLICATION_KEY is required}"
-          : "''${B2_BUCKET:?B2_BUCKET is required}"
-          : "''${B2_PREFIX:?B2_PREFIX is required}"
 
           export B2_ACCOUNT_INFO="$STATE_DIRECTORY/b2-account-info"
 
           for file in "$backup_dir"/*.age; do
             b2v4 file upload --no-progress \
-              "$B2_BUCKET" \
+              ${lib.escapeShellArg cfg.upload.bucket} \
               "$file" \
-              "''${B2_PREFIX%/}/$timestamp/$(basename "$file")"
+              "${lib.escapeShellArg cfg.upload.prefix}/$timestamp/$(basename "$file")"
           done
         ''}
       '';

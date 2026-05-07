@@ -102,6 +102,8 @@
             sops-nix.nixosModules.sops
             disko.nixosModules.disko
             ./modules/base
+            ./modules/services/backup
+            ./credentials.nix
           ]
           ++ modules;
         };
