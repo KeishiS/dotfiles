@@ -1,6 +1,5 @@
 {
   imports = [
-    ../services/sops-nix
     ./nix.nix
     ./boot.nix
     ./security.nix

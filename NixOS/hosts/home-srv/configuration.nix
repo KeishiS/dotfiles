@@ -3,11 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    # ./grafana.nix
-    # ./cloudflared.nix
-    # ./nginx.nix
     ./postgresql
-    # ./myserv
   ];
 
   networking.hostName = "nixos-keishis-home";

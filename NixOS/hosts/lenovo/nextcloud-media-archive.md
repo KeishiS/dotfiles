@@ -1,6 +1,6 @@
 # Nextcloud Media Archive
 
-## Paths
+## Path
 
 - 処理対象: `/storage/nextcloud/data/keishis/files/JellyfinImport`
 - Jellyfin library 用: `/storage/jellyfin/media/keishis`
@@ -9,7 +9,7 @@
 
 Nextcloud 管理下のファイルは読むだけにし、移動・削除・権限変更はしない。
 
-## Behavior
+## 動作
 
 `nextcloud-media-archive.timer` は 15 分ごとに実行される。
 
@@ -47,13 +47,13 @@ B2_APPLICATION_KEY=...
 bucket と prefix は `credentials.nix` の `sandi.backup.b2.targets.nextcloudMedia`
 で管理する。
 
-## Local Retention
+## ローカル保持期間
 
 ローカル archive は `systemd-tmpfiles` により 1 日で削除する。
 
 marker は二重処理防止に必要なので削除しない。
 
-## Commands
+## コマンド
 
 timer 確認:
 

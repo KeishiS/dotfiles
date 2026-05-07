@@ -4,11 +4,11 @@
 
 ## ディレクトリ構成
 
-- `hosts/`: マシンごとの差分。hostname、hardware configuration、disk、host 固有サービスを置く。
+- `hosts/`: マシンごとの差分。hostname、hardware configuration、disk、host 固有 service を置く。
 - `modules/base/`: すべての NixOS host に入れる基礎設定。
 - `modules/profiles/`: desktop、server、window manager など用途別の組み合わせ。
 - `modules/services/`: 再利用する NixOS service module。
-- `home/keishis/`: Home Manager configuration。
+- `home/keishis/`: Home Manager 設定。
 - `scripts/`: 運用補助スクリプト。
 
 ## よく使うコマンド
@@ -40,11 +40,11 @@ nix --experimental-features "nix-command flakes" run github:nix-community/disko/
 ## インストール手順
 
 ```sh
-> # edit disk.nix to replace disk path and a temporary key file path
+> # disk.nix の disk path と一時 key file path を編集する
 > nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko <path-to-disk.nix>
 > nixos-install --flake .#<machine-name>
 
-> # unmount all partitions
+> # すべての partition を unmount する
 > systemd-cryptenroll --fido2-device=auto --unlock-key-file=<path-to-luks.key> /dev/pool/root
 
 > # 現在のキースロットの確認

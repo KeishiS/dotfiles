@@ -13,11 +13,6 @@
     ./nextcloud.nix
     ./jellyfin.nix
     ./nextcloud-media-archive.nix
-    # ./scrutiny.nix
-
-    # ./prometheus.nix
-    # ./yace.nix
-    # ./myserv
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";

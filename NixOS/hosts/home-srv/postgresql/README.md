@@ -1,8 +1,8 @@
 # home-srv PostgreSQL
 
-## App database design
+## App database 設計
 
-各アプリは `prod` と `dev` の 2 つの database を持つ。
+各 app は `prod` と `dev` の 2 つの database を持つ。
 
 ```text
 <app>_prod
@@ -34,15 +34,15 @@ keylytix_prod_operator
 
 role の用途:
 
-- `owner`: database object の所有者。`NOLOGIN` とし、人間やアプリは直接使わない。
+- `owner`: database object の所有者。`NOLOGIN` とし、人間や app は直接使わない。
 - `migrator`: schema migration 用。DDL を実行できる。PgBouncer ではなく PostgreSQL に直結する。
-- `app`: アプリ runtime 用。PgBouncer 経由で接続する。
+- `app`: app runtime 用。PgBouncer 経由で接続する。
 - `readonly`: 開発者や運用者の通常確認用。読み取りのみ。
 - `operator`: 運用時のデータ修正用。必要時だけ使う。
 
 権限の基本方針:
 
-- `postgres` superuser はアプリから使わない。
+- `postgres` superuser は app から使わない。
 - `owner` は object ownership を固定するための role であり、`LOGIN` させない。
 - `migrator` は migration 実行時だけ使う。
 - `app` は runtime の DML 用に限定する。
@@ -68,7 +68,7 @@ human write operation:
 PgBouncer には runtime 用の `app` role だけを登録する。migration は DDL と
 transaction pooling の相性を避けるため PostgreSQL へ直結する。
 
-各アプリの設定は PostgreSQL 基盤配下に分ける。
+各 app の設定は PostgreSQL 基盤配下に分ける。
 
 ```text
 hosts/home-srv/postgresql/
@@ -85,15 +85,15 @@ hosts/home-srv/postgresql/
 
 `apps/common.nix` は以下を行う。
 
-- `<app>_prod` と `<app>_dev` の database 作成
-- stage ごとの 5 role 作成
-- `owner` を `NOLOGIN`、それ以外を `LOGIN` として作成
-- database/schema owner と基本 grant の設定
-- PostgreSQL backup 対象への追加
+- `<app>_prod` と `<app>_dev` の database を作成する
+- stage ごとの 5 role を作成する
+- `owner` を `NOLOGIN`、それ以外を `LOGIN` として作成する
+- database/schema owner と基本 grant を設定する
+- PostgreSQL backup 対象へ追加する
 
 DB/role は NixOS 側で管理する。Terraform でも PostgreSQL provider で
 database/role/grant を管理できるが、接続情報や password が state に残り得る。
-この PostgreSQL は NixOS host 内部のサービスなので、host lifecycle と同じ
+この PostgreSQL は NixOS host 内部の service なので、host lifecycle と同じ
 NixOS configuration に寄せる。
 
 role password は Nix store に置かない。必要になったら `<app>-db.env.enc` などに
@@ -308,9 +308,9 @@ sudo journalctl -u home-postgresql-backup.service -n 100 --no-pager
 ローカルの backup は `services.homePostgresqlBackup.localRetention` で指定した期間を過ぎると
 `systemd-tmpfiles` によって削除される。デフォルトは `1d`。
 
-## Backblaze upload
+## Backblaze upload 設定
 
-credential file の形式は以下の通り．
+credential file の形式は以下の通り。
 
 ```sh
 B2_APPLICATION_KEY_ID=...
@@ -339,7 +339,7 @@ services.homePostgresqlBackup.upload = {
 };
 ```
 
-## Restore
+## Restore 手順
 
 B2 から対象ファイルを取得する。
 
@@ -350,7 +350,7 @@ b2v4 file download \
   /tmp/<database>.dump.zst.age
 ```
 
-YubiKey recipient で暗号化しているため identity file を用いて以下のように復号化できる．
+YubiKey recipient で暗号化しているため、identity file を用いて以下のように復号化できる。
 
 ```sh
 rage -d \
