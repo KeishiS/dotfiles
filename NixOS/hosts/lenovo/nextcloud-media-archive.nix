@@ -7,11 +7,20 @@ let
   archiveDir = "/storage/archive/nextcloud-media/encrypted/${account}";
   stateDir = "/var/lib/nextcloud-media-archive/state/${account}";
   minAgeMinutes = 10;
+  localArchiveRetention = "1d";
   recipientArgs = lib.concatMapStringsSep " " (
     recipient: "-r ${lib.escapeShellArg recipient}"
   ) config.sandi.backup.ageRecipients;
 in
 {
+  sops.secrets.nextcloud-media-b2-env = {
+    format = "binary";
+    sopsFile = ./secrets/nextcloud-media-b2.env.enc;
+    owner = "nextcloud-media-archive";
+    group = "nextcloud-media-archive";
+    mode = "0400";
+  };
+
   assertions = [
     {
       assertion = config.sandi.backup.ageRecipients != [ ];
@@ -40,8 +49,8 @@ in
     "d ${mediaDir} 2770 jellyfin jellyfin -"
     "d /storage/archive 0750 nextcloud-media-archive nextcloud-media-archive -"
     "d /storage/archive/nextcloud-media 2770 nextcloud-media-archive nextcloud-media-archive -"
-    "d /storage/archive/nextcloud-media/encrypted 2770 nextcloud-media-archive nextcloud-media-archive -"
-    "d ${archiveDir} 2770 nextcloud-media-archive nextcloud-media-archive -"
+    "d /storage/archive/nextcloud-media/encrypted 2770 nextcloud-media-archive nextcloud-media-archive ${localArchiveRetention}"
+    "d ${archiveDir} 2770 nextcloud-media-archive nextcloud-media-archive ${localArchiveRetention}"
     "d /var/lib/nextcloud-media-archive 0750 nextcloud-media-archive nextcloud-media-archive -"
     "d /var/lib/nextcloud-media-archive/state 2770 nextcloud-media-archive nextcloud-media-archive -"
     "d ${stateDir} 2770 nextcloud-media-archive nextcloud-media-archive -"
@@ -56,6 +65,9 @@ in
       User = "nextcloud-media-archive";
       Group = "nextcloud-media-archive";
       UMask = "0027";
+      EnvironmentFile = config.sops.secrets.nextcloud-media-b2-env.path;
+      StateDirectory = "nextcloud-media-archive";
+      StateDirectoryMode = "0750";
       ReadOnlyPaths = [ "/storage/nextcloud" ];
       ReadWritePaths = [
         "/storage/jellyfin"
@@ -71,6 +83,7 @@ in
       findutils
       gnutar
       zstd
+      config.sandi.backup.b2.cliPackage
     ];
 
     script = ''
@@ -111,6 +124,16 @@ in
             | age ${recipientArgs} \
             > "$archive"
           echo "created encrypted archive: $archive"
+
+          : "''${B2_APPLICATION_KEY_ID:?B2_APPLICATION_KEY_ID is required}"
+          : "''${B2_APPLICATION_KEY:?B2_APPLICATION_KEY is required}"
+
+          export B2_ACCOUNT_INFO="$STATE_DIRECTORY/b2-account-info"
+          b2v4 file upload --no-progress \
+            ${lib.escapeShellArg b2Target.bucket} \
+            "$archive" \
+            "${lib.escapeShellArg b2Target.prefix}/$rel.tar.zst.age"
+          echo "uploaded encrypted archive: ${b2Target.prefix}/$rel.tar.zst.age"
 
           install -D -m 0644 /dev/null "$marker"
         done
