@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   account = "keishis";
+  backupLib = import ../../modules/services/backup/lib.nix { inherit lib; };
   b2Target = config.sandi.backup.b2.targets.nextcloudMedia;
   sourceDir = "/storage/nextcloud/data/${account}/files/JellyfinImport";
   mediaDir = "/storage/jellyfin/media/${account}";
@@ -8,9 +9,7 @@ let
   stateDir = "/var/lib/nextcloud-media-archive/state/${account}";
   minAgeMinutes = 10;
   localArchiveRetention = "1d";
-  recipientArgs = lib.concatMapStringsSep " " (
-    recipient: "-r ${lib.escapeShellArg recipient}"
-  ) config.sandi.backup.ageRecipients;
+  recipientArgs = backupLib.ageRecipientArgs config.sandi.backup.ageRecipients;
 in
 {
   sops.secrets.nextcloud-media-b2-env = {
@@ -125,14 +124,14 @@ in
             > "$archive"
           echo "created encrypted archive: $archive"
 
-          : "''${B2_APPLICATION_KEY_ID:?B2_APPLICATION_KEY_ID is required}"
-          : "''${B2_APPLICATION_KEY:?B2_APPLICATION_KEY is required}"
+          ${backupLib.b2RequiredEnv}
 
-          export B2_ACCOUNT_INFO="$STATE_DIRECTORY/b2-account-info"
-          b2v4 file upload --no-progress \
-            ${lib.escapeShellArg b2Target.bucket} \
-            "$archive" \
-            "${lib.escapeShellArg b2Target.prefix}/$rel.tar.zst.age"
+          ${backupLib.b2AccountInfoEnv}
+          ${backupLib.b2Upload {
+            bucket = b2Target.bucket;
+            source = ''"$archive"'';
+            destination = ''${lib.escapeShellArg b2Target.prefix}/"$rel.tar.zst.age"'';
+          }}
           echo "uploaded encrypted archive: ${b2Target.prefix}/$rel.tar.zst.age"
 
           install -D -m 0644 /dev/null "$marker"

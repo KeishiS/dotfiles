@@ -6,10 +6,9 @@
 }:
 let
   cfg = config.services.homePostgresqlBackup;
+  backupLib = import ../../../modules/services/backup/lib.nix { inherit lib; };
   b2Cli = config.sandi.backup.b2.cliPackage;
-  recipientArgs = lib.concatMapStringsSep " " (
-    recipient: "-r ${lib.escapeShellArg recipient}"
-  ) cfg.ageRecipients;
+  recipientArgs = backupLib.ageRecipientArgs cfg.ageRecipients;
   dumpDatabase = database: ''
     database=${lib.escapeShellArg database}
     ${pkgs.postgresql_18}/bin/pg_dump --format=custom --dbname=${lib.escapeShellArg database} \
@@ -160,16 +159,15 @@ in
 
         # upload
         ${lib.optionalString cfg.upload.enable ''
-          : "''${B2_APPLICATION_KEY_ID:?B2_APPLICATION_KEY_ID is required}"
-          : "''${B2_APPLICATION_KEY:?B2_APPLICATION_KEY is required}"
-
-          export B2_ACCOUNT_INFO="$STATE_DIRECTORY/b2-account-info"
+          ${backupLib.b2RequiredEnv}
+          ${backupLib.b2AccountInfoEnv}
 
           for file in "$backup_dir"/*.age; do
-            b2v4 file upload --no-progress \
-              ${lib.escapeShellArg cfg.upload.bucket} \
-              "$file" \
-              "${lib.escapeShellArg cfg.upload.prefix}/$timestamp/$(basename "$file")"
+            ${backupLib.b2Upload {
+              bucket = cfg.upload.bucket;
+              source = ''"$file"'';
+              destination = ''${lib.escapeShellArg cfg.upload.prefix}/"$timestamp/$(basename "$file")"'';
+            }}
           done
         ''}
       '';
