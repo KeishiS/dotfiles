@@ -9,7 +9,7 @@
     ../../modules/services/portunus
     ../../modules/services/ldap
     ../../modules/services/sssd
-    ../../modules/services/vaultwarden
+    ./vaultwarden.nix
     ./nextcloud.nix
     ./jellyfin.nix
     ./nextcloud-media-archive.nix
