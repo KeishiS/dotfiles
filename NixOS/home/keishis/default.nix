@@ -8,6 +8,7 @@
     ./appearance.nix
     ./packages.nix
     ./session.nix
+    ./gnupg.nix
     ./git.nix
     ./programs.nix
     ./xdg.nix

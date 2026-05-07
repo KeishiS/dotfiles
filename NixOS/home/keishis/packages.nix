@@ -34,6 +34,7 @@
     vlc
     insomnia
     jetbrains.datagrip
+    dbgate
 
     kicad
     freerouting
