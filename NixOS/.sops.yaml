@@ -6,57 +6,18 @@ keys:
     - &nixos-sandi-lenovo age14w3la5xmucv3glnyt2c26gv37ne5caed2ntuk2gfxrmwlpyfdygs34qm6h
     - &nixos-sandi-n100 age1pn27c7fv0ayma6resthfh955u4zg9ncshrjt3t694zyjqhk79q3qjekg3f
 creation_rules:
-    - path_regex: ^secrets/.*
-      key_groups:
-          - pgp:
-                - *yubikey
-            age:
-                - *nixos-keishis-home
-                - *nixos-sandi-lenovo
     - path_regex: ^hosts/lenovo/secrets/.*
       key_groups:
           - pgp:
                 - *yubikey
             age:
                 - *nixos-sandi-lenovo
-    - path_regex: ^modules/services/sssd/secrets/.*
-      key_groups:
-          - pgp:
-                - *yubikey
-            age:
-                - *nixos-sandi-lenovo
-    - path_regex: ^modules/services/portunus/secrets/techadmin.enc
-      key_groups:
-          - pgp:
-                - *yubikey
-            age:
-                - *nixos-keishis-home
-                - *nixos-sandi-lenovo
-                - *nixos-sandi-n100
     - path_regex: ^hosts/home-srv/.*
       key_groups:
           - pgp:
                 - *yubikey
             age:
                 - *nixos-keishis-home
-    - path_regex: ^hosts/lenovo/myserv/secrets/.*
-      key_groups:
-          - pgp:
-                - *yubikey
-            age:
-                - *nixos-sandi-lenovo
-    - path_regex: ^modules/services/portunus/secrets/.*
-      key_groups:
-          - pgp:
-                - *yubikey
-            age:
-                - *nixos-sandi-lenovo
-    - path_regex: ^modules/services/vaultwarden/secrets/.*
-      key_groups:
-          - pgp:
-                - *yubikey
-            age:
-                - *nixos-sandi-lenovo
     - path_regex: ^home/keishis/.*
       key_groups:
           - pgp:
