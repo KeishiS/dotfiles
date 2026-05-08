@@ -17,7 +17,7 @@ in
     certs.${certName} = {
       domain = certName;
       dnsProvider = "cloudflare";
-      environmentFile = config.sops.secrets.db-sandi05-acme.path;
+      environmentFile = config.sops.secrets.sandi05-cloudflare-acme.path;
       dnsPropagationCheck = true;
       group = "postgres";
     };

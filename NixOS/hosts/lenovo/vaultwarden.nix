@@ -29,7 +29,7 @@
       SMTP_USERNAME = "resend";
       SMTP_FROM = "noreply@mail.sandi05.com";
       SMTP_FROM_NAME = "vaultwarden";
-      SMTP_DEBUG = true;
+      SMTP_DEBUG = false;
     };
   };
 

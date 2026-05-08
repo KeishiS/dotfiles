@@ -59,6 +59,7 @@
     enable = true;
     videoDrivers = [ "amdgpu" ];
   };
+
   environment.systemPackages = with pkgs; [
     rocmPackages.rocminfo
   ];

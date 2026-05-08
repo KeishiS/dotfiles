@@ -18,10 +18,6 @@
       options = "--delete-older-than 3d";
       automatic = true;
     };
-    optimise = {
-      automatic = true;
-      dates = [ "daily" ];
-    };
   };
 
   programs.nix-ld.dev.enable = true;

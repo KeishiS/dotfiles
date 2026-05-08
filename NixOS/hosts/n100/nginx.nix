@@ -62,49 +62,6 @@
     };
 
     #---------------------------------------------------------------------
-    # Gotify
-    # --------------------------------------------------------------------
-    virtualHosts."notify.sandi05.com-redirect" = {
-      serverName = "notify.sandi05.com";
-      listen = [
-        {
-          addr = "0.0.0.0";
-          port = 80;
-        }
-        {
-          addr = "[::]";
-          port = 80;
-        }
-      ];
-      extraConfig = ''
-        return 301 https://$host$request_uri;
-      '';
-    };
-
-    virtualHosts."notify.sandi05.com" = {
-      serverName = "notify.sandi05.com";
-      listen = [
-        {
-          addr = "0.0.0.0";
-          port = 443;
-          ssl = true;
-        }
-        {
-          addr = "[::]";
-          port = 443;
-          ssl = true;
-        }
-      ];
-      addSSL = true;
-      useACMEHost = "sandi05.com";
-
-      locations."/" = {
-        proxyPass = "http://192.168.10.17:8111";
-        proxyWebsockets = true;
-      };
-    };
-
-    #---------------------------------------------------------------------
     # VaultWarden
     # --------------------------------------------------------------------
     virtualHosts."key.sandi05.com-redirect" = {
@@ -164,10 +121,10 @@
     };
 
     #---------------------------------------------------------------------
-    # Monitoring
+    # Jellyfin
     # --------------------------------------------------------------------
-    virtualHosts."monitor.sandi05.com-redirect" = {
-      serverName = "monitor.sandi05.com";
+    virtualHosts."stream.sandi05.com-redirect" = {
+      serverName = "stream.sandi05.com";
       listen = [
         {
           addr = "0.0.0.0";
@@ -183,8 +140,8 @@
       '';
     };
 
-    virtualHosts."monitor.sandi05.com" = {
-      serverName = "monitor.sandi05.com";
+    virtualHosts."stream.sandi05.com" = {
+      serverName = "stream.sandi05.com";
       listen = [
         {
           addr = "0.0.0.0";
@@ -201,8 +158,13 @@
       useACMEHost = "sandi05.com";
 
       locations."/" = {
-        proxyPass = "http://192.168.10.17:3000";
+        proxyPass = "http://192.168.10.17:8096";
         proxyWebsockets = true;
+        extraConfig = ''
+          proxy_buffering off;
+          proxy_read_timeout    3600s;
+          proxy_send_timeout    3600s;
+        '';
       };
     };
 
@@ -261,9 +223,8 @@
       domain = "sandi05.com";
       extraDomainNames = [
         "storage.sandi05.com"
-        "notify.sandi05.com"
         "key.sandi05.com"
-        "monitor.sandi05.com"
+        "stream.sandi05.com"
       ];
       dnsProvider = "cloudflare";
       environmentFile = config.sops.secrets."sandi05-cloudflare-acme".path;

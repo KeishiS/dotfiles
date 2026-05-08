@@ -29,16 +29,6 @@
     };
   };
 
-  fileSystems."/users" = {
-    device = "192.168.10.17:/users";
-    fsType = "nfs";
-  };
-
-  fileSystems."/nfs/keylytix" = {
-    device = "192.168.10.17:/keylytix";
-    fsType = "nfs";
-  };
-
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

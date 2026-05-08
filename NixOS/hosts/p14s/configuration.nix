@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
   ];
   networking.hostName = "NixOS-keishis-P14s";
+  networking.hostFiles = [ ./hosts.local ];
 
   services.libinput.enable = true; # enable touchpad support
   services.fwupd.enable = true; # enable farmware update. `fwupdmgr refresh / fwupdmgr update / fwupdmgr get-updates`

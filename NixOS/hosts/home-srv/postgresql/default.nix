@@ -9,9 +9,9 @@ in
     ./backup.nix
   ];
 
-  sops.secrets.db-sandi05-acme = {
+  sops.secrets.sandi05-cloudflare-acme = {
     format = "yaml";
-    sopsFile = ./secrets/cloudflare.enc.yaml;
+    sopsFile = ../../../secrets/cloudflare-sandi05-acme.enc.yaml;
     mode = "0400";
     owner = "acme";
     group = "acme";
