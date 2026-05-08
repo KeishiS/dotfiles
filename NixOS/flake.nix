@@ -191,7 +191,6 @@
         ./modules/users/sandi.nix
         ./modules/profiles/server.nix
         ./hosts/n100/configuration.nix
-        ./modules/services/ldap
       ];
     };
 }
