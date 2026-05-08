@@ -6,6 +6,13 @@ keys:
     - &nixos-sandi-lenovo age14w3la5xmucv3glnyt2c26gv37ne5caed2ntuk2gfxrmwlpyfdygs34qm6h
     - &nixos-sandi-n100 age1w0vvgnce5xs2e7fw79tzy2szc0dd7r0c9ekle52vavym5mdl3pesxdscm3
 creation_rules:
+    - path_regex: ^secrets/.*
+      key_groups:
+          - pgp:
+                - *yubikey
+            age:
+                - *nixos-keishis-home
+                - *nixos-sandi-lenovo
     - path_regex: ^hosts/lenovo/secrets/.*
       key_groups:
           - pgp:

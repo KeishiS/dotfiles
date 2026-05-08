@@ -59,6 +59,11 @@
     enable = true;
     videoDrivers = [ "amdgpu" ];
   };
+  fileSystems."/users" = {
+    device = "192.168.10.17:/users";
+    fsType = "nfs";
+  };
+
   environment.systemPackages = with pkgs; [
     rocmPackages.rocminfo
   ];
