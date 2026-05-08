@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -16,6 +17,14 @@ in
     group = "acme";
   };
 
+  sops.secrets.kanidm-idm-admin = {
+    format = "binary";
+    sopsFile = ./secrets/kanidm-idm-admin.enc;
+    mode = "0400";
+    owner = "kanidm";
+    group = "kanidm";
+  };
+
   security.acme = {
     acceptTerms = true;
     defaults.email = "nobuta05@gmail.com";
@@ -30,10 +39,8 @@ in
   };
 
   services.kanidm = {
-    package = pkgs.kanidm_1_9;
+    package = lib.mkForce pkgs.kanidm_1_9.withSecretProvisioning;
     enableServer = true;
-    enableClient = true;
-    enablePam = true;
     serverSettings = {
       bindaddress = "127.0.0.1:8443";
       ldapbindaddress = null;
@@ -42,16 +49,22 @@ in
       tls_chain = "${cert.directory}/fullchain.pem";
       tls_key = "${cert.directory}/key.pem";
     };
-    clientSettings = {
-      uri = "https://${domain}";
-    };
-    unixSettings = {
-      pam_allowed_login_groups = [ "server-users" ];
-      home_prefix = "/users/";
-      home_attr = "name";
-      home_alias = "none";
-      uid_attr_map = "name";
-      gid_attr_map = "name";
+
+    provision = {
+      enable = true;
+      instanceUrl = "https://${domain}";
+      idmAdminPasswordFile = config.sops.secrets.kanidm-idm-admin.path;
+
+      groups = {
+        server-users = {
+          overwriteMembers = false;
+        };
+
+        idm_people_self_mail_write = {
+          members = [ "server-users" ];
+          overwriteMembers = false;
+        };
+      };
     };
   };
 
@@ -73,31 +86,10 @@ in
 
   users.users.nginx.extraGroups = [ "kanidm" ];
 
-  users.groups.kanidm-authorized-keys = { };
-  users.users.kanidm-authorized-keys = {
-    description = "Kanidm authorized keys delegate";
-    isSystemUser = true;
-    group = "kanidm-authorized-keys";
-  };
-
-  services.openssh.settings = {
-    AuthorizedKeysCommand = "${config.security.wrapperDir}/kanidm_ssh_authorizedkeys %u";
-    AuthorizedKeysCommandUser = "kanidm-authorized-keys";
-  };
-
-  security.wrappers.kanidm_ssh_authorizedkeys = {
-    owner = "root";
-    group = "root";
-    permissions = "a+rx";
-    source = "${config.services.kanidm.package}/bin/kanidm_ssh_authorizedkeys";
-  };
-
   systemd.services.kanidm = {
     after = [ "acme-${domain}.service" ];
     requires = [ "acme-${domain}.service" ];
   };
-
-  systemd.services.kanidm-unixd-tasks.serviceConfig.BindPaths = [ "/users" ];
 
   networking.firewall.allowedTCPPorts = [
     80

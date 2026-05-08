@@ -12,6 +12,7 @@
     ./nextcloud-media-archive.nix
     ./kanidm.nix
     ./nfs.nix
+    ../../modules/services/kanidm-client
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";
