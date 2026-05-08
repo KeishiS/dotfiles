@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./nginx.nix
+    # ./nginx.nix
   ];
 
   networking.hostName = "NixOS-sandi-N100";

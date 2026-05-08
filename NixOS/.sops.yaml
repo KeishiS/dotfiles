@@ -4,7 +4,7 @@ keys:
     - &nixos-keishis-x13 age1gpnv7cgya70xfz9h0p4ah0wvpl5srq4jktme8v4fwg0m7ljpwyqsh5e5a2
     - &nixos-keishis-home age1x3wren8ffn330kmzclwmle5q5parkwhmljf9hm4uwjcpcygdwy9qzqwlrv
     - &nixos-sandi-lenovo age14w3la5xmucv3glnyt2c26gv37ne5caed2ntuk2gfxrmwlpyfdygs34qm6h
-    - &nixos-sandi-n100 age1w0vvgnce5xs2e7fw79tzy2szc0dd7r0c9ekle52vavym5mdl3pesxdscm3
+    - &nixos-sandi-n100 age1pn27c7fv0ayma6resthfh955u4zg9ncshrjt3t694zyjqhk79q3qjekg3f
 creation_rules:
     - path_regex: ^secrets/.*
       key_groups:
