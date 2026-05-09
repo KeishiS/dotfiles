@@ -3,13 +3,15 @@
 ## App database 設計
 
 各 app は `prod` と `dev` の 2 つの database を持つ。
+また、Atlas の差分計算用に専用の作業 database を持つ。
 
 ```text
 <app>_prod
 <app>_dev
+<app>_atlas_dev
 ```
 
-各 database には stage ごとに 5 つの role を用意する。
+通常 app database には stage ごとに 5 つの role を用意する。
 
 ```text
 <app>_<stage>_owner
@@ -19,17 +21,25 @@
 <app>_<stage>_operator
 ```
 
+Atlas 作業 database には同名の login role を用意する。
+
+```text
+<app>_atlas_dev
+```
+
 例:
 
 ```text
 keylytix_prod
 keylytix_dev
+keylytix_atlas_dev
 
 keylytix_prod_owner
 keylytix_prod_migrator
 keylytix_prod_app
 keylytix_prod_readonly
 keylytix_prod_operator
+keylytix_atlas_dev
 ```
 
 role の用途:
@@ -39,6 +49,7 @@ role の用途:
 - `app`: app runtime 用。PgBouncer 経由で接続する。
 - `readonly`: 開発者や運用者の通常確認用。読み取りのみ。
 - `operator`: 運用時のデータ修正用。必要時だけ使う。
+- `<app>_atlas_dev`: Atlas 作業 database の owner。実 app database には接続しない。
 
 権限の基本方針:
 
@@ -86,10 +97,15 @@ hosts/home-srv/postgresql/
 `apps/common.nix` は以下を行う。
 
 - `<app>_prod` と `<app>_dev` の database を作成する
+- Atlas 作業用の `<app>_atlas_dev` database と同名 role を作成する
 - stage ごとの 5 role を作成する
 - `owner` を `NOLOGIN`、それ以外を `LOGIN` として作成する
 - database/schema owner と基本 grant を設定する
-- PostgreSQL backup 対象へ追加する
+- 通常 app database を PostgreSQL backup 対象へ追加する
+
+`<app>_atlas_dev` は Atlas が schema 差分計算に使う空の作業 database なので、
+通常 app database と違って app 同名 schema は事前作成しない。また backup 対象にも
+含めない。
 
 DB/role は NixOS 側で管理する。Terraform でも PostgreSQL provider で
 database/role/grant を管理できるが、接続情報や password が state に残り得る。
@@ -115,11 +131,15 @@ database が存在することを確認する。
 sudo -u postgres psql -c "\\l ${app}_*"
 ```
 
+期待値として `${app}_prod`, `${app}_dev`, `${app}_atlas_dev` が存在する。
+
 role が存在することを確認する。
 
 ```sh
 sudo -u postgres psql -c "\\du ${app}_*"
 ```
+
+期待値として stage ごとの role に加えて `${app}_atlas_dev` role が存在する。
 
 role 属性を確認する。
 
@@ -165,26 +185,29 @@ WHERE d.datname = :'db';
 owner = <app>_<stage>_owner
 ```
 
-`public` schema の owner を確認する。
+`public` と app 同名 schema の owner を確認する。
 
 ```sh
-sudo -u postgres psql -d "$db" -x -c "
+sudo -u postgres psql -d "$db" -x -v app="$app" -c "
 SELECT nspname, pg_get_userbyid(nspowner) AS owner
 FROM pg_namespace
-WHERE nspname = 'public';
+WHERE nspname IN ('public', :'app')
+ORDER BY nspname;
 "
 ```
 
 期待値:
 
 ```text
-owner = <app>_<stage>_owner
+public owner = <app>_<stage>_owner
+<app> owner = <app>_<stage>_owner
 ```
 
-`public` schema の grant を確認する。
+`public` と app 同名 schema の grant を確認する。
 
 ```sh
-sudo -u postgres psql -d "$db" -c '\dn+ public'
+sudo -u postgres psql -d "$db" -c "\dn+ public"
+sudo -u postgres psql -d "$db" -c "\dn+ $app"
 ```
 
 期待値:
@@ -210,7 +233,7 @@ CREATE TABLE should_fail (id int);
 ```sql
 RESET ROLE;
 SET ROLE <app>_<stage>_migrator;
-CREATE TABLE permission_check (id serial primary key, name text);
+CREATE TABLE <app>.permission_check (id serial primary key, name text);
 ```
 
 これは成功する想定。
@@ -218,8 +241,8 @@ CREATE TABLE permission_check (id serial primary key, name text);
 ```sql
 RESET ROLE;
 SET ROLE <app>_<stage>_app;
-INSERT INTO permission_check (name) VALUES ('ok');
-SELECT * FROM permission_check;
+INSERT INTO <app>.permission_check (name) VALUES ('ok');
+SELECT * FROM <app>.permission_check;
 ```
 
 `app` role は通常の DML ができる想定。
@@ -227,8 +250,8 @@ SELECT * FROM permission_check;
 ```sql
 RESET ROLE;
 SET ROLE <app>_<stage>_readonly;
-SELECT * FROM permission_check;
-INSERT INTO permission_check (name) VALUES ('should_fail');
+SELECT * FROM <app>.permission_check;
+INSERT INTO <app>.permission_check (name) VALUES ('should_fail');
 ```
 
 `readonly` role は `SELECT` でき、`INSERT` は失敗する想定。
@@ -237,7 +260,7 @@ INSERT INTO permission_check (name) VALUES ('should_fail');
 
 ```sql
 RESET ROLE;
-DROP TABLE permission_check;
+DROP TABLE <app>.permission_check;
 ```
 
 ### アプリ DB の削除
@@ -257,14 +280,16 @@ sudo -u postgres psql
 ```sql
 REVOKE CONNECT ON DATABASE keylytix_prod FROM PUBLIC;
 REVOKE CONNECT ON DATABASE keylytix_dev FROM PUBLIC;
+REVOKE CONNECT ON DATABASE keylytix_atlas_dev FROM PUBLIC;
 
 SELECT pg_terminate_backend(pid)
 FROM pg_stat_activity
-WHERE datname IN ('keylytix_prod', 'keylytix_dev')
+WHERE datname IN ('keylytix_prod', 'keylytix_dev', 'keylytix_atlas_dev')
   AND pid <> pg_backend_pid();
 
 DROP DATABASE IF EXISTS keylytix_prod;
 DROP DATABASE IF EXISTS keylytix_dev;
+DROP DATABASE IF EXISTS keylytix_atlas_dev;
 
 REVOKE keylytix_prod_owner FROM keylytix_prod_migrator;
 REVOKE keylytix_dev_owner FROM keylytix_dev_migrator;
@@ -280,6 +305,8 @@ DROP ROLE IF EXISTS keylytix_dev_readonly;
 DROP ROLE IF EXISTS keylytix_dev_app;
 DROP ROLE IF EXISTS keylytix_dev_migrator;
 DROP ROLE IF EXISTS keylytix_dev_owner;
+
+DROP ROLE IF EXISTS keylytix_atlas_dev;
 ```
 
 ## Backup
