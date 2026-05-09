@@ -34,7 +34,7 @@ in
       ssl_cert_file = "${cert.directory}/fullchain.pem";
       ssl_key_file = "${cert.directory}/key.pem";
 
-      listen_addresses = lib.mkForce "localhost,db.sandi05.com,192.168.10.4,192.168.10.10,100.85.14.63,[::1]";
+      listen_addresses = lib.mkForce "localhost,db.sandi05.com,192.168.10.4,192.168.10.10,100.112.172.58,[::1]";
       logging_collector = true;
       log_connections = true;
       log_disconnections = true;
