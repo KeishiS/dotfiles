@@ -20,10 +20,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+/*
     keylytix = {
       url = "github:sandybox05/KeyLytix";
       flake = false;
     };
+*/
 
     pyproject-nix = {
       url = "github:pyproject-nix/pyproject.nix";
@@ -51,7 +53,7 @@
       sops-nix,
       disko,
       nix-ld,
-      keylytix,
+      # keylytix,
 
       # for keylytix-workspace
       pyproject-nix,
@@ -63,6 +65,11 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
+        config.allowUnfreePredicate =
+          pkg:
+          builtins.elem (nixpkgs.lib.getName pkg) [
+            "terraform"
+          ];
       };
 
       projectName = "dotfiles";
@@ -84,6 +91,7 @@
           export SANDBOX_BASH=${pkgs.bashInteractive}/bin/bash
           export PROJECT_NAME=${projectName}
           export SANDBOX_BASHRC_TEMPLATE=${./flake-config/bashrc}
+          export SANDBOX_NIX_CONF_TEMPLATE=${./flake-config/nix.conf}
           export SANDBOX_STARSHIP_TEMPLATE=${./flake-config/starship.toml}
           export SANDBOX_CACERT=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
           export BASH_COMPLETION_PATH=${pkgs.bash-completion}/share/bash-completion/bash_completion
@@ -116,10 +124,10 @@
             pnpm
             ripgrep
             starship
+            terraform
             uv
           ];
           shellHook = ''
-            # export PATH="$PWD/scripts:$PATH"
             if [ -z "''${SKIP_AGENT_BWRAP:-}" ]; then
               exec ${entrypoint}/bin/sandbox-enter
             fi
@@ -132,6 +140,8 @@
             pnpm
             ripgrep
             starship
+            terraform
+            awscli2
             uv
 
             age-plugin-yubikey

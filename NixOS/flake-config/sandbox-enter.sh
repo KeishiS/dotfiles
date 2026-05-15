@@ -43,6 +43,7 @@ install -d -m 700 \
     "$tmp_home/.claude" \
     "$tmp_home/.codex" \
     "$tmp_home/.config" \
+    "$tmp_home/.config/nix" \
     "$tmp_home/.gemini" \
     "$tmp_home/.local/share" \
     "$tmp_home/.local/share/pnpm" \
@@ -55,6 +56,8 @@ fi
 if [ ! -e "$tmp_home/.bashrc" ]; then
     install -m 600 "$SANDBOX_BASHRC_TEMPLATE" "$tmp_home/.bashrc"
 fi
+
+install -m 600 "$SANDBOX_NIX_CONF_TEMPLATE" "$tmp_home/.config/nix/nix.conf"
 
 codex_auth_args=()
 if [ -f "$host_home/.codex/auth.json" ]; then
