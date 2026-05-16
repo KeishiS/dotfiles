@@ -6,3 +6,4 @@ hosts/home-srv/postgresql/apps/** filter=git-crypt diff=git-crypt
 hosts/_retired/** filter=git-crypt diff=git-crypt
 modules/_retired/** filter=git-crypt diff=git-crypt
 ops/ext/** filter=git-crypt diff=git-crypt
+secrets/README.md filter=git-crypt diff=git-crypt
