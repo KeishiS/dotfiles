@@ -4,7 +4,7 @@ let
 in
 {
   services.kanidm = {
-    package = pkgs.kanidm_1_9;
+    package = pkgs.kanidmWithSecretProvisioning_1_10;
     enableClient = true;
     enablePam = true;
     clientSettings = {

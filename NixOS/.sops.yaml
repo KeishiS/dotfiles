@@ -22,6 +22,10 @@ creation_rules:
       key_groups:
           - pgp:
                 - *yubikey
+    - path_regex: ^secrets/rtx830.*
+      key_groups:
+          - pgp:
+                - *yubikey
     - path_regex: .*
       key_groups:
           - pgp:

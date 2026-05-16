@@ -1,11 +1,13 @@
 **/secrets/*
 !**/secrets/*.enc
 !**/secrets/*.enc.*
+!**/secrets/*.example
 
 **/.terraform/
-**/.terraform.lock.hcl
 **/*.tfstate
 **/*.tfstate.*
 **/*.tfvars
 **/*.tfvars.json
 **/*.tfplan
+
+rtx830.generated.conf

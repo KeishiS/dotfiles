@@ -39,7 +39,7 @@ in
   };
 
   services.kanidm = {
-    package = lib.mkForce pkgs.kanidm_1_9.withSecretProvisioning;
+    package = lib.mkForce pkgs.kanidmWithSecretProvisioning_1_10;
     enableServer = true;
     serverSettings = {
       bindaddress = "127.0.0.1:8443";

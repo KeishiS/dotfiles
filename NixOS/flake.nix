@@ -120,6 +120,7 @@
       devShells.${system} = {
         default = pkgs.mkShellNoCC {
           packages = with pkgs; [
+            gomplate
             nodejs_24
             pnpm
             ripgrep
@@ -136,6 +137,7 @@
 
         plain = pkgs.mkShellNoCC {
           packages = with pkgs; [
+            gomplate
             nodejs_24
             pnpm
             ripgrep
