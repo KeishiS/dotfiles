@@ -77,7 +77,6 @@
         name = "sandbox-enter";
         runtimeInputs = with pkgs; [
           bashInteractive
-          bash-completion
           bat
           bubblewrap
           coreutils
@@ -86,15 +85,16 @@
           fzf
           ripgrep
           starship
+          zsh
         ];
         text = ''
           export SANDBOX_BASH=${pkgs.bashInteractive}/bin/bash
+          export SANDBOX_ZSH=${pkgs.zsh}/bin/zsh
           export PROJECT_NAME=${projectName}
-          export SANDBOX_BASHRC_TEMPLATE=${./flake-config/bashrc}
+          export SANDBOX_ZSHRC_TEMPLATE=${./flake-config/zshrc}
           export SANDBOX_NIX_CONF_TEMPLATE=${./flake-config/nix.conf}
           export SANDBOX_STARSHIP_TEMPLATE=${./flake-config/starship.toml}
           export SANDBOX_CACERT=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
-          export BASH_COMPLETION_PATH=${pkgs.bash-completion}/share/bash-completion/bash_completion
           export STARSHIP_BIN=${pkgs.starship}/bin/starship
           ${builtins.readFile ./flake-config/sandbox-enter.sh}
         '';
@@ -145,12 +145,18 @@
             terraform
             awscli2
             uv
+            zsh
 
             age-plugin-yubikey
             rage
           ];
           shellHook = ''
             export PATH="$PWD/scripts:$PATH"
+            export SHELL=${pkgs.zsh}/bin/zsh
+            if [ -z "''${IN_NIX_DEVELOP_ZSH:-}" ]; then
+              export IN_NIX_DEVELOP_ZSH=1
+              exec "$SHELL" -i
+            fi
           '';
         };
       };

@@ -1,5 +1,5 @@
 if [ -n "${IN_AGENT_BWRAP:-}" ]; then
-    exec "$SANDBOX_BASH" --noprofile --norc
+    exec "$SANDBOX_ZSH" -i
 fi
 
 export IN_AGENT_BWRAP=1
@@ -40,6 +40,7 @@ fi
 
 install -d -m 700 \
     "$tmp_home/.cache" \
+    "$tmp_home/.cache/zsh" \
     "$tmp_home/.claude" \
     "$tmp_home/.codex" \
     "$tmp_home/.config" \
@@ -53,8 +54,8 @@ if [ ! -e "$tmp_home/.config/starship.toml" ]; then
     install -m 600 "$SANDBOX_STARSHIP_TEMPLATE" "$tmp_home/.config/starship.toml"
 fi
 
-if [ ! -e "$tmp_home/.bashrc" ]; then
-    install -m 600 "$SANDBOX_BASHRC_TEMPLATE" "$tmp_home/.bashrc"
+if [ ! -e "$tmp_home/.zshrc" ]; then
+    install -m 600 "$SANDBOX_ZSHRC_TEMPLATE" "$tmp_home/.zshrc"
 fi
 
 install -m 600 "$SANDBOX_NIX_CONF_TEMPLATE" "$tmp_home/.config/nix/nix.conf"
@@ -113,7 +114,7 @@ exec bwrap \
     --setenv HOME /home/agent \
     --setenv USER agent \
     --setenv LOGNAME agent \
-    --setenv SHELL "$SANDBOX_BASH" \
+    --setenv SHELL "$SANDBOX_ZSH" \
     --setenv TERM "xterm-256color" \
     --setenv COLORTERM "truecolor" \
     --setenv PATH "$PATH" \
@@ -123,9 +124,8 @@ exec bwrap \
     --setenv XDG_CONFIG_HOME /home/agent/.config \
     --setenv XDG_DATA_HOME /home/agent/.local/share \
     --setenv GIT_CONFIG_GLOBAL /dev/null \
-    --setenv BASH_COMPLETION_PATH "$BASH_COMPLETION_PATH" \
     --setenv STARSHIP_BIN "$STARSHIP_BIN" \
     --setenv UV_PROJECT_ENVIRONMENT /home/agent/venv/${PROJECT_NAME} \
     --setenv UV_PYTHON_INSTALL_DIR /home/agent/.local/share/uv/python \
     --chdir /workspace \
-    "$SANDBOX_BASH" --rcfile /home/agent/.bashrc -i
+    "$SANDBOX_ZSH" -i
