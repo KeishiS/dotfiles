@@ -2,6 +2,7 @@
 !**/secrets/*.enc
 !**/secrets/*.enc.*
 !**/secrets/*.example
+!**/secrets/README.md
 
 **/.terraform/
 **/*.tfstate

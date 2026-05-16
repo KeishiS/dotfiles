@@ -56,7 +56,7 @@
           proxy_connect_timeout 3600s;
           send_timeout          3600s;
         '';
-        proxyPass = "http://192.168.10.17:80";
+        proxyPass = "http://lenovo.sandi05.com:80";
         proxyWebsockets = true;
       };
     };
@@ -109,14 +109,14 @@
           proxy_set_header X-Forwarded-Proto $scheme;
           proxy_set_header X-Forwarded-Host $http_host;
         '';
-        proxyPass = "http://192.168.10.17:8000";
+        proxyPass = "http://lenovo.sandi05.com:8000";
       };
       locations."/notifications/hub" = {
-        proxyPass = "http://192.168.10.17:8000";
+        proxyPass = "http://lenovo.sandi05.com:8000";
         proxyWebsockets = true;
       };
       locations."/notifications/hub/negotiate" = {
-        proxyPass = "http://192.168.10.17:8000";
+        proxyPass = "http://lenovo.sandi05.com:8000";
       };
     };
 
@@ -158,7 +158,7 @@
       useACMEHost = "sandi05.com";
 
       locations."/" = {
-        proxyPass = "http://192.168.10.17:8096";
+        proxyPass = "http://lenovo.sandi05.com:8096";
         proxyWebsockets = true;
         extraConfig = ''
           proxy_buffering off;

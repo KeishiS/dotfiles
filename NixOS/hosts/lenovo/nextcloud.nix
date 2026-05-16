@@ -17,10 +17,9 @@
     maxUploadSize = "10G";
     datadir = "/storage/nextcloud";
     settings = {
-      trusted_domains = [ "192.168.10.17" ];
+      trusted_domains = [ "storage.sandi05.com" ];
       trusted_proxies = [
-        "192.168.10.31"
-        "192.168.10.25"
+        "192.168.100.31"
       ];
       overwriteprotocol = "https";
 

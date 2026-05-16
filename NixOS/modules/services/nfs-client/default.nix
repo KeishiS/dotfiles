@@ -43,7 +43,7 @@ in
 
             remote = lib.mkOption {
               type = lib.types.str;
-              example = "192.168.10.17:/users";
+              example = "lenovo.sandi05.com:/users";
               description = "Remote NFS export.";
             };
 
