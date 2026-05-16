@@ -18,9 +18,7 @@
     datadir = "/storage/nextcloud";
     settings = {
       trusted_domains = [ "storage.sandi05.com" ];
-      trusted_proxies = [
-        "192.168.100.31"
-      ];
+      trusted_proxies = [ "192.168.100.31" ];
       overwriteprotocol = "https";
 
       mail_smtpmode = "smtp";
