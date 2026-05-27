@@ -1,3 +1,5 @@
+flake.nix filter=git-crypt diff=git-crypt
+flake.lock filter=git-crypt diff=git-crypt
 private.nix filter=git-crypt diff=git-crypt
 credentials.nix filter=git-crypt diff=git-crypt
 modules/base/hosts filter=git-crypt diff=git-crypt
