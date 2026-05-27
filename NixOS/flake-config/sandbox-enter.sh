@@ -92,7 +92,6 @@ exec bwrap \
     --unshare-ipc \
     --unshare-pid \
     --unshare-uts \
-    --disable-userns \
     --clearenv \
     --dir /bin \
     --dir /lib64 \
