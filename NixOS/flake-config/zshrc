@@ -7,22 +7,21 @@ export GIT_CONFIG_GLOBAL=/dev/null
 export STARSHIP_CONFIG=/home/agent/.config/starship.toml
 export PATH="/home/agent/.local/bin:$PNPM_HOME:$PATH"
 
-bind 'set completion-ignore-case on'
-bind 'set show-all-if-ambiguous on'
-bind 'TAB:menu-complete'
+autoload -Uz compinit
+compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu select
 
 alias ls='eza --group-directories-first --icons=auto'
 alias ll='eza -lh --group-directories-first --icons=auto'
 alias la='eza -lah --group-directories-first --icons=auto'
 alias cat='bat --paging=never'
 
-if [ -r "$BASH_COMPLETION_PATH" ]; then
-    . "$BASH_COMPLETION_PATH"
-fi
-
-eval "$("$STARSHIP_BIN" init bash)"
+eval "$("$STARSHIP_BIN" init zsh)"
 cd /workspace
 
 pnpm install -g @openai/codex
 pnpm install -g @google/gemini-cli
-curl -fsSL https://claude.ai/install.sh | bash
+if [ ! -x "$HOME/.local/bin/claude" ]; then
+    curl -fsSL https://claude.ai/install.sh | bash
+fi

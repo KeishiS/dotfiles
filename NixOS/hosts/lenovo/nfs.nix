@@ -6,8 +6,8 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /export            192.168.10.0/24(rw,async,fsid=0,root_squash,no_subtree_check)
-      /export/users      192.168.10.0/24(rw,nohide,async,root_squash,no_subtree_check)
+      /export            192.168.100.0/24(rw,async,fsid=0,root_squash,no_subtree_check)
+      /export/users      192.168.100.0/24(rw,nohide,async,root_squash,no_subtree_check)
     '';
   };
   networking.firewall.allowedTCPPorts = [ 2049 ];

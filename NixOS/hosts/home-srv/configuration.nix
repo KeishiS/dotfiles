@@ -9,9 +9,9 @@
   ];
 
   networking.hostName = "nixos-keishis-home";
-  networking.hostFiles = [
-    ./hosts.local
-  ];
+  networking.networkmanager.connectionConfig = {
+    "ipv4.dhcp-client-id" = "none";
+  };
 
   environment.systemPackages = with pkgs; [
     asunder
@@ -22,6 +22,7 @@
   services.tailscale = {
     enable = true;
     openFirewall = true;
+    extraUpFlags = [ "--accept-dns=false" ];
   };
 
   services.libinput.enable = true;
@@ -30,7 +31,7 @@
     enable = true;
     mounts.users = {
       mountPoint = "/users";
-      remote = "192.168.10.17:/users";
+      remote = "lenovo.sandi05.com:/users";
     };
   };
 
