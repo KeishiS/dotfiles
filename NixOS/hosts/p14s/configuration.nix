@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./dns.nix
   ];
   networking.hostName = "NixOS-keishis-P14s";
   networking.networkmanager.wifi.macAddress = "random";
