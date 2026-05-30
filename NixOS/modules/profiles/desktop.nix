@@ -1,7 +1,18 @@
 { pkgs, ... }:
+let
+  pinentry-auto = pkgs.writeShellApplication {
+    name = "pinentry-auto";
+    runtimeEnv = {
+      PINENTRY_GUI = "${pkgs.pinentry-gnome3}/bin/pinentry";
+      PINENTRY_TUI = "${pkgs.pinentry-curses}/bin/pinentry";
+      SYSTEMCTL = "${pkgs.systemd}/bin/systemctl";
+    };
+    text = builtins.readFile ./scripts/pinentry-auto.sh;
+  };
+in
 {
   programs.gnupg.agent = {
-    pinentryPackage = pkgs.pinentry-gnome3;
+    pinentryPackage = pinentry-auto;
   };
 
   fonts = {

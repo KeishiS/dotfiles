@@ -9,7 +9,7 @@
     curl
     wget
     helix
-    nixfmt-rfc-style
+    nixfmt
     tmux
     gcc
     gfortran
