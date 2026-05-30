@@ -68,7 +68,7 @@ in
           settings = {
             nixd = {
               nixpkgs.expr = "import (builtins.getFlake \"${homeManagerFlake}\").inputs.nixpkgs { system = \"${pkgs.stdenv.hostPlatform.system}\"; }";
-              formatting.command = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
+              formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
               options."home-manager".expr =
                 "(builtins.getFlake \"${homeManagerFlake}\").homeConfigurations.\"${config.home.username}\".options";
             };
@@ -82,7 +82,7 @@ in
             "nixd"
             "!nil"
           ];
-          formatter.external.command = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
+          formatter.external.command = "${pkgs.nixfmt}/bin/nixfmt";
         };
 
         "Shell Script" = {

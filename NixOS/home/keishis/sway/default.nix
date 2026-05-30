@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   theme = (import ../theme);
 in
@@ -117,7 +117,10 @@ in
         { command = "dex -a"; }
         { command = "swaync"; }
         {
-          command = "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";
+          command = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP=sway";
+        }
+        {
+          command = "${pkgs.gnupg}/bin/gpg-connect-agent UPDATESTARTUPTTY /bye";
         }
       ];
     };

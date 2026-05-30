@@ -27,10 +27,9 @@
     zoom-us
     _1password-gui
     bitwarden-cli
-    bitwarden-desktop
+    # bitwarden-desktop
     nixd
-    nixfmt-rfc-style # language server for Nix
-    nil # another nix language server
+    nixfmt # language server for Nix
     vlc
     insomnia
     jetbrains.datagrip
