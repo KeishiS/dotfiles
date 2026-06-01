@@ -2,11 +2,11 @@
   description = "A simple NixOS flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     sops-nix.url = "github:Mic92/sops-nix";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -20,12 +20,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-/*
-    keylytix = {
-      url = "github:sandybox05/KeyLytix";
-      flake = false;
-    };
-*/
+    /*
+        keylytix = {
+          url = "github:sandybox05/KeyLytix";
+          flake = false;
+        };
+    */
 
     pyproject-nix = {
       url = "github:pyproject-nix/pyproject.nix";
@@ -173,20 +173,6 @@
         ./modules/profiles/hyprland.nix
       ];
 
-      nixosConfigurations.nixos-keishis-x13 = mkHost [
-        ./private.nix
-        ./modules/profiles/desktop.nix
-        ./modules/profiles/bluetooth.nix
-        ./modules/profiles/japanese.nix
-        ./modules/profiles/yubikey.nix
-        ./modules/profiles/sway.nix
-        ./modules/profiles/hyprland.nix
-        ./modules/profiles/i3.nix
-        ./hosts/x13/configuration.nix
-        ./modules/services/networkmanager
-        ./modules/profiles/laptop.nix
-      ];
-
       nixosConfigurations.nixos-keishis-home = mkHost [
         ./private.nix
         ./modules/profiles/desktop.nix
@@ -199,6 +185,22 @@
         ./modules/services/networkmanager
       ];
 
+      nixosConfigurations.nixos-sandi-m710q = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = inputs;
+        modules = [
+          nix-ld.nixosModules.nix-ld
+          sops-nix.nixosModules.sops
+          disko.nixosModules.disko
+          ./modules/base
+          ./modules/users/sandi.nix
+          ./modules/profiles/server.nix
+          ./modules/services/backup
+          ./modules/services/networkmanager
+          ./hosts/m710q/configuration.nix
+        ];
+      };
+
       nixosConfigurations.nixos-sandi-lenovo = mkHost [
         ./modules/users/sandi.nix
         ./modules/profiles/server.nix
@@ -210,5 +212,22 @@
         ./modules/profiles/server.nix
         ./hosts/n100/configuration.nix
       ];
+
+      /*
+        # retired
+        nixosConfigurations.nixos-keishis-x13 = mkHost [
+          ./private.nix
+          ./modules/profiles/desktop.nix
+          ./modules/profiles/bluetooth.nix
+          ./modules/profiles/japanese.nix
+          ./modules/profiles/yubikey.nix
+          ./modules/profiles/sway.nix
+          ./modules/profiles/hyprland.nix
+          ./modules/profiles/i3.nix
+          ./hosts/x13/configuration.nix
+          ./modules/services/networkmanager
+          ./modules/profiles/laptop.nix
+        ];
+      */
     };
 }

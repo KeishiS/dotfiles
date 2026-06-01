@@ -1,9 +1,6 @@
 { ... }:
 {
   networking = {
-    hostFiles = [
-      ./hosts
-    ];
     firewall = {
       enable = true;
       allowedTCPPorts = [ 22 ];
