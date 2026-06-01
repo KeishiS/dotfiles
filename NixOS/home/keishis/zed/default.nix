@@ -1,6 +1,12 @@
-{ pkgs, pkgs-unstable, ... }:
+{
+  config,
+  pkgs,
+  pkgs-unstable,
+  ...
+}:
 let
   theme = (import ../theme);
+  homeManagerFlake = "path:${config.home.homeDirectory}/.config/home-manager";
 in
 {
   programs.zed-editor = {
@@ -56,10 +62,27 @@ in
         program = pkgs.zsh;
       };
 
+      lsp = {
+        nixd = {
+          binary.path = "${pkgs.nixd}/bin/nixd";
+          settings = {
+            nixd = {
+              nixpkgs.expr = "import (builtins.getFlake \"${homeManagerFlake}\").inputs.nixpkgs { system = \"${pkgs.stdenv.hostPlatform.system}\"; }";
+              formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+              options."home-manager".expr =
+                "(builtins.getFlake \"${homeManagerFlake}\").homeConfigurations.\"${config.home.username}\".options";
+            };
+          };
+        };
+      };
+
       languages = {
         Nix = {
-          language_servers = [ "nixd" ];
-          formatter.external.command = "nixfmt";
+          language_servers = [
+            "nixd"
+            "!nil"
+          ];
+          formatter.external.command = "${pkgs.nixfmt}/bin/nixfmt";
         };
 
         "Shell Script" = {

@@ -1,8 +1,9 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
+    configType = "hyprlang";
     settings = {
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
@@ -47,6 +48,8 @@
       ];
       exec-once = [
         "fcitx5"
+        "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE"
+        "${pkgs.gnupg}/bin/gpg-connect-agent UPDATESTARTUPTTY /bye"
       ];
 
       input = {
