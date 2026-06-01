@@ -27,10 +27,8 @@
     enable = true;
     defaultApplications = {
       "x-scheme-handler/gitkraken" = "GitKraken.desktop";
-      "x-scheme-handler/mailspring" = "org.mozilla.Thunderbird.desktop";
       "x-scheme-handler/http" = "firefox.desktop";
       "x-scheme-handler/https" = "firefox.desktop";
-      "x-scheme-handler/postman" = "Postman.desktop";
       "text/html" = "firefox.desktop";
       "text/xml" = "firefox.desktop";
       "text/mml" = "firefox.desktop";

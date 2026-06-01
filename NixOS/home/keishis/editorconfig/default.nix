@@ -1,0 +1,13 @@
+{ ... }:
+{
+  editorconfig = {
+    enable = true;
+    settings."*" = {
+      charset = "utf-8";
+      trim_trailing_whitespace = true;
+      indent_style = "space";
+      indent_size = 4;
+      insert_final_newline = true;
+    };
+  };
+}

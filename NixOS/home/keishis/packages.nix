@@ -64,7 +64,6 @@
     # devpod-desktop
     qemu
     virtiofsd
-    mise
     terraform
 
     scrcpy
