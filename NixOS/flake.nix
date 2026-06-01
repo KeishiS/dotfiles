@@ -193,7 +193,6 @@
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
           ./modules/base
-          ./modules/users/sandi.nix
           ./modules/profiles/server.nix
           ./modules/services/networkmanager
           ./hosts/m710q/configuration.nix
@@ -201,7 +200,6 @@
       };
 
       nixosConfigurations.nixos-sandi-lenovo = mkHost [
-        ./modules/users/sandi.nix
         ./modules/profiles/server.nix
         ./modules/services/backup
         ./credentials.nix
@@ -209,7 +207,6 @@
       ];
 
       nixosConfigurations.nixos-sandi-n100 = mkHost [
-        ./modules/users/sandi.nix
         ./modules/profiles/server.nix
         ./hosts/n100/configuration.nix
       ];
