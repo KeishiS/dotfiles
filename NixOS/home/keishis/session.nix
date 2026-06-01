@@ -3,7 +3,7 @@
   home.sessionPath = [
     "$HOME/.cargo/bin"
     "$HOME/.local/bin"
-    "$HOME/.local/share/pnpm"
+    "$HOME/.local/share/pnpm/bin"
   ];
 
   home.shellAliases = {
