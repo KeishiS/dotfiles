@@ -19,6 +19,7 @@ in
 
   gtk = {
     enable = true;
+    gtk4.theme = null;
     font.name = theme.font.console;
     theme = {
       package = pkgs.orchis-theme;
