@@ -168,6 +168,8 @@
         ./modules/profiles/bluetooth.nix
         ./modules/profiles/japanese.nix
         ./modules/profiles/yubikey.nix
+        ./modules/profiles/i3.nix
+        ./modules/profiles/sway.nix
         ./modules/profiles/hyprland.nix
       ];
 
@@ -177,6 +179,7 @@
         ./modules/profiles/bluetooth.nix
         ./modules/profiles/japanese.nix
         ./modules/profiles/yubikey.nix
+        ./modules/profiles/i3.nix
         ./modules/profiles/sway.nix
         ./modules/profiles/hyprland.nix
         ./modules/services/backup

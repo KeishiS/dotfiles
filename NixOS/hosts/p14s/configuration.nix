@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -26,6 +26,10 @@
   '';
 
   hardware.keyboard.qmk.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    remmina
+  ];
 
   services.tailscale = {
     enable = true;
