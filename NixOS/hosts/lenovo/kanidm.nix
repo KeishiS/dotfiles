@@ -40,14 +40,16 @@ in
 
   services.kanidm = {
     package = lib.mkForce pkgs.kanidmWithSecretProvisioning_1_10;
-    enableServer = true;
-    serverSettings = {
-      bindaddress = "127.0.0.1:8443";
-      ldapbindaddress = null;
-      origin = "https://${domain}";
-      domain = domain;
-      tls_chain = "${cert.directory}/fullchain.pem";
-      tls_key = "${cert.directory}/key.pem";
+    server = {
+      enable = true;
+      settings = {
+        bindaddress = "127.0.0.1:8443";
+        ldapbindaddress = null;
+        origin = "https://${domain}";
+        domain = domain;
+        tls_chain = "${cert.directory}/fullchain.pem";
+        tls_key = "${cert.directory}/key.pem";
+      };
     };
 
     provision = {
