@@ -25,10 +25,6 @@
   programs.waybar.enable = true;
 
   xdg.portal = {
-    # [for discord]
-    # Failed to call method: org.freedesktop.DBus.Properties.Get:
-    # object_path= /org/freedesktop/portal/desktop: org.freedesktop.DBus.Error.InvalidArgs:
-    # No such interface “org.freedesktop.portal.FileChooser”
     enable = true;
     wlr.enable = true;
     extraPortals = with pkgs; [

@@ -164,24 +164,24 @@
         ./hosts/p14s/configuration.nix
         ./modules/services/networkmanager
         ./modules/profiles/laptop.nix
-        ./modules/profiles/desktop.nix
+        ./modules/profiles/desktop
         ./modules/profiles/bluetooth.nix
         ./modules/profiles/japanese.nix
         ./modules/profiles/yubikey.nix
-        ./modules/profiles/i3.nix
-        ./modules/profiles/sway.nix
-        ./modules/profiles/hyprland.nix
+        ./modules/profiles/desktop/x11/i3.nix
+        ./modules/profiles/desktop/wayland/sway.nix
+        ./modules/profiles/desktop/wayland/hyprland.nix
       ];
 
       nixosConfigurations.nixos-keishis-home = mkHost [
         ./private.nix
-        ./modules/profiles/desktop.nix
+        ./modules/profiles/desktop
         ./modules/profiles/bluetooth.nix
         ./modules/profiles/japanese.nix
         ./modules/profiles/yubikey.nix
-        ./modules/profiles/i3.nix
-        ./modules/profiles/sway.nix
-        ./modules/profiles/hyprland.nix
+        ./modules/profiles/desktop/x11/i3.nix
+        ./modules/profiles/desktop/wayland/sway.nix
+        ./modules/profiles/desktop/wayland/hyprland.nix
         ./modules/services/backup
         ./credentials.nix
         ./hosts/home-srv/configuration.nix
@@ -218,13 +218,13 @@
         # retired
         nixosConfigurations.nixos-keishis-x13 = mkHost [
           ./private.nix
-          ./modules/profiles/desktop.nix
+          ./modules/profiles/desktop
           ./modules/profiles/bluetooth.nix
           ./modules/profiles/japanese.nix
           ./modules/profiles/yubikey.nix
-          ./modules/profiles/sway.nix
-          ./modules/profiles/hyprland.nix
-          ./modules/profiles/i3.nix
+          ./modules/profiles/desktop/wayland/sway.nix
+          ./modules/profiles/desktop/wayland/hyprland.nix
+          ./modules/profiles/desktop/x11/i3.nix
           ./hosts/x13/configuration.nix
           ./modules/services/networkmanager
           ./modules/profiles/laptop.nix
