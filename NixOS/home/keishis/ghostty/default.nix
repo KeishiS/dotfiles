@@ -7,6 +7,7 @@ in
     enable = true;
     enableZshIntegration = true;
     enableBashIntegration = true;
+    systemd.enable = false;
 
     settings = {
       font-size = 16;
