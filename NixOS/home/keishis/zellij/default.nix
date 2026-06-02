@@ -9,10 +9,6 @@
       show_startup_tips false
 
       keybinds clear-defaults=true {
-          shared_except "locked" {
-              bind "Esc" { SwitchToMode "normal"; }
-          }
-
           normal {
               bind "Alt g" { SwitchToMode "locked"; }
               bind "Alt p" { SwitchToMode "pane"; }
@@ -37,6 +33,7 @@
           }
 
           pane {
+              bind "Esc" { SwitchToMode "normal"; }
               bind "h" "Left" { MoveFocus "Left"; }
               bind "j" "Down" { MoveFocus "Down"; }
               bind "k" "Up" { MoveFocus "Up"; }
@@ -50,6 +47,7 @@
           }
 
           tab {
+              bind "Esc" { SwitchToMode "normal"; }
               bind "Tab" { GoToNextTab; }
               bind "Backspace" { GoToPreviousTab; }
               bind "n" { NewTab; SwitchToMode "normal"; }
@@ -59,6 +57,7 @@
           }
 
           resize {
+              bind "Esc" { SwitchToMode "normal"; }
               bind "h" "Left" { Resize "Left"; }
               bind "j" "Down" { Resize "Down"; }
               bind "k" "Up" { Resize "Up"; }
@@ -68,6 +67,7 @@
           }
 
           scroll {
+              bind "Esc" { SwitchToMode "normal"; }
               bind "j" "Down" { ScrollDown; }
               bind "k" "Up" { ScrollUp; }
               bind "d" { HalfPageScrollDown; }
@@ -77,6 +77,7 @@
           }
 
           session {
+              bind "Esc" { SwitchToMode "normal"; }
               bind "d" { Detach; }
           }
       }
