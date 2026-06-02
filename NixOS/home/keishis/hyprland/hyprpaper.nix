@@ -1,13 +1,19 @@
 { config, ... }:
+let
+  wallpaper = "${config.home.homeDirectory}/dotfiles/wallpaper/wallpaper01.png";
+in
 {
   services.hyprpaper = {
     enable = true;
     settings = {
       preload = [
-        "${config.home.homeDirectory}/dotfiles/wallpaper/wallpaper01.png"
+        wallpaper
       ];
       wallpaper = [
-        ",${config.home.homeDirectory}/dotfiles/wallpaper/wallpaper01.png"
+        {
+          monitor = "";
+          path = wallpaper;
+        }
       ];
     };
   };
