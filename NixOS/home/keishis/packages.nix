@@ -67,6 +67,7 @@
     terraform
 
     scrcpy
-    lean4
+    # lean4
+    elan
   ];
 }
