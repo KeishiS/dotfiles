@@ -50,16 +50,8 @@ install -d -m 700 \
     "$tmp_home/.local/share/pnpm" \
     "$tmp_home/venv"
 
-if [ ! -e "$tmp_home/.config/starship.toml" ]; then
-    install -m 600 "$SANDBOX_STARSHIP_TEMPLATE" "$tmp_home/.config/starship.toml"
-    echo "installed starship setting file"
-fi
-
-if [ ! -e "$tmp_home/.zshrc" ]; then
-    install -m 600 "$SANDBOX_ZSHRC_TEMPLATE" "$tmp_home/.zshrc"
-    echo "installed zshrc file"
-fi
-
+install -m 600 "$SANDBOX_STARSHIP_TEMPLATE" "$tmp_home/.config/starship.toml"
+install -m 600 "$SANDBOX_ZSHRC_TEMPLATE" "$tmp_home/.zshrc"
 install -m 600 "$SANDBOX_NIX_CONF_TEMPLATE" "$tmp_home/.config/nix/nix.conf"
 
 codex_auth_args=()

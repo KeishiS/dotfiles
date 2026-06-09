@@ -5,7 +5,7 @@
     ./hardware-configuration.nix
     ./postgresql
     ./myserv1
-    ../../modules/services/kanidm-client
+    # ../../modules/services/kanidm-client
     ../../modules/services/nfs-client
   ];
 
