@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   programs.gnupg.agent = {
     pinentryPackage = pkgs.pinentry-gnome3;
@@ -18,9 +23,11 @@
       noto-fonts-color-emoji
       source-han-code-jp
       ipaexfont
+      monaspace
       moralerspace
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
+      nerd-fonts.monaspace
       nerd-fonts.noto
 
       vollkorn # for basic-report in typst
