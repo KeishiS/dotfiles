@@ -7,6 +7,7 @@ in
     enable = true;
     enableZshIntegration = true;
     enableBashIntegration = true;
+    systemd.enable = false;
 
     settings = {
       font-size = 16;
@@ -17,13 +18,6 @@ in
       theme = "Ghostty Default Style Dark";
       cursor-style = "bar";
       clipboard-paste-protection = false;
-      keybind = [
-        "ctrl+q=new_tab"
-        "ctrl+h=new_split:down"
-        "ctrl+v=new_split:right"
-        "ctrl+shift+h=goto_split:left"
-        "ctrl+shift+l=goto_split:right"
-      ];
     };
   };
 }

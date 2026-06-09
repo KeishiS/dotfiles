@@ -14,6 +14,7 @@
 
   fileSystems."/export/users" = {
     device = "/users";
+    fsType = "none";
     options = [ "bind" ];
   };
 }

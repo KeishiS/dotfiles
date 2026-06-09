@@ -41,7 +41,7 @@ in
           format-plugged = "FULL {capacity}%";
           states = {
             warning = 30;
-            critial = 15;
+            critical = 15;
           };
         };
         disk = {
@@ -132,7 +132,7 @@ in
         color: ${theme.background};
       }
 
-      #battery.critial {
+      #battery.critical {
         border: 1px solid ${theme.semantic.error};
         background: ${theme.semantic.error};
         color: ${theme.background};

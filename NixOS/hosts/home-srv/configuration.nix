@@ -28,6 +28,12 @@
 
   services.libinput.enable = true;
 
+  services.xrdp = {
+    enable = true;
+    openFirewall = false;
+    defaultWindowManager = "${pkgs.i3}/bin/i3";
+  };
+
   sandi.nfsClient = {
     enable = true;
     mounts.users = {

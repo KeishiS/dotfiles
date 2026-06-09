@@ -10,8 +10,10 @@
     ./session.nix
     ./gnupg.nix
     ./git.nix
-    ./programs.nix
     ./xdg.nix
+    ./editorconfig
+    ./shell
+    ./starship
 
     ./sway
     ./swaylock
@@ -19,21 +21,23 @@
     ./waybar
     ./wezterm
     ./hyprland
-    ./hyprpaper
-    ./hyprlock
-    ./hypridle
     ./i3
     ./sops-nix
 
     # terminal
     ./ghostty
+    ./zellij
     ./rio
     ./foot
 
     # editor
     ./helix
     ./zed
+    ./vscode
+
+    # media
+    ./obs-studio
   ];
 
-  home.stateVersion = "24.11"; # Please read the comment before changing.
+  home.stateVersion = "26.05";
 }

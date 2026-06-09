@@ -5,18 +5,22 @@ in
 {
   services.kanidm = {
     package = pkgs.kanidmWithSecretProvisioning_1_10;
-    enableClient = true;
-    enablePam = true;
-    clientSettings = {
-      uri = "https://${domain}";
+    client = {
+      enable = true;
+      settings = {
+        uri = "https://${domain}";
+      };
     };
-    unixSettings = {
-      pam_allowed_login_groups = [ "server-users" ];
-      home_prefix = "/users/";
-      home_attr = "name";
-      home_alias = "none";
-      uid_attr_map = "name";
-      gid_attr_map = "name";
+    unix = {
+      enable = true;
+      settings = {
+        kanidm.pam_allowed_login_groups = [ "server-users" ];
+        home_prefix = "/users/";
+        home_attr = "name";
+        home_alias = "none";
+        uid_attr_map = "name";
+        gid_attr_map = "name";
+      };
     };
   };
 

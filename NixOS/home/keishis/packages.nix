@@ -64,10 +64,10 @@
     # devpod-desktop
     qemu
     virtiofsd
-    mise
     terraform
 
     scrcpy
-    lean4
+    # lean4
+    elan
   ];
 }

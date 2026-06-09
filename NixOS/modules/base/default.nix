@@ -1,14 +1,14 @@
 {
   imports = [
-    ./nix.nix
     ./boot.nix
-    ./security.nix
-    ./networking.nix
-    ./locale.nix
-    ./users.nix
-    ./packages.nix
     ./editors.nix
-    ./shell.nix
     ./gnupg.nix
+    ./locale.nix
+    ./networking.nix
+    ./nix.nix
+    ./packages.nix
+    ./security.nix
+    ./shell.nix
+    ./users.nix
   ];
 }

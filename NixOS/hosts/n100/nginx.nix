@@ -237,22 +237,4 @@
     443
   ];
   networking.firewall.allowedUDPPorts = [ 443 ];
-
-  #---------------------------------------------------------------------
-  # DDNS for IPv6
-  #---------------------------------------------------------------------
-  sops.secrets."cloudflare-ddns-token" = {
-    format = "yaml";
-    sopsFile = ./secrets/sandi05-cloudflare.enc.yaml;
-    mode = "0400";
-  };
-  services.ddclient = {
-    enable = true;
-    protocol = "cloudflare";
-    username = "token";
-    passwordFile = config.sops.secrets."cloudflare-ddns-token".path;
-    zone = "sandi05.com";
-    domains = [ "sandi05.com" ];
-    usev6 = "webv6, web=googlev6";
-  };
 }
