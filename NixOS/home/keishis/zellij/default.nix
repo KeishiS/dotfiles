@@ -45,12 +45,15 @@
 
           tab {
               bind "Esc" { SwitchToMode "normal"; }
+              bind "Enter" { SwitchToMode "normal"; }
               bind "Tab" { GoToNextTab; }
               bind "Backspace" { GoToPreviousTab; }
               bind "n" { NewTab; SwitchToMode "normal"; }
               bind "x" { CloseTab; SwitchToMode "normal"; }
               bind "h" "Left" { GoToPreviousTab; }
               bind "l" "Right" { GoToNextTab; }
+              bind "i" { MoveTab "Left"; }
+              bind "o" { MoveTab "Right"; }
           }
 
           resize {
