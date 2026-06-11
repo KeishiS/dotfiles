@@ -1,6 +1,31 @@
 { config, pkgs, ... }:
 let
   theme = (import ../theme);
+  powerMenu = pkgs.writeShellScript "sway-powermenu" ''
+    lock="Lock"
+    logout="Logout"
+    suspend="Suspend"
+    reboot="Reboot"
+    shutdown="Shutdown"
+
+    chosen=$(
+      printf "%s\n%s\n%s\n%s\n%s\n" \
+        "$lock" \
+        "$logout" \
+        "$suspend" \
+        "$reboot" \
+        "$shutdown" |
+        ${pkgs.wofi}/bin/wofi --cache-file=/dev/null --dmenu --hide-scroll --insensitive
+    )
+
+    case "$chosen" in
+      "$lock") ${pkgs.swaylock}/bin/swaylock -C ~/.config/swaylock/config ;;
+      "$logout") ${pkgs.sway}/bin/swaymsg exit ;;
+      "$suspend") ${pkgs.systemd}/bin/systemctl suspend ;;
+      "$reboot") ${pkgs.systemd}/bin/systemctl reboot ;;
+      "$shutdown") ${pkgs.systemd}/bin/systemctl poweroff ;;
+    esac
+  '';
 in
 {
   wayland.windowManager.sway = {
@@ -25,8 +50,7 @@ in
         "${modifier}+f" = "fullscreen toggle";
         "${modifier}+s" = "exec --no-startup-id \"slurp | grim -g - ~/`date +'%Y-%m-%d_%H:%M:%S'.png`\"";
         "${modifier}+d" = "exec --no-startup-id \"wofi -S run\"";
-        "${modifier}+x" =
-          "exec --no-startup-id ${config.home.homeDirectory}/dotfiles/.config/wofi/powermenu.sh";
+        "${modifier}+x" = "exec --no-startup-id ${powerMenu}";
 
         "XF86MonBrightnessUp" = "exec --no-startup-id brightnessctl s +5%";
         "XF86MonBrightnessDown" = "exec --no-startup-id brightnessctl s 5%-";

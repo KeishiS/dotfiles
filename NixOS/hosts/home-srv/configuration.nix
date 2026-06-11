@@ -4,7 +4,8 @@
   imports = [
     ./hardware-configuration.nix
     ./postgresql
-    ../../modules/services/kanidm-client
+    ./myserv1
+    # ../../modules/services/kanidm-client
     ../../modules/services/nfs-client
   ];
 
