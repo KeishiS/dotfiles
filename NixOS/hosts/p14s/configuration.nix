@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./dns.nix
   ];
   networking.hostName = "NixOS-keishis-P14s";
   networking.networkmanager.wifi.macAddress = "random";
@@ -37,5 +38,5 @@
     extraUpFlags = [ "--accept-dns=false" ];
   };
 
-  system.stateVersion = "25.11";
+  system.stateVersion = "26.05";
 }

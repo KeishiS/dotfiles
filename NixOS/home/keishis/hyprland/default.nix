@@ -1,4 +1,31 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
+let
+  powerMenu = pkgs.writeShellScript "hyprland-powermenu" ''
+    lock="Lock"
+    logout="Logout"
+    suspend="Suspend"
+    reboot="Reboot"
+    shutdown="Shutdown"
+
+    chosen=$(
+      printf "%s\n%s\n%s\n%s\n%s\n" \
+        "$lock" \
+        "$logout" \
+        "$suspend" \
+        "$reboot" \
+        "$shutdown" |
+        ${pkgs.wofi}/bin/wofi --cache-file=/dev/null --dmenu --hide-scroll --insensitive
+    )
+
+    case "$chosen" in
+      "$lock") ${pkgs.hyprlock}/bin/hyprlock ;;
+      "$logout") ${pkgs.hyprland}/bin/hyprctl dispatch exit ;;
+      "$suspend") ${pkgs.systemd}/bin/systemctl suspend ;;
+      "$reboot") ${pkgs.systemd}/bin/systemctl reboot ;;
+      "$shutdown") ${pkgs.systemd}/bin/systemctl poweroff ;;
+    esac
+  '';
+in
 {
   imports = [
     ./hypridle.nix
@@ -19,7 +46,7 @@
         "$mod, d, exec, wofi -S run"
         "$mod, t, togglegroup"
         "$mod, f, fullscreen"
-        "$mod, x, exec, ${config.home.homeDirectory}/dotfiles/.config/wofi/powermenu.sh"
+        "$mod, x, exec, ${powerMenu}"
         "$mod, s, exec, slurp | grim -g - ~/`date +'%Y-%m-%d_%H:%M:%S'`.png"
 
         ", XF86MonBrightnessUp, exec, brightnessctl s +5%"
