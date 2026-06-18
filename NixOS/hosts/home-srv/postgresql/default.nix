@@ -5,6 +5,7 @@ in
 {
   imports = [
     ./server.nix
+    ./pgbouncer.nix
     ./apps
     ./backup.nix
   ];

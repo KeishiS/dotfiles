@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./open-webui.nix
+    # ./open-webui.nix
   ];
 
   networking.hostName = "nixos-sandi-m710q";

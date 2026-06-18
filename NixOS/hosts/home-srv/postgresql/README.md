@@ -79,6 +79,65 @@ human write operation:
 PgBouncer には runtime 用の `app` role だけを登録する。migration は DDL と
 transaction pooling の相性を避けるため PostgreSQL へ直結する。
 
+PgBouncer は `:6432` で以下に listen する。
+
+```text
+localhost
+192.168.100.24
+100.112.172.58
+```
+
+client -> PgBouncer は TLS 必須にし、`db.sandi05.com` の ACME 証明書を使う。
+PgBouncer -> PostgreSQL は同一 host の unix socket 経由なので TLS は使わない。
+PgBouncer の TLS 初期化が CA file 未指定で失敗するため、client cert 検証用 CA として
+system CA bundle を明示する。ただし `client_tls_sslmode = require` なので client
+certificate は必須にしない。
+
+pool 設定の初期値:
+
+```text
+pool_mode = transaction
+max_client_conn = 200
+default_pool_size = 10
+reserve_pool_size = 5
+reserve_pool_timeout = 5
+server_idle_timeout = 600
+server_lifetime = 3600
+```
+
+各 app database には `max_db_connections = 15` を設定する。現在の PgBouncer
+対象は `keylytix_prod`, `keylytix_dev`, `koyomado_prod`, `koyomado_dev` なので、
+server connection は通常時最大 40、reserve 込み最大 60 を目安にする。
+PostgreSQL の `max_connections = 100` に対して、migration や人間の直結用の余裕を残す。
+
+PgBouncer の `auth_file` は sops-nix で管理する。
+`hosts/home-srv/postgresql/secrets/pgbouncer-users.enc.txt` に、PgBouncer の
+auth file 形式で `*_app` role だけを登録する。
+
+```text
+"keylytix_prod_app" "SCRAM-SHA-256$..."
+"keylytix_dev_app" "SCRAM-SHA-256$..."
+"koyomado_prod_app" "SCRAM-SHA-256$..."
+"koyomado_dev_app" "SCRAM-SHA-256$..."
+```
+
+PostgreSQL role password と PgBouncer `auth_file` は同じ SCRAM verifier に揃える。
+verifier は `postgres` superuser で確認できる。
+
+```sh
+sudo -u postgres psql -Atc "
+SELECT format('\"%s\" \"%s\"', rolname, rolpassword)
+FROM pg_authid
+WHERE rolname IN (
+  'keylytix_prod_app',
+  'keylytix_dev_app',
+  'koyomado_prod_app',
+  'koyomado_dev_app'
+)
+ORDER BY rolname;
+"
+```
+
 各 app の設定は PostgreSQL 基盤配下に分ける。
 
 ```text

@@ -20,6 +20,10 @@ in
       environmentFile = config.sops.secrets.sandi05-cloudflare-acme.path;
       dnsPropagationCheck = true;
       group = "postgres";
+      reloadServices = [
+        "postgresql.service"
+        "pgbouncer.service"
+      ];
     };
   };
 
