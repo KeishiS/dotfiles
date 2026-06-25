@@ -13,7 +13,7 @@
     enable = true;
     mounts.users = {
       mountPoint = "/users";
-      remote = "lenovo.sandi05.com:/users";
+      remote = "calc-serv.sandi05.com:/users";
     };
   };
 

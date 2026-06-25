@@ -56,7 +56,7 @@
           proxy_connect_timeout 3600s;
           send_timeout          3600s;
         '';
-        proxyPass = "http://lenovo.sandi05.com:80";
+        proxyPass = "http://calc-serv.sandi05.com:80";
         proxyWebsockets = true;
       };
     };

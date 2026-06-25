@@ -7,10 +7,9 @@
   imports = [
     ./hardware-configuration.nix
     ./vaultwarden.nix
-    # ./nextcloud.nix
     ./jellyfin.nix
-    # ./nextcloud-media-archive.nix
-    # ../../modules/services/kanidm-client
+    ./nextcloud-media-archive.nix
+    ../../modules/services/kanidm-client
     ../../modules/services/nfs-client
   ];
 

@@ -1,12 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  account = "keishis";
+  nextcloudAccount = "bcd76067022f35e3705357b03a527034b3aa6c7e6cde28983b73536079ffd658";
+  mediaAccount = "nobuta05";
+  nextcloudGid = 952;
+  archiveUid = 954;
+  archiveGid = 954;
   backupLib = import ../../modules/services/backup/lib.nix { inherit lib; };
   b2Target = config.sandi.backup.b2.targets.nextcloudMedia;
-  sourceDir = "/storage/nextcloud/data/${account}/files/JellyfinImport";
-  mediaDir = "/storage/jellyfin/media/${account}";
-  archiveDir = "/storage/archive/nextcloud-media/encrypted/${account}";
-  stateDir = "/var/lib/nextcloud-media-archive/state/${account}";
+  sourceDir = "/storage/nextcloud/data/${nextcloudAccount}/files/JellyfinImport";
+  mediaDir = "/storage/jellyfin/media/${mediaAccount}";
+  archiveDir = "/storage/archive/nextcloud-media/encrypted/${mediaAccount}";
+  stateDir = "/var/lib/nextcloud-media-archive/state/${mediaAccount}";
   minAgeMinutes = 10;
   localArchiveRetention = "1d";
   recipientArgs = backupLib.ageRecipientArgs config.sandi.backup.ageRecipients;
@@ -31,8 +40,11 @@ in
     }
   ];
 
+  users.groups.nextcloud.gid = nextcloudGid;
+  users.groups.nextcloud-media-archive.gid = archiveGid;
   users.users.nextcloud-media-archive = {
     isSystemUser = true;
+    uid = archiveUid;
     group = "nextcloud-media-archive";
     extraGroups = [
       "nextcloud"
@@ -40,16 +52,7 @@ in
     ];
   };
 
-  users.groups.nextcloud-media-archive = { };
-
   systemd.tmpfiles.rules = [
-    "d /storage/jellyfin 0750 jellyfin jellyfin -"
-    "d /storage/jellyfin/media 0750 jellyfin jellyfin -"
-    "d ${mediaDir} 2770 jellyfin jellyfin -"
-    "d /storage/archive 0750 nextcloud-media-archive nextcloud-media-archive -"
-    "d /storage/archive/nextcloud-media 2770 nextcloud-media-archive nextcloud-media-archive -"
-    "d /storage/archive/nextcloud-media/encrypted 2770 nextcloud-media-archive nextcloud-media-archive ${localArchiveRetention}"
-    "d ${archiveDir} 2770 nextcloud-media-archive nextcloud-media-archive ${localArchiveRetention}"
     "d /var/lib/nextcloud-media-archive 0750 nextcloud-media-archive nextcloud-media-archive -"
     "d /var/lib/nextcloud-media-archive/state 2770 nextcloud-media-archive nextcloud-media-archive -"
     "d ${stateDir} 2770 nextcloud-media-archive nextcloud-media-archive -"
@@ -57,7 +60,14 @@ in
 
   systemd.services.nextcloud-media-archive = {
     description = "Copy Nextcloud videos to Jellyfin and create encrypted archives";
-    after = [ "nextcloud-setup.service" ];
+    after = [
+      "network-online.target"
+      "autofs.service"
+    ];
+    wants = [
+      "network-online.target"
+      "autofs.service"
+    ];
 
     serviceConfig = {
       Type = "oneshot";
