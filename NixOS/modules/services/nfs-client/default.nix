@@ -80,7 +80,7 @@ in
       enable = true;
       timeout = cfg.timeout;
       autoMaster = ''
-        /- file:${mapFile}
+        /- ${mapFile}
       '';
     };
 

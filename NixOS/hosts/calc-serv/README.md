@@ -23,105 +23,69 @@ Kanidmの通常管理は `idm_admin` で行う。
 kanidm login --name idm_admin
 ```
 
+### 0. 初回のみlogin許可groupをPOSIX groupにする
+
+`server-users` はLinux login、Vaultwarden login、Nextcloud loginを許可するためのgroupとして使う。
+初回だけPOSIX groupとして有効化する。
+すでに有効化済みなら再実行は不要。
+
+```bash
+kanidm group posix set --name idm_admin server-users
+# 以下で設定を確認
+kanidm group posix show --name idm_admin server-users
+```
+
 ### 1. personを作成する
 
 `<USER>` はlogin名、`<DISPLAY_NAME>` は表示名に置き換える。
 
 ```bash
 kanidm person create --name idm_admin <USER> "<DISPLAY_NAME>"
-```
-
-mail addressを登録する場合:
-
-```bash
+# mail addressの登録
 kanidm person update --name idm_admin <USER> --mail <USER@example.com>
-```
 
-### 2. POSIX accountを有効化する
-
-calc-servでは `services.kanidm.unix` によりLinux loginにKanidmを使うため、
-loginさせるユーザはPOSIX accountとして有効化する。
-
-```bash
-kanidm person posix set --name idm_admin <USER> --shell /run/current-system/sw/bin/bash
-```
-
-数値IDをKanidmに自動割り当てさせる場合は `--gidnumber` を指定しない。
-既存systemとの都合で固定したい場合のみ指定する。
-
-```bash
-kanidm person posix set --name idm_admin <USER> --shell /run/current-system/sw/bin/bash --gidnumber <GID>
-```
-
-確認する。
-
-```bash
-kanidm person posix show --name idm_admin <USER>
-```
-
-### 3. login許可groupに追加する
-
-calc-servでは `server-users` に所属するPOSIX userだけがPAM loginを許可される。
-SSHやlocal loginを許可するには、このgroupへ追加する。
-
-```bash
+# posix/vaultwarden/nextcloudの利用権限を付与
 kanidm group add-members --name idm_admin server-users <USER>
-```
-
-確認する。
-
-```bash
+# グループ設定の確認
 kanidm group get --name idm_admin server-users
-```
+kanidm group posix show --name idm_admin server-users
 
-### 4. 必要に応じて管理用groupに追加する
+# shell情報の設定(uidを自動振り分けする場合)
+kanidm person posix set --name idm_admin <USER> --shell /run/current-system/sw/bin/bash
+# shell情報の設定(uidを指定する場合)
+kanidm person posix set --name idm_admin <USER> --shell /run/current-system/sw/bin/bash --gidnumber <GID>
+# posix関連情報の確認
+kanidm person posix show --name idm_admin <USER>
 
-Kanidmのユーザ・group管理を許可する場合:
+# credentialsの設定
+## 公開鍵の登録
+kanidm person ssh add-publickey --name idm_admin <USER> <KEY_NAME> "<PUBLIC_KEY>"
+## 登録済み鍵の確認
+kanidm person ssh list-publickeys --name idm_admin <USER>
 
-```bash
+# kanidmのユーザ・グループ管理権限を付与する場合, idm_admins へ所属させる
 kanidm group add-members --name idm_admin idm_admins <USER>
-```
-
-Web UIのAdmin linkを表示したい場合:
-
-```bash
+# web UIを表示させる場合
 kanidm group add-members --name idm_admin idm_ui_enable_experimental_features <USER>
 ```
 
-`idm_ui_enable_experimental_features` に所属すると、`/ui/apps` のnavigationに `Admin` linkが表示される。
-link先は `/ui/admin/persons` で、Admin画面内から `/ui/admin/groups` に移動できる。
+### client側での設定確認
+
+```bash
+# NSSで見えるかの確認
+getent passwd <USER>
+getent group server-users
+
+# SSH鍵解決の確認
+/run/wrappers/bin/kanidm_ssh_authorizedkeys <USER>
+```
 
 ### 5. credentialを設定する
 
 初回passwordやpasskeyなどのcredentialは、Kanidm Web UIまたはKanidm CLIで設定する。
 `kanidm-provision` はpersonやgroupの作成には使えるが、credentialやSSH public keyの登録までは扱わない。
 
-SSH loginに使うpublic keyを登録する場合:
-
-```bash
-kanidm person ssh add-publickey --name idm_admin <USER> <KEY_NAME> "<PUBLIC_KEY>"
-```
-
-登録済みkeyを確認する。
-
-```bash
-kanidm person ssh list-publickeys --name idm_admin <USER>
-```
-
 ### 6. client側で確認する
-
-NSSで見えるか確認する。
-
-```bash
-getent passwd <USER>
-getent group server-users
-```
-
-SSH key解決を確認する。
-
-```bash
-/run/wrappers/bin/kanidm_ssh_authorizedkeys <USER>
-```
 
 loginできない場合は、以下を確認する。
 
@@ -130,35 +94,122 @@ journalctl -u kanidm-unixd -b
 journalctl -u kanidm-unixd-tasks -b
 kanidm person posix show --name idm_admin <USER>
 kanidm group get --name idm_admin server-users
+kanidm group posix show --name idm_admin server-users
 ```
 
-### TODO: Nextcloud OAuth2連携
+### Vaultwarden OAuth2連携
 
-NextcloudのloginをKanidmに寄せるため、OAuth2 / OpenID Connect連携を検討する。
-Kanidm側では `services.kanidm.provision.systems.oauth2.nextcloud` を使い、
-Nextcloud側ではOpenID Connect対応appを設定する。
+VaultwardenのloginをKanidmに寄せるため、Kanidm側でOAuth2 / OpenID Connect clientを作成する。
+Vaultwarden側ではSSOを有効にするが、移行中に閉め出されないよう `SSO_ONLY=false` にしている。
 
-検討時に決める情報:
-
-- Nextcloudの公開URL
-- Nextcloud側で使うapp: official OpenID Connect Login / Social Login / その他
-- OAuth2 callback URL
-- loginを許可するKanidm group: 例 `nextcloud-users`
-- Nextcloud管理者にするKanidm group: 例 `nextcloud-admins`
-- OAuth2 client secretを `sops-nix` で管理するか
-
-想定するgroup構成:
+Kanidm側の設定:
 
 ```text
-nextcloud-users
-  Nextcloudへloginできるユーザ
-
-nextcloud-admins
-  Nextcloud上で管理者権限を持つユーザ
+client id: vaultwarden
+display name: Vaultwarden
+landing URL: https://key.sandi05.com/#/sso
+redirect URL: https://key.sandi05.com/identity/connect/oidc-signin
+discovery URL: https://id.sandi05.com/oauth2/openid/vaultwarden/.well-known/openid-configuration
+issuer URL: https://id.sandi05.com/oauth2/openid/vaultwarden
 ```
 
-実装時は `kanidm-provision.json` または `services.kanidm.provision.groups` でgroupを作成し、
-`systems.oauth2.nextcloud.scopeMaps` / `claimMaps` でNextcloudへ渡す情報を整理する。
+loginを許可するユーザは `server-users` に追加する。
+Linux login、Vaultwarden、Nextcloudの許可groupを共通化しているため、Vaultwarden専用groupは使わない。
+
+Kanidm側のclient secretを確認する。
+
+```bash
+kanidm system oauth2 show-basic-secret --name idm_admin vaultwarden
+```
+
+Vaultwarden側の `hosts/lenovo/secrets/vw.env.enc` には、既存のSMTP secretなどに加えて次の値を入れる。
+client secretはNix storeに置かない。
+
+```env
+SSO_CLIENT_SECRET=<KANIDM_VAULTWARDEN_CLIENT_SECRET>
+```
+
+Vaultwarden側の主な設定:
+
+```text
+SSO_ENABLED=true
+SSO_ONLY=false
+SSO_AUTHORITY=https://id.sandi05.com/oauth2/openid/vaultwarden
+SSO_CLIENT_ID=vaultwarden
+SSO_SCOPES="email profile"
+SSO_PKCE=true
+```
+
+既存のVaultwardenユーザとKanidmユーザを対応させるには、両者のmail addressを一致させる。
+`SSO_SIGNUPS_MATCH_EMAIL=true` により、mail addressが一致する既存ユーザはSSO login時に関連付けられる。
+
+確認する。
+
+```bash
+kanidm system oauth2 get --name idm_admin vaultwarden
+kanidm group get --name idm_admin server-users
+journalctl -u vaultwarden -b
+```
+
+SSO loginで問題なく使えることを確認してから、必要であれば `SSO_ONLY=true` に変更する。
+
+### Nextcloud OAuth2連携
+
+NextcloudのloginをKanidmに寄せるため、Kanidm側でOAuth2 / OpenID Connect clientを作成する。
+Nextcloud側は `user_oidc` appを使う前提。
+現在はNextcloudを動かしていないため、Kanidm側のclientだけ先に作成しておく。
+
+Kanidm側の設定:
+
+```text
+client id: nextcloud
+display name: Nextcloud
+landing URL: https://storage.sandi05.com
+redirect URL: https://storage.sandi05.com/apps/user_oidc/code
+discovery URL: https://id.sandi05.com/oauth2/openid/nextcloud/.well-known/openid-configuration
+issuer URL: https://id.sandi05.com/oauth2/openid/nextcloud
+```
+
+loginを許可するgroup:
+
+```text
+server-users
+  Linux login、Vaultwarden login、Nextcloud loginを許可するユーザ
+```
+
+Kanidm側のclient secretを確認する。
+
+```bash
+kanidm system oauth2 show-basic-secret --name idm_admin nextcloud
+```
+
+Nextcloud側では `user_oidc` appを有効化し、providerを作成する。
+NixOSのNextcloud packageにappが含まれていない場合は、Nextcloudの管理画面または `occ app:install user_oidc` で導入する。
+
+```bash
+sudo -u nextcloud nextcloud-occ app:enable user_oidc
+sudo -u nextcloud nextcloud-occ user_oidc:provider kanidm \
+  --clientid="nextcloud" \
+  --clientsecret="<KANIDM_NEXTCLOUD_CLIENT_SECRET>" \
+  --discoveryuri="https://id.sandi05.com/oauth2/openid/nextcloud/.well-known/openid-configuration" \
+  --group-provisioning=1 \
+  --group-whitelist-regex="/^server-users$/" \
+  --group-restrict-login-to-whitelist=1
+```
+
+loginを許可するユーザは `server-users` に追加する。
+管理者として扱いたいユーザは、初回login後にNextcloud側で管理者権限を付与する。
+
+```bash
+kanidm group add-members --name idm_admin server-users <USER>
+```
+
+確認する。
+
+```bash
+kanidm system oauth2 get --name idm_admin nextcloud
+kanidm group get --name idm_admin server-users
+```
 
 ### Kanidm password recovery mail
 

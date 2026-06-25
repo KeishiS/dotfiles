@@ -1,4 +1,8 @@
-{ config, ... }:
+{ config, lib, ... }:
+let
+  vaultwardenUid = 951;
+  vaultwardenGid = 951;
+in
 {
   sops.secrets.vwEnv = {
     format = "binary";
@@ -20,6 +24,14 @@
       INVITATIONS_ALLOWED = true; # 招待したユーザは可
       SIGNUPS_VERIFY = true;
 
+      SSO_ENABLED = true;
+      SSO_ONLY = false;
+      SSO_SIGNUPS_MATCH_EMAIL = true;
+      SSO_AUTHORITY = "https://id.sandi05.com/oauth2/openid/vaultwarden";
+      SSO_SCOPES = "email profile";
+      SSO_PKCE = true;
+      SSO_CLIENT_ID = "vaultwarden";
+
       ENABLE_WEBSOCKET = true;
       PUSH_ENABLED = true;
 
@@ -32,6 +44,11 @@
       SMTP_DEBUG = false;
     };
   };
+
+  users.groups.vaultwarden.gid = vaultwardenGid;
+  users.users.vaultwarden.uid = vaultwardenUid;
+
+  systemd.services.backup-vaultwarden.wantedBy = lib.mkForce [ ];
 
   networking.firewall.allowedTCPPorts = [ 8000 ];
 }

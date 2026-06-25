@@ -37,6 +37,14 @@ in
     group = "kanidm";
   };
 
+  sops.secrets.kanidm-admin = {
+    format = "binary";
+    sopsFile = ./secrets/kanidm-admin.enc;
+    mode = "0400";
+    owner = "kanidm";
+    group = "kanidm";
+  };
+
   sops.secrets.kanidm-mail-sender = {
     format = "binary";
     sopsFile = ./secrets/kanidm-mail-sender.enc.toml;
@@ -67,6 +75,7 @@ in
     provision = {
       enable = true;
       instanceUrl = "https://${domain}";
+      adminPasswordFile = config.sops.secrets.kanidm-admin.path;
       idmAdminPasswordFile = config.sops.secrets.kanidm-idm-admin.path;
       extraJsonFile = ./kanidm-provision.json;
       groups = {
@@ -77,6 +86,29 @@ in
           members = [ "server-users" ];
           overwriteMembers = false;
         };
+      };
+      systems.oauth2.vaultwarden = {
+        displayName = "Vaultwarden";
+        originUrl = "https://key.sandi05.com/identity/connect/oidc-signin";
+        originLanding = "https://key.sandi05.com/#/sso";
+        preferShortUsername = true;
+        scopeMaps.server-users = [
+          "openid"
+          "email"
+          "profile"
+        ];
+      };
+      systems.oauth2.nextcloud = {
+        displayName = "Nextcloud";
+        originUrl = "https://storage.sandi05.com/apps/user_oidc/code";
+        originLanding = "https://storage.sandi05.com";
+        preferShortUsername = true;
+        scopeMaps.server-users = [
+          "openid"
+          "email"
+          "profile"
+          "groups_name"
+        ];
       };
     };
 

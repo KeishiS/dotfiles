@@ -7,12 +7,11 @@
   imports = [
     ./hardware-configuration.nix
     ./vaultwarden.nix
-    ./nextcloud.nix
-    ./jellyfin.nix
-    ./nextcloud-media-archive.nix
-    ./kanidm.nix
-    ./nfs.nix
-    ../../modules/services/kanidm-client
+    # ./nextcloud.nix
+    # ./jellyfin.nix
+    # ./nextcloud-media-archive.nix
+    # ../../modules/services/kanidm-client
+    ../../modules/services/nfs-client
   ];
 
   networking.hostName = "NixOS-sandi-lenovo";
@@ -22,5 +21,20 @@
     libarchive # for bsdtar
   ];
 
-  system.stateVersion = "25.11";
+  sandi.nfsClient = {
+    enable = true;
+    mounts = {
+      storage = {
+        mountPoint = "/storage";
+        remote = "calc-serv.sandi05.com:/storage";
+      };
+
+      users = {
+        mountPoint = "/users";
+        remote = "calc-serv.sandi05.com:/users";
+      };
+    };
+  };
+
+  system.stateVersion = "26.05";
 }

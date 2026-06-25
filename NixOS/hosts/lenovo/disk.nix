@@ -1,93 +1,13 @@
 let
-  d0 = "<device0>";
-  d1 = "<device1>";
-  d2 = "<device2>";
-  d3 = "<device3>";
+  osDisk = "/dev/disk/by-id/nvme-eui.002538a901b5aa54";
+  # dataDisk0 = "/dev/disk/by-id/usb-TM_D4_SSD_20251016154C-0:0";
+  # dataDisk1 = "/dev/disk/by-id/usb-TM_D4_SSD_20251016154C-0:1";
 in
 {
   disko.devices = {
-    disk.disk1 = {
-      type = "disk";
-      device = d1;
-      content = {
-        type = "gpt";
-        partitions.data.size = "100%";
-      };
-    };
-
-    disk.disk2 = {
-      type = "disk";
-      device = d2;
-      content = {
-        type = "gpt";
-        partitions.data.size = "100%";
-      };
-    };
-
-    disk.disk3 = {
-      type = "disk";
-      device = d3;
-      content = {
-        type = "gpt";
-        partitions.data.size = "100%";
-      };
-    };
-
-    disk.disk0 = {
-      type = "disk";
-      device = d0;
-      content = {
-        type = "gpt";
-        partitions.data = {
-          size = "100%";
-          content = {
-            type = "btrfs";
-            extraArgs = [
-              "-f"
-              "-L NAS"
-              "-d raid10"
-              "-m raid1c3"
-              d1
-              d2
-              d3
-            ];
-
-            subvolumes = {
-              "/storage" = {
-                mountpoint = "/storage";
-                mountOptions = [
-                  "noatime"
-                  "ssd"
-                  "space_cache=v2"
-                  # "degraded"
-                ];
-              };
-              "/pg" = {
-                mountpoint = "/pg";
-                mountOptions = [
-                  "noatime"
-                  "ssd"
-                  "space_cache=v2"
-                  # "degraded"
-                ];
-              };
-              "/users" = {
-                mountpoint = "/users";
-                mountOptions = [
-                  "noatime"
-                  "ssd"
-                  "space_cache=v2"
-                ];
-              };
-            };
-          };
-        };
-      };
-    };
-
     disk.main = {
       type = "disk";
-      device = "<OS disk>";
+      device = osDisk;
       content = {
         type = "gpt";
         partitions.ESP = {
@@ -123,5 +43,52 @@ in
         };
       };
     };
+
+    /*
+      disk.data0 = {
+        type = "disk";
+        device = dataDisk0;
+        content = {
+          type = "gpt";
+          partitions.lvm = {
+            size = "100%";
+            type = "8E00";
+            content = {
+              type = "lvm_pv";
+              vg = "nixstore";
+            };
+          };
+        };
+      };
+
+      disk.data1 = {
+        type = "disk";
+        device = dataDisk1;
+        content = {
+          type = "gpt";
+          partitions.lvm = {
+            size = "100%";
+            type = "8E00";
+            content = {
+              type = "lvm_pv";
+              vg = "nixstore";
+            };
+          };
+        };
+      };
+
+      lvm_vg.nixstore = {
+        type = "lvm_vg";
+        lvs.nix = {
+          size = "100%FREE";
+          content = {
+            type = "filesystem";
+            format = "ext4";
+            mountpoint = "/nix";
+            mountOptions = [ "noatime" ];
+          };
+        };
+      };
+    */
   };
 }
