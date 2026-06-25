@@ -17,7 +17,6 @@ let
   archiveDir = "/storage/archive/nextcloud-media/encrypted/${mediaAccount}";
   stateDir = "/var/lib/nextcloud-media-archive/state/${mediaAccount}";
   minAgeMinutes = 10;
-  localArchiveRetention = "1d";
   recipientArgs = backupLib.ageRecipientArgs config.sandi.backup.ageRecipients;
 in
 {
@@ -127,8 +126,8 @@ in
           install -d -m 2770 "$(dirname "$dest")"
           install -m 0640 "$src" "$dest"
 
-          mkdir -p "$(dirname "$archive")"
-          tar -C "$(dirname "$src")" -cf - "$(basename "$src")" \
+          install -d -m 2770 "$(dirname "$archive")"
+          tar -C "$(dirname "$src")" -cf - -- "$(basename "$src")" \
             | zstd --threads=1 \
             | age ${recipientArgs} \
             > "$archive"
