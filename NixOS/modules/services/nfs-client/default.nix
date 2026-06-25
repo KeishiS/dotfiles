@@ -59,7 +59,6 @@ in
                 "rw"
                 "vers=4.2"
                 "hard"
-                "intr"
               ];
               description = "NFS mount options used by autofs.";
             };
@@ -83,10 +82,6 @@ in
         /- ${mapFile}
       '';
     };
-
-    systemd.tmpfiles.rules = lib.mapAttrsToList (
-      _name: mount: "d ${mount.mountPoint} 0755 root root -"
-    ) cfg.mounts;
 
     systemd.services.autofs = {
       path = [

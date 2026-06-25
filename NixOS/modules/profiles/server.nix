@@ -3,7 +3,7 @@
   ...
 }:
 {
-  security.sudo.wheelNeedsPassword = true;
+  security.sudo-rs.wheelNeedsPassword = true;
 
   environment.systemPackages = with pkgs; [
     julia_110-bin

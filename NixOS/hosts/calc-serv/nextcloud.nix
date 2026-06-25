@@ -87,6 +87,9 @@ in
       Type = "oneshot";
       User = "nextcloud";
       Group = "nextcloud";
+      # nextcloud-occ checks CREDENTIALS_DIRECTORY before deciding whether to
+      # spawn systemd-run for runtime secrets. Keep this even though the script
+      # does not read mail_smtppassword directly.
       LoadCredential = [
         "mail_smtppassword:${config.sops.secrets.nextcloud-smtp-password.path}"
       ];
