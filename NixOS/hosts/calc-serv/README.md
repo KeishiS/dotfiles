@@ -12,6 +12,244 @@
 `raid1c3` は各blockを3つ保持するため、最大2台までのdisk故障に耐えることを意図している。
 故障したdiskは速やかに交換し、degraded状態での長期運用は避ける。
 
+## Kanidmユーザ追加手順
+
+Kanidmの通常管理は `idm_admin` で行う。
+`admin` はdomainやsystem寄りの管理用であり、ユーザ・groupの通常管理では基本的に使わない。
+
+初回またはsessionが切れている場合はloginする。
+
+```bash
+kanidm login --name idm_admin
+```
+
+### 1. personを作成する
+
+`<USER>` はlogin名、`<DISPLAY_NAME>` は表示名に置き換える。
+
+```bash
+kanidm person create --name idm_admin <USER> "<DISPLAY_NAME>"
+```
+
+mail addressを登録する場合:
+
+```bash
+kanidm person update --name idm_admin <USER> --mail <USER@example.com>
+```
+
+### 2. POSIX accountを有効化する
+
+calc-servでは `services.kanidm.unix` によりLinux loginにKanidmを使うため、
+loginさせるユーザはPOSIX accountとして有効化する。
+
+```bash
+kanidm person posix set --name idm_admin <USER> --shell /run/current-system/sw/bin/bash
+```
+
+数値IDをKanidmに自動割り当てさせる場合は `--gidnumber` を指定しない。
+既存systemとの都合で固定したい場合のみ指定する。
+
+```bash
+kanidm person posix set --name idm_admin <USER> --shell /run/current-system/sw/bin/bash --gidnumber <GID>
+```
+
+確認する。
+
+```bash
+kanidm person posix show --name idm_admin <USER>
+```
+
+### 3. login許可groupに追加する
+
+calc-servでは `server-users` に所属するPOSIX userだけがPAM loginを許可される。
+SSHやlocal loginを許可するには、このgroupへ追加する。
+
+```bash
+kanidm group add-members --name idm_admin server-users <USER>
+```
+
+確認する。
+
+```bash
+kanidm group get --name idm_admin server-users
+```
+
+### 4. 必要に応じて管理用groupに追加する
+
+Kanidmのユーザ・group管理を許可する場合:
+
+```bash
+kanidm group add-members --name idm_admin idm_admins <USER>
+```
+
+Web UIのAdmin linkを表示したい場合:
+
+```bash
+kanidm group add-members --name idm_admin idm_ui_enable_experimental_features <USER>
+```
+
+`idm_ui_enable_experimental_features` に所属すると、`/ui/apps` のnavigationに `Admin` linkが表示される。
+link先は `/ui/admin/persons` で、Admin画面内から `/ui/admin/groups` に移動できる。
+
+### 5. credentialを設定する
+
+初回passwordやpasskeyなどのcredentialは、Kanidm Web UIまたはKanidm CLIで設定する。
+`kanidm-provision` はpersonやgroupの作成には使えるが、credentialやSSH public keyの登録までは扱わない。
+
+SSH loginに使うpublic keyを登録する場合:
+
+```bash
+kanidm person ssh add-publickey --name idm_admin <USER> <KEY_NAME> "<PUBLIC_KEY>"
+```
+
+登録済みkeyを確認する。
+
+```bash
+kanidm person ssh list-publickeys --name idm_admin <USER>
+```
+
+### 6. client側で確認する
+
+NSSで見えるか確認する。
+
+```bash
+getent passwd <USER>
+getent group server-users
+```
+
+SSH key解決を確認する。
+
+```bash
+/run/wrappers/bin/kanidm_ssh_authorizedkeys <USER>
+```
+
+loginできない場合は、以下を確認する。
+
+```bash
+journalctl -u kanidm-unixd -b
+journalctl -u kanidm-unixd-tasks -b
+kanidm person posix show --name idm_admin <USER>
+kanidm group get --name idm_admin server-users
+```
+
+### TODO: Nextcloud OAuth2連携
+
+NextcloudのloginをKanidmに寄せるため、OAuth2 / OpenID Connect連携を検討する。
+Kanidm側では `services.kanidm.provision.systems.oauth2.nextcloud` を使い、
+Nextcloud側ではOpenID Connect対応appを設定する。
+
+検討時に決める情報:
+
+- Nextcloudの公開URL
+- Nextcloud側で使うapp: official OpenID Connect Login / Social Login / その他
+- OAuth2 callback URL
+- loginを許可するKanidm group: 例 `nextcloud-users`
+- Nextcloud管理者にするKanidm group: 例 `nextcloud-admins`
+- OAuth2 client secretを `sops-nix` で管理するか
+
+想定するgroup構成:
+
+```text
+nextcloud-users
+  Nextcloudへloginできるユーザ
+
+nextcloud-admins
+  Nextcloud上で管理者権限を持つユーザ
+```
+
+実装時は `kanidm-provision.json` または `services.kanidm.provision.groups` でgroupを作成し、
+`systems.oauth2.nextcloud.scopeMaps` / `claimMaps` でNextcloudへ渡す情報を整理する。
+
+### TODO: Kanidm password recovery mail
+
+Kanidmでpassword紛失時の再発行に対応するため、credential reset linkをmail送信できるようにする。
+Kanidm本体は直接SMTP送信せず、DB内のmessage queueにmessageを積む。
+送信は `kanidm-mail-sender` がmessage queueを処理してSMTP relayへ渡す。
+
+想定経路:
+
+```text
+Kanidm
+  -> message queue
+  -> kanidm-mail-sender
+  -> Cloudflare Email Service SMTP
+  -> user email
+```
+
+Cloudflareは `Email Routing` だけでは送信用途に不足する。
+送信には `Email Service` / `Email Sending` のSMTPを使う。
+
+Cloudflare SMTPの想定値:
+
+```text
+host: smtp.mx.cloudflare.net
+port: 465
+username: api_token
+password: <Cloudflare API token>
+```
+
+Kanidm mail senderの設定イメージ:
+
+```toml
+token = "<kanidm mail-sender service account token>"
+
+instance_display_name = "Sandi Kanidm"
+instance_url = "https://id.sandi05.com"
+
+mail_from_address = "kanidm@sandi05.com"
+mail_reply_to_address = "noreply@sandi05.com"
+
+mail_relay = "smtp.mx.cloudflare.net:465"
+mail_username = "api_token"
+mail_password = "<cloudflare-email-api-token>"
+```
+
+実装時に必要な作業:
+
+- Cloudflare Email Service / Email Sendingを有効化する
+- 送信元domainと送信元addressを設定する
+- Cloudflare API tokenを作成し、`sops-nix` でsecret管理する
+- Kanidmに `mail-sender` service accountを作成する
+- `mail-sender` を `idm_message_senders` groupへ追加する
+- `mail-sender` 用のread-write API tokenを発行し、`sops-nix` でsecret管理する
+- `kanidm-mail-sender` をsystemd serviceとして実行する
+- 各personに `mail` attributeを設定する
+- self-service recoveryを使う場合はdomain設定でaccount recoveryを有効化する
+
+Kanidm側の準備command例:
+
+```bash
+kanidm service-account create --name idm_admin mail-sender "Mail Sender" idm_admins
+kanidm group add-members --name idm_admin idm_message_senders mail-sender
+kanidm service-account api-token generate --name idm_admin mail-sender "mail sender token" --readwrite
+```
+
+self-service recoveryを有効化する場合:
+
+```bash
+kanidm system domain set-allow-account-recovery true --name admin
+```
+
+ユーザへ手動でreset linkを送信する場合:
+
+```bash
+kanidm person credential send-reset-token --name idm_admin <USER>
+```
+
+mail送信を使わず、reset tokenを手動で渡す場合:
+
+```bash
+kanidm person credential create-reset-token --name idm_admin <USER>
+```
+
+注意点:
+
+- Cloudflare Email Sendingの利用条件、料金、制限を事前に確認する。
+- Cloudflare API tokenとKanidm mail-sender tokenはNix storeに入れない。
+- `mail-sender` service accountは `idm_message_senders` 以外の強いgroupへ入れない。
+- 高権限ユーザのcredential resetには制限がある。
+- reset tokenは既定で1時間、最大24時間まで。
+
 ## disk故障時の交換手順
 
 disk交換はdiskoではなく、btrfsの運用commandで行う。

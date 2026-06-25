@@ -39,6 +39,11 @@ in
 
   services.kanidm = {
     package = pkgs.kanidmWithSecretProvisioning_1_10;
+    client = {
+      enable = true;
+      settings.uri = "https://${domain}";
+    };
+
     server = {
       enable = true;
       settings = {
@@ -55,6 +60,7 @@ in
       enable = true;
       instanceUrl = "https://${domain}";
       idmAdminPasswordFile = config.sops.secrets.kanidm-idm-admin.path;
+      extraJsonFile = ./kanidm-provision.json;
       groups = {
         server-users = {
           overwriteMembers = false;
@@ -68,6 +74,17 @@ in
 
     unix = {
       enable = true;
+      sshIntegration = true;
+      settings = {
+        hsm_type = "tpm_if_possible";
+        kanidm.pam_allowed_login_groups = [ "server-users" ];
+        home_prefix = "/users/";
+        home_mount_prefix = "/users";
+        home_attr = "uuid";
+        home_alias = "name";
+        uid_attr_map = "name";
+        gid_attr_map = "name";
+      };
     };
   };
 
@@ -96,6 +113,8 @@ in
     after = [ "acme-${domain}.service" ];
     requires = [ "acme-${domain}.service" ];
   };
+
+  systemd.services.kanidm-unixd-tasks.serviceConfig.BindPaths = [ "/users" ];
 
   networking.firewall.allowedTCPPorts = [
     80

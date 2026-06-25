@@ -1,4 +1,8 @@
 { pkgs, ... }:
+let
+  vaultwardenUid = 951;
+  vaultwardenGid = 951;
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -19,6 +23,18 @@
     fileSystems = [ "/storage" ];
     interval = "monthly";
   };
+
+  users.groups.vaultwarden.gid = vaultwardenGid;
+  users.users.vaultwarden = {
+    isSystemUser = true;
+    uid = vaultwardenUid;
+    group = "vaultwarden";
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /storage/vaultwarden 0700 ${toString vaultwardenUid} ${toString vaultwardenGid} -"
+    "d /storage/vaultwarden/backup 0700 ${toString vaultwardenUid} ${toString vaultwardenGid} -"
+  ];
 
   system.stateVersion = "26.05";
 }
