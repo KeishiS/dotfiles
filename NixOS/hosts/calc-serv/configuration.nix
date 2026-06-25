@@ -12,6 +12,7 @@ in
     ./hardware-configuration.nix
     ./nfs.nix
     ./kanidm.nix
+    ./nextcloud.nix
   ];
 
   networking.hostName = "nixos-sandi-calc-serv";
@@ -53,6 +54,7 @@ in
     "d /storage/vaultwarden 0700 ${toString vaultwardenUid} ${toString vaultwardenGid} -"
     "d /storage/vaultwarden/backup 0700 ${toString vaultwardenUid} ${toString vaultwardenGid} -"
     "d /storage/nextcloud 0750 ${toString nextcloudUid} ${toString nextcloudGid} -"
+    "d /storage/nextcloud/config 0750 ${toString nextcloudUid} ${toString nextcloudGid} -"
     "d /storage/jellyfin 0750 ${toString jellyfinUid} ${toString jellyfinGid} -"
     "d /storage/jellyfin/media 0750 ${toString jellyfinUid} ${toString jellyfinGid} -"
   ];
