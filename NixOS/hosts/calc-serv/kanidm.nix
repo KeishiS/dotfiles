@@ -37,6 +37,14 @@ in
     group = "kanidm";
   };
 
+  sops.secrets.kanidm-mail-sender = {
+    format = "binary";
+    sopsFile = ./secrets/kanidm-mail-sender.enc.toml;
+    mode = "0440";
+    owner = "root";
+    group = "kanidm";
+  };
+
   services.kanidm = {
     package = pkgs.kanidmWithSecretProvisioning_1_10;
     client = {
@@ -112,6 +120,35 @@ in
   systemd.services.kanidm = {
     after = [ "acme-${domain}.service" ];
     requires = [ "acme-${domain}.service" ];
+  };
+
+  systemd.services.kanidm-mail-sender = {
+    description = "Kanidm mail sender";
+    wantedBy = [ "multi-user.target" ];
+    wants = [ "network-online.target" ];
+    after = [
+      "network-online.target"
+      "kanidm.service"
+    ];
+    requires = [ "kanidm.service" ];
+
+    serviceConfig = {
+      ExecStart = "${config.services.kanidm.package}/bin/kanidm-mail-sender -c /etc/kanidm/config -m ${config.sops.secrets.kanidm-mail-sender.path}";
+      User = "kanidm";
+      Group = "kanidm";
+      Restart = "on-failure";
+      RestartSec = "10s";
+
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+      ProtectHome = true;
+      ProtectSystem = "strict";
+      RestrictAddressFamilies = [
+        "AF_INET"
+        "AF_INET6"
+        "AF_UNIX"
+      ];
+    };
   };
 
   systemd.services.kanidm-unixd-tasks.serviceConfig.BindPaths = [ "/users" ];

@@ -160,7 +160,7 @@ nextcloud-admins
 実装時は `kanidm-provision.json` または `services.kanidm.provision.groups` でgroupを作成し、
 `systems.oauth2.nextcloud.scopeMaps` / `claimMaps` でNextcloudへ渡す情報を整理する。
 
-### TODO: Kanidm password recovery mail
+### Kanidm password recovery mail
 
 Kanidmでpassword紛失時の再発行に対応するため、credential reset linkをmail送信できるようにする。
 Kanidm本体は直接SMTP送信せず、DB内のmessage queueにmessageを積む。
@@ -172,23 +172,23 @@ Kanidm本体は直接SMTP送信せず、DB内のmessage queueにmessageを積む
 Kanidm
   -> message queue
   -> kanidm-mail-sender
-  -> Cloudflare Email Service SMTP
+  -> Resend SMTP
   -> user email
 ```
 
-Cloudflareは `Email Routing` だけでは送信用途に不足する。
-送信には `Email Service` / `Email Sending` のSMTPを使う。
+calc-servでは `kanidm-mail-sender` をsystemd serviceとして起動する。
+接続情報は `hosts/calc-serv/secrets/kanidm-mail-sender.enc.toml` に置く。
 
-Cloudflare SMTPの想定値:
+Resend SMTPの想定値:
 
 ```text
-host: smtp.mx.cloudflare.net
-port: 465
-username: api_token
-password: <Cloudflare API token>
+host: smtp.resend.com
+port: 587
+username: resend
+password: <Resend API key>
 ```
 
-Kanidm mail senderの設定イメージ:
+secretに入れるTOMLの例:
 
 ```toml
 token = "<kanidm mail-sender service account token>"
@@ -199,20 +199,19 @@ instance_url = "https://id.sandi05.com"
 mail_from_address = "kanidm@sandi05.com"
 mail_reply_to_address = "noreply@sandi05.com"
 
-mail_relay = "smtp.mx.cloudflare.net:465"
-mail_username = "api_token"
-mail_password = "<cloudflare-email-api-token>"
+mail_relay = "smtp.resend.com"
+mail_username = "resend"
+mail_password = "<resend-api-key>"
 ```
 
-実装時に必要な作業:
+初回に必要な作業:
 
-- Cloudflare Email Service / Email Sendingを有効化する
-- 送信元domainと送信元addressを設定する
-- Cloudflare API tokenを作成し、`sops-nix` でsecret管理する
 - Kanidmに `mail-sender` service accountを作成する
 - `mail-sender` を `idm_message_senders` groupへ追加する
 - `mail-sender` 用のread-write API tokenを発行し、`sops-nix` でsecret管理する
-- `kanidm-mail-sender` をsystemd serviceとして実行する
+- Resendで送信元domainまたは送信元addressを検証する
+- `hosts/calc-serv/secrets/kanidm-mail-sender.enc.toml` を作成する
+- flake評価に含めるため、暗号化済みの `kanidm-mail-sender.enc.toml` をGit管理に入れる
 - 各personに `mail` attributeを設定する
 - self-service recoveryを使う場合はdomain設定でaccount recoveryを有効化する
 
@@ -222,6 +221,16 @@ Kanidm側の準備command例:
 kanidm service-account create --name idm_admin mail-sender "Mail Sender" idm_admins
 kanidm group add-members --name idm_admin idm_message_senders mail-sender
 kanidm service-account api-token generate --name idm_admin mail-sender "mail sender token" --readwrite
+```
+
+self-service recoveryとは別に、Resendへの送信経路だけを確認する場合:
+
+```bash
+sudo -u kanidm \
+  /run/current-system/sw/bin/kanidm-mail-sender \
+  -c /etc/kanidm/config \
+  -m /run/secrets/kanidm-mail-sender \
+  --test-email <MAIL_ADDRESS>
 ```
 
 self-service recoveryを有効化する場合:
@@ -244,8 +253,8 @@ kanidm person credential create-reset-token --name idm_admin <USER>
 
 注意点:
 
-- Cloudflare Email Sendingの利用条件、料金、制限を事前に確認する。
-- Cloudflare API tokenとKanidm mail-sender tokenはNix storeに入れない。
+- Resendの利用条件、料金、制限を事前に確認する。
+- Resend API keyとKanidm mail-sender tokenはNix storeに入れない。
 - `mail-sender` service accountは `idm_message_senders` 以外の強いgroupへ入れない。
 - 高権限ユーザのcredential resetには制限がある。
 - reset tokenは既定で1時間、最大24時間まで。
