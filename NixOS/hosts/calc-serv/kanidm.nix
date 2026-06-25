@@ -136,7 +136,6 @@ in
 
       locations."/" = {
         proxyPass = "https://127.0.0.1:8443";
-        proxyWebsockets = true;
         extraConfig = ''
           proxy_ssl_name ${domain};
           proxy_ssl_server_name on;

@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   users.users.nginx.extraGroups = [ "acme" ];
   services.nginx = {
@@ -58,6 +58,61 @@
         '';
         proxyPass = "http://calc-serv.sandi05.com:80";
         proxyWebsockets = true;
+      };
+    };
+
+    #---------------------------------------------------------------------
+    # Kanidm
+    # --------------------------------------------------------------------
+    virtualHosts."id.sandi05.com-redirect" = {
+      serverName = "id.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
+          port = 80;
+        }
+      ];
+      extraConfig = ''
+        return 301 https://$host$request_uri;
+      '';
+    };
+
+    virtualHosts."id.sandi05.com" = {
+      serverName = "id.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      addSSL = true;
+      useACMEHost = "sandi05.com";
+
+      http2 = true;
+      http3 = true;
+
+      locations."/" = {
+        proxyPass = "https://192.168.100.20:443";
+        extraConfig = ''
+          proxy_http_version 1.1;
+          proxy_set_header Connection "";
+
+          proxy_ssl_server_name on;
+          proxy_ssl_name id.sandi05.com;
+          proxy_ssl_verify on;
+          proxy_ssl_verify_depth 5;
+          proxy_ssl_trusted_certificate ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt;
+        '';
       };
     };
 
@@ -223,6 +278,7 @@
       domain = "sandi05.com";
       extraDomainNames = [
         "storage.sandi05.com"
+        "id.sandi05.com"
         "key.sandi05.com"
         "stream.sandi05.com"
       ];
