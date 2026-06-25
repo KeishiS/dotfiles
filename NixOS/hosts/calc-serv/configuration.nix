@@ -2,6 +2,10 @@
 let
   vaultwardenUid = 951;
   vaultwardenGid = 951;
+  nextcloudUid = 952;
+  nextcloudGid = 952;
+  jellyfinUid = 953;
+  jellyfinGid = 953;
 in
 {
   imports = [
@@ -31,9 +35,26 @@ in
     group = "vaultwarden";
   };
 
+  users.groups.nextcloud.gid = nextcloudGid;
+  users.users.nextcloud = {
+    isSystemUser = true;
+    uid = nextcloudUid;
+    group = "nextcloud";
+  };
+
+  users.groups.jellyfin.gid = jellyfinGid;
+  users.users.jellyfin = {
+    isSystemUser = true;
+    uid = jellyfinUid;
+    group = "jellyfin";
+  };
+
   systemd.tmpfiles.rules = [
     "d /storage/vaultwarden 0700 ${toString vaultwardenUid} ${toString vaultwardenGid} -"
     "d /storage/vaultwarden/backup 0700 ${toString vaultwardenUid} ${toString vaultwardenGid} -"
+    "d /storage/nextcloud 0750 ${toString nextcloudUid} ${toString nextcloudGid} -"
+    "d /storage/jellyfin 0750 ${toString jellyfinUid} ${toString jellyfinGid} -"
+    "d /storage/jellyfin/media 0750 ${toString jellyfinUid} ${toString jellyfinGid} -"
   ];
 
   system.stateVersion = "26.05";
