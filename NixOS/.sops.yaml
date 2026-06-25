@@ -3,9 +3,10 @@ keys:
     - &nixos-keishis-p14s age124e8pp8x4g904kyftnt98d68pdsefa68xj73j2jn6800sqwghgaq7wh5u6
     - &nixos-keishis-x13 age1gpnv7cgya70xfz9h0p4ah0wvpl5srq4jktme8v4fwg0m7ljpwyqsh5e5a2
     - &nixos-keishis-home age1x3wren8ffn330kmzclwmle5q5parkwhmljf9hm4uwjcpcygdwy9qzqwlrv
-    - &nixos-sandi-lenovo age14w3la5xmucv3glnyt2c26gv37ne5caed2ntuk2gfxrmwlpyfdygs34qm6h
+    - &nixos-sandi-lenovo age1d0atmv0fq96hq65k8z7aqwlxv7mg9fr2rsc3j2ngsj8vjfrq2c9smywkrq
     - &nixos-sandi-n100 age1pn27c7fv0ayma6resthfh955u4zg9ncshrjt3t694zyjqhk79q3qjekg3f
     - &nixos-sandi-m710q age1pwx9r82jgehvjj9tn2l3wh3x0yj09q9lvlyfxefemc5w3mxat9uqqxtama
+    - &nixos-sandi-calc-serv age1w8w47te4h3ppmjjmlpmkzvm7pxlwyzrd3cwuhvv0cw9hxw8qja8qaql7mf
 creation_rules:
     - path_regex: ^hosts/lenovo/secrets/.*
       key_groups:
@@ -25,6 +26,12 @@ creation_rules:
                 - *yubikey
             age:
                 - *nixos-sandi-m710q
+    - path_regex: ^hosts/calc-serv/.*
+      key_groups:
+          - pgp:
+                - *yubikey
+            age:
+                - *nixos-sandi-calc-serv
     - path_regex: ^home/keishis/.*
       key_groups:
           - pgp:
@@ -43,4 +50,5 @@ creation_rules:
                 - *nixos-sandi-lenovo
                 - *nixos-sandi-n100
                 - *nixos-sandi-m710q
+                - *nixos-sandi-calc-serv
                 - *nixos-keishis-x13

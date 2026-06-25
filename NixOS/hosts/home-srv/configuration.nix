@@ -10,9 +10,6 @@
   ];
 
   networking.hostName = "nixos-keishis-home";
-  networking.networkmanager.connectionConfig = {
-    "ipv4.dhcp-client-id" = "none";
-  };
 
   environment.systemPackages = with pkgs; [
     asunder
@@ -38,7 +35,7 @@
     enable = true;
     mounts.users = {
       mountPoint = "/users";
-      remote = "lenovo.sandi05.com:/users";
+      remote = "calc-serv.sandi05.com:/users";
     };
   };
 
