@@ -8,7 +8,7 @@ in
     settings = {
       confirmbefore-quit = false;
       cursor.shape = "beam";
-      editor.program = "hx";
+      editor.program = "vim";
       fonts = {
         size = 22;
         family = theme.font.console;

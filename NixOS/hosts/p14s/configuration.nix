@@ -6,6 +6,11 @@
   ];
   networking.hostName = "NixOS-keishis-P14s";
   networking.networkmanager.wifi.macAddress = "random";
+  # Temporary: allow inbound TCP for local testing.
+  networking.firewall.allowedTCPPorts = [
+    1514
+    1515
+  ];
 
   services.libinput.enable = true; # enable touchpad support
   services.fwupd.enable = true; # enable farmware update. `fwupdmgr refresh / fwupdmgr update / fwupdmgr get-updates`
@@ -28,7 +33,14 @@
 
   hardware.keyboard.qmk.enable = true;
 
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+    defaultNetwork.settings.dns_enabled = true;
+  };
+
   environment.systemPackages = with pkgs; [
+    podman-compose
     remmina
   ];
 

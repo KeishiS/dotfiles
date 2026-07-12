@@ -25,6 +25,22 @@ let
       "$shutdown") ${pkgs.systemd}/bin/systemctl poweroff ;;
     esac
   '';
+
+  cheatSheet = pkgs.writeShellScript "hyprland-cheatsheet" ''
+    ${pkgs.hyprland}/bin/hyprctl binds -j | ${pkgs.jq}/bin/jq -r '
+      def mods($m):
+        [ (if ($m / 64 | floor) % 2 == 1 then "SUPER" else empty end),
+          (if ($m / 8 | floor) % 2 == 1 then "ALT" else empty end),
+          (if ($m / 4 | floor) % 2 == 1 then "CTRL" else empty end),
+          (if $m % 2 == 1 then "SHIFT" else empty end)
+        ] | join("+");
+      .[]
+      | (if .modmask > 0 then mods(.modmask) + "+" else "" end)
+        + (if .key != "" then .key else "code:" + (.keycode | tostring) end)
+        + "\t" + .dispatcher
+        + (if .arg != "" then " " + .arg else "" end)
+    ' | ${pkgs.wofi}/bin/wofi --cache-file=/dev/null --dmenu --insensitive --prompt "Keybinds" > /dev/null
+  '';
 in
 {
   imports = [
@@ -42,12 +58,23 @@ in
       "$terminal" = "ghostty";
       bind = [
         "$mod, Return, exec, ghostty"
-        "$mod Shift, q, killactive"
+        "$mod, q, killactive"
         "$mod, d, exec, wofi -S run"
         "$mod, t, togglegroup"
         "$mod, f, fullscreen"
         "$mod, x, exec, ${powerMenu}"
         "$mod, s, exec, slurp | grim -g - ~/`date +'%Y-%m-%d_%H:%M:%S'`.png"
+        "$mod, slash, exec, ${cheatSheet}"
+
+        # フォーカス移動・ウィンドウ移動（zellij の Alt+hjkl と同じ語彙）
+        "$mod, h, movefocus, l"
+        "$mod, j, movefocus, d"
+        "$mod, k, movefocus, u"
+        "$mod, l, movefocus, r"
+        "$mod Shift, h, movewindow, l"
+        "$mod Shift, j, movewindow, d"
+        "$mod Shift, k, movewindow, u"
+        "$mod Shift, l, movewindow, r"
 
         ", XF86MonBrightnessUp, exec, brightnessctl s +5%"
         ", XF86MonBrightnessDown, exec, brightnessctl s 5%-"

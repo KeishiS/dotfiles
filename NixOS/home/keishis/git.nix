@@ -7,7 +7,7 @@
       user.name = "KeishiS";
       user.email = "sando.keishi.sp@alumni.tsukuba.ac.jp";
       core = {
-        editor = "hx";
+        editor = "vim";
         quotepath = false;
       };
       commit.gpgsign = true;

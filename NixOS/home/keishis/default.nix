@@ -31,6 +31,7 @@
     ./foot
 
     # editor
+    ./vim
     ./helix
     ./zed
     ./vscode

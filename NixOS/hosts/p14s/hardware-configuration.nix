@@ -39,7 +39,6 @@
         "nls_iso8859-1"
         "amdgpu"
       ];
-      luks.cryptoModules = [ "aes" ];
       luks.devices."unlocked" = {
         crypttabExtraOpts = [ "fido2-device=auto" ];
       };

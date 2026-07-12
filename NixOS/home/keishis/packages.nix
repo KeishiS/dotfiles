@@ -27,9 +27,8 @@
     zoom-us
     _1password-gui
     bitwarden-cli
-    # bitwarden-desktop
-    nixd
-    nixfmt # language server for Nix
+    nixd # language server for Nix
+    nixfmt # formatter for Nix
     vlc
     insomnia
     jetbrains.datagrip
@@ -38,7 +37,6 @@
     kicad
     freerouting
     qmk
-    # kdePackages.kdenlive
 
     # Dev Tools
     cargo-make
@@ -46,13 +44,12 @@
     glpk
     julia_110-bin
     keybase
+    mise
     quarto
     R
     rustup
     texliveFull
     typst
-    # yarn-berry
-    # pipx
     cloud-utils
     gh
     uv
@@ -67,7 +64,7 @@
     terraform
 
     scrcpy
-    # lean4
     elan
   ];
+  # ++ [ pkgs-unstable.bitwarden-desktop ];
 }
