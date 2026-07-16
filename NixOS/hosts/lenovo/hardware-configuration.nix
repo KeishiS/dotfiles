@@ -31,11 +31,6 @@
       ];
       kernelModules = [ "vfat" ];
     };
-
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
   };
 
   # sudo zpool create pool0 raidz /dev/sda1 /dev/sdb1

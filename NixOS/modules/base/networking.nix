@@ -1,11 +1,7 @@
 { ... }:
 {
-  networking = {
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [ 22 ];
-    };
-  };
+  # port 22 は services.openssh.openFirewall (default: true) が開放する
+  networking.firewall.enable = true;
 
   services.avahi = {
     enable = true;

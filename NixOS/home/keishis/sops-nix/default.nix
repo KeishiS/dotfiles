@@ -1,12 +1,9 @@
 {
   config,
-  lib,
   ...
 }:
 {
   sops.gnupg.home = "${config.home.homeDirectory}/.gnupg";
-
-  systemd.user.services.sops-nix.Install.WantedBy = lib.mkForce [ ];
 
   sops.secrets = {
     ssh_config = {

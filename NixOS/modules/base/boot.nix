@@ -6,4 +6,5 @@
     systemd-boot.configurationLimit = 5;
     efi.canTouchEfiVariables = true;
   };
+  boot.tmp.cleanOnBoot = true;
 }

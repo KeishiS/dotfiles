@@ -31,7 +31,13 @@ in
 
   services.dnsmasq = {
     enable = true;
-    settings.addn-hosts = [ "etc/dnsmasq-hosts/db-override.hosts" ];
+    settings = {
+      addn-hosts = [ "/etc/dnsmasq-hosts/db-override.hosts" ];
+      # ローカルリゾルバ用途のみのためloopbackにのみバインド
+      listen-address = "127.0.0.1";
+      bind-interfaces = true;
+      cache-size = 1000;
+    };
   };
 
   system.activationScripts.dbDnsHosts = {

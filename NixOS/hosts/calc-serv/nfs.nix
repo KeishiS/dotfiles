@@ -4,9 +4,9 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /export            192.168.100.0/24(rw,fsid=0,crossmnt,async,root_squash,no_subtree_check)
-      /export/users      192.168.100.0/24(rw,async,root_squash,no_subtree_check)
-      /export/storage    192.168.100.0/24(rw,async,root_squash,no_subtree_check)
+      /export            192.168.100.0/24(rw,fsid=0,crossmnt,sync,root_squash,no_subtree_check)
+      /export/users      192.168.100.0/24(rw,sync,root_squash,no_subtree_check)
+      /export/storage    192.168.100.0/24(rw,sync,root_squash,no_subtree_check)
     '';
   };
 

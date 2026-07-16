@@ -46,7 +46,11 @@
       useACMEHost = "sandi05.com";
 
       http2 = true;
+      quic = true;
       http3 = true;
+      extraConfig = ''
+        add_header Alt-Svc 'h3=":443"; ma=86400';
+      '';
 
       locations."/" = {
         extraConfig = ''
@@ -99,7 +103,11 @@
       useACMEHost = "sandi05.com";
 
       http2 = true;
+      quic = true;
       http3 = true;
+      extraConfig = ''
+        add_header Alt-Svc 'h3=":443"; ma=86400';
+      '';
 
       locations."/" = {
         proxyPass = "https://192.168.100.20:443";

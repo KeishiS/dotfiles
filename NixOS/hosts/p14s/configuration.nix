@@ -5,13 +5,8 @@
     ./dns.nix
   ];
   networking.hostName = "NixOS-keishis-P14s";
-  networking.networkmanager.wifi.macAddress = "random";
-  # Temporary: allow inbound TCP for local testing.
-  networking.firewall.allowedTCPPorts = [
-    1514
-    1515
-  ];
-
+  networking.networkmanager.wifi.macAddress = "stable";
+  networking.networkmanager.wifi.powersave = false;
   services.libinput.enable = true; # enable touchpad support
   services.fwupd.enable = true; # enable farmware update. `fwupdmgr refresh / fwupdmgr update / fwupdmgr get-updates`
   services.fprintd.enable = true; # enable fingerprint reader
