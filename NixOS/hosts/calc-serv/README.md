@@ -85,6 +85,36 @@ getent group server-users
 初回passwordやpasskeyなどのcredentialは、Kanidm Web UIまたはKanidm CLIで設定する。
 `kanidm-provision` はpersonやgroupの作成には使えるが、credentialやSSH public keyの登録までは扱わない。
 
+管理者がreset URLを発行して、ユーザ本人に渡す場合:
+
+```bash
+kanidm person credential create-reset-token --name idm_admin <USER>
+```
+
+commandの出力に表示される `https://id.sandi05.com/ui/reset?token=...` をユーザ本人へ安全な方法で渡す。
+reset tokenの有効期限は既定で1時間で、最大24時間まで指定できる。
+例えば有効期限を24時間にする場合:
+
+```bash
+kanidm person credential create-reset-token --name idm_admin <USER> 86400
+```
+
+mail addressがpersonに登録済みで、後述の `kanidm-mail-sender` が設定・起動済みの場合は、
+reset URLをmailで送信できる。
+
+```bash
+kanidm person credential send-reset-token --name idm_admin <USER>
+```
+
+URLを受け取ったユーザはKanidm Web UIでpasswordやpasskeyを追加し、変更をcommitする。
+CLIを使う場合は、`create-reset-token` の出力に表示されたtokenを指定する。
+
+```bash
+kanidm person credential use-reset-token <TOKEN>
+```
+
+reset tokenはcredentialの変更をcommitすると無効になる。
+
 ### 6. client側で確認する
 
 loginできない場合は、以下を確認する。
