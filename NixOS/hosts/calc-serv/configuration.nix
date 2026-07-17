@@ -22,8 +22,18 @@ in
 
   environment.systemPackages = with pkgs; [
     btrfs-progs
+    clinfo
     nfs-utils
+    rocmPackages.rocminfo
+    rocmPackages.rocm-smi
     smartmontools
+  ];
+
+  services.libinput.enable = true;
+
+  users.users.keishis.extraGroups = [
+    "render"
+    "video"
   ];
 
   services.btrfs.autoScrub = {

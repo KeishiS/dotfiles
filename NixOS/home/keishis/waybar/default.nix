@@ -58,8 +58,9 @@ in
           tooltip = false;
         };
         network = {
-          format-wifi = "{essid} ({signalStrength}%)";
-          format-ethernet = "{ifname} ({ipaddr})";
+          interval = 1;
+          format-wifi = "{essid} ({signalStrength}%) ↓ {bandwidthDownBytes} ↑ {bandwidthUpBytes}";
+          format-ethernet = "{ifname} ({ipaddr}) ↓ {bandwidthDownBytes} ↑ {bandwidthUpBytes}";
           format-disconnected = "Disconnected";
           tooltip = false;
         };

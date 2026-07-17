@@ -28,11 +28,24 @@
         "sd_mod"
       ];
       kernelModules = [
+        "amdgpu"
         "vfat"
       ];
     };
   };
 
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware = {
+    cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        rocmPackages.clr.icd
+      ];
+    };
+  };
+
+  services.xserver.videoDrivers = [ "amdgpu" ];
+
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
