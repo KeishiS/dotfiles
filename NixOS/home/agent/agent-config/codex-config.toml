@@ -1,0 +1,9 @@
+[agents]
+max_threads = 4
+max_depth = 1
+
+[shell_environment_policy.set]
+GIT_AUTHOR_NAME = "Codex"
+GIT_AUTHOR_EMAIL = "nobuta05+codex@gmail.com"
+GIT_COMMITTER_NAME = "Codex"
+GIT_COMMITTER_EMAIL = "nobuta05+codex@gmail.com"
