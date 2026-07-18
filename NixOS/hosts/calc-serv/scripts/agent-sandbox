@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# エラー終了時に標準エラー出力へ表示する共通関数
+die() {
+    echo "agent-sandbox: $*" >&2
+    exit 1
+}
+
+# `agent-sandbox` は引数なしで実行するため，
+# 何らかの引数がある場合は何もせず終了
+if [ "$#" -ne 0 ]; then
+    die "usage: agent-sandbox"
+fi
+
+caller_uid="$(id -u)"
+caller_name="$(id -un)"
+readonly sandbox_root="${AGENT_SANDBOX_ROOT:?AGENT_SANDBOX_ROOT is not set}"
+
+# agent-sandbox コマンドが使えるのは server-users グループに属するユーザのみなので，
+# server-users が確認できない環境では終了
+server_users_entry="$(getent group server-users)" ||
+    die "server-users group is not known to NSS"
+server_users_gid="$(printf '%s\n' "$server_users_entry" | cut -d: -f3)"
+
+is_server_user=0
+# callerの属するグループ一覧を取得
+read -r -a caller_groups <<<"$(id -G "$caller_name")"
+for gid in "${caller_groups[@]}"; do
+    if [ "$gid" = "$server_users_gid" ]; then
+        is_server_user=1
+        break
+    fi
+done
+
+if [ "$is_server_user" -ne 1 ]; then
+    die "$caller_name is not a member of server-users"
+fi
+
+# workspace として以下のものは指定できない
+workspace="$(realpath "$PWD")"
+## ルートディレクトリ，ディレクトリでないもの，シンボリックリンク
+if [ "$workspace" = "/" ] || [ ! -d "$workspace" ] || [ -L "$workspace" ]; then
+    die "invalid workspace: $workspace"
+fi
+## 読み書き権限がなかったり，探索可能でないディレクトリ
+if [ ! -r "$workspace" ] || [ ! -w "$workspace" ] || [ ! -x "$workspace" ]; then
+    die "workspace is not accessible and writable: $workspace"
+fi
+
+if [ ! -x /run/wrappers/bin/sudo ]; then
+    die "sudo wrapper is unavailable"
+fi
+
+# 隔離環境用のホームディレクトリの作成
+/run/wrappers/bin/sudo -n "$AGENT_SANDBOX_HOME_HELPER"
+
+sandbox_home="$sandbox_root/by-uid/$caller_uid"
+if [ -L "$sandbox_home" ] || [ ! -d "$sandbox_home" ]; then
+    die "sandbox home was not prepared correctly: $sandbox_home"
+fi
+
+"$AGENT_SANDBOX_ENTER" "$workspace"

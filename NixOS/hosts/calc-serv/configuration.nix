@@ -13,6 +13,7 @@ in
 {
   imports = [
     ./hardware-configuration.nix
+    ./agent-sandbox.nix
     ./nfs.nix
     ./kanidm.nix
     ./nextcloud.nix

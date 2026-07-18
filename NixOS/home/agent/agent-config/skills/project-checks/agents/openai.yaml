@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Checks"
+  short_description: "Run the appropriate validation for the current project"
+  default_prompt: "Inspect the current project and run its documented checks."

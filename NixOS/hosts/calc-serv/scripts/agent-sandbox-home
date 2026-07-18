@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly sandbox_root="${AGENT_SANDBOX_ROOT:?AGENT_SANDBOX_ROOT is not set}"
+readonly homes_root="$sandbox_root/by-uid"
+
+die() {
+    echo "agent-sandbox-home: $*" >&2
+    exit 1
+}
+
+if [ "$#" -ne 0 ]; then
+    die "this command does not accept arguments"
+fi
+
+if [ "$(id -u)" -ne 0 ]; then
+    die "this command must run through sudo"
+fi
+
+caller_uid="${SUDO_UID:-}"
+caller_gid="${SUDO_GID:-}"
+caller_name="${SUDO_USER:-}"
+
+case "$caller_uid" in
+"" | *[!0-9]*) die "invalid or missing SUDO_UID" ;;
+esac
+
+case "$caller_gid" in
+"" | *[!0-9]*) die "invalid or missing SUDO_GID" ;;
+esac
+
+if [ "$caller_uid" -eq 0 ]; then
+    die "root does not need an agent sandbox home"
+fi
+
+passwd_entry="$(getent passwd "$caller_uid")" ||
+    die "uid $caller_uid is not known to NSS"
+resolved_name="${passwd_entry%%:*}"
+
+if [ -z "$caller_name" ] || [ "$caller_name" != "$resolved_name" ]; then
+    die "sudo identity does not match NSS identity for uid $caller_uid"
+fi
+
+resolved_uid="$(id -u "$resolved_name")"
+resolved_gid="$(id -g "$resolved_name")"
+if [ "$resolved_uid" != "$caller_uid" ] || [ "$resolved_gid" != "$caller_gid" ]; then
+    die "sudo uid/gid does not match NSS identity for $resolved_name"
+fi
+
+server_users_entry="$(getent group server-users)" ||
+    die "server-users group is not known to NSS"
+server_users_gid="$(printf '%s\n' "$server_users_entry" | cut -d: -f3)"
+
+is_server_user=0
+read -r -a caller_groups <<<"$(id -G "$resolved_name")"
+for gid in "${caller_groups[@]}"; do
+    if [ "$gid" = "$server_users_gid" ]; then
+        is_server_user=1
+        break
+    fi
+done
+
+if [ "$is_server_user" -ne 1 ]; then
+    die "$resolved_name is not a member of server-users"
+fi
+
+if ! mountpoint -q "$sandbox_root"; then
+    die "$sandbox_root is not a mount point"
+fi
+
+for path in "$sandbox_root" "$homes_root"; do
+    if [ -L "$path" ] || [ ! -d "$path" ]; then
+        die "$path must be an existing, non-symlink directory"
+    fi
+    if [ "$(stat -c '%u:%g' "$path")" != "0:0" ]; then
+        die "$path must be owned by root:root"
+    fi
+    if [ "$(stat -c '%a' "$path")" != "711" ]; then
+        die "$path must have mode 0711"
+    fi
+done
+
+home="$homes_root/$caller_uid"
+if mkdir -m 0700 "$home" 2>/dev/null; then
+    chown "$caller_uid:$caller_gid" "$home"
+else
+    if [ -L "$home" ] || [ ! -d "$home" ]; then
+        die "$home exists but is not a non-symlink directory"
+    fi
+fi
+
+if [ "$(stat -c '%u:%g' "$home")" != "$caller_uid:$caller_gid" ]; then
+    die "$home has an unexpected owner"
+fi
+
+if [ "$(stat -c '%a' "$home")" != "700" ]; then
+    die "$home must have mode 0700"
+fi

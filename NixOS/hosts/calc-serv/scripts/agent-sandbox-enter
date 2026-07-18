@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+die() {
+    echo "agent-sandbox-enter: $*" >&2
+    exit 1
+}
+
+if [ "$#" -ne 1 ]; then
+    die "expected a workspace path"
+fi
+
+workspace="$(realpath "$1")"
+if [ "$workspace" = "/" ] || [ ! -d "$workspace" ] || [ -L "$workspace" ]; then
+    die "invalid workspace: $workspace"
+fi
+
+current_uid="$(id -u)"
+current_gid="$(id -g)"
+readonly sandbox_root="${AGENT_SANDBOX_ROOT:?AGENT_SANDBOX_ROOT is not set}"
+sandbox_home="$sandbox_root/by-uid/$current_uid"
+
+if [ -L "$sandbox_home" ] || [ ! -d "$sandbox_home" ]; then
+    die "sandbox home is missing or invalid: $sandbox_home"
+fi
+if [ "$(stat -c '%u:%g' "$sandbox_home")" != "$current_uid:$current_gid" ]; then
+    die "sandbox home has an unexpected owner: $sandbox_home"
+fi
+if [ "$(stat -c '%a' "$sandbox_home")" != "700" ]; then
+    die "sandbox home must have mode 0700: $sandbox_home"
+fi
+if [ ! -S /nix/var/nix/daemon-socket/socket ]; then
+    die "Nix daemon socket is unavailable"
+fi
+
+# xxxx 部分はランダムな文字列が生成される
+runtime_dir="$(mktemp -d "/tmp/agent-sandbox-$current_uid.XXXXXXXX")"
+cleanup() {
+    rm -rf "$runtime_dir"
+}
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+trap 'exit 129' HUP
+
+# 隔離環境の初期設定
+printf 'agent:x:%s:%s:AI Agent:/home/agent:%s\n' \
+    "$current_uid" "$current_gid" "$AGENT_SANDBOX_BASH" >"$runtime_dir/passwd"
+printf 'agent:x:%s:\n' "$current_gid" >"$runtime_dir/group"
+printf '%s\n' \
+    'passwd: files' \
+    'group: files' \
+    'hosts: files dns' >"$runtime_dir/nsswitch.conf"
+chmod 600 "$runtime_dir/passwd" "$runtime_dir/group" "$runtime_dir/nsswitch.conf"
+
+device_args=()
+if [ -e /dev/dri ]; then
+    device_args+=(--dev-bind /dev/dri /dev/dri)
+fi
+if [ -e /dev/kfd ]; then
+    device_args+=(--dev-bind /dev/kfd /dev/kfd)
+fi
+
+# die-with-parent: bwrap 自身または親プロセスが終了した際に内部でのコマンドも SIGKILL
+# unshare-user: user namespace の分離で，Linux capabilityをホストから分離
+# unshare-ipc: IPC namespace の分離で，意図せず共有メモリを介して通信するのを防ぐ
+# unshare-pid: PID namespace の分離で，ホスト側のプロセス一覧を見えなくする
+# unshare-uts: ホスト側のhostname などを変更できなくする
+# unshare-cgroup-try: cgroup の階層分離
+# cap-drop ALL: namespace 内の管理者相当の機能を無効化
+# dir <dirname>: 空ディレクトリの作成
+bwrap \
+    --die-with-parent \
+    --new-session \
+    --unshare-user \
+    --unshare-ipc \
+    --unshare-pid \
+    --unshare-uts \
+    --unshare-cgroup-try \
+    --cap-drop ALL \
+    --clearenv \
+    --dir /bin \
+    --dir /etc \
+    --dir /etc/nix \
+    --dir /home \
+    --dir /lib64 \
+    --dir /nix \
+    --dir /nix/var \
+    --dir /nix/var/nix \
+    --dir /nix/var/nix/daemon-socket \
+    --dir /run \
+    --dir /usr \
+    --dir /usr/bin \
+    --symlink "$AGENT_SANDBOX_BASH" /bin/sh \
+    --symlink "$AGENT_SANDBOX_BASH" /bin/bash \
+    --symlink "$AGENT_SANDBOX_BASH" /usr/bin/bash \
+    --symlink "$AGENT_SANDBOX_ENV" /usr/bin/env \
+    --symlink "$AGENT_SANDBOX_DYNAMIC_LOADER" /lib64/ld-linux-x86-64.so.2 \
+    --ro-bind /nix/store /nix/store \
+    --bind /nix/var/nix/daemon-socket/socket /nix/var/nix/daemon-socket/socket \
+    --ro-bind-try /run/current-system /run/current-system \
+    --ro-bind-try /etc/resolv.conf /etc/resolv.conf \
+    --ro-bind-try /etc/hosts /etc/hosts \
+    --ro-bind "$runtime_dir/nsswitch.conf" /etc/nsswitch.conf \
+    --ro-bind "$runtime_dir/passwd" /etc/passwd \
+    --ro-bind "$runtime_dir/group" /etc/group \
+    --ro-bind-try /sys /sys \
+    --proc /proc \
+    --dev /dev \
+    "${device_args[@]}" \
+    --bind "$workspace" /workspace \
+    --bind "$sandbox_home" /home/agent \
+    --tmpfs /tmp \
+    --setenv HOME /home/agent \
+    --setenv USER agent \
+    --setenv LOGNAME agent \
+    --setenv SHELL "$AGENT_SANDBOX_BASH" \
+    --setenv PATH "$AGENT_SANDBOX_RUNTIME_PATH" \
+    --setenv TERM "${TERM:-xterm-256color}" \
+    --setenv COLORTERM "${COLORTERM:-truecolor}" \
+    --setenv SSL_CERT_FILE "$AGENT_SANDBOX_CACERT" \
+    --setenv NIX_SSL_CERT_FILE "$AGENT_SANDBOX_CACERT" \
+    --setenv NIX_REMOTE daemon \
+    --setenv XDG_CACHE_HOME /home/agent/.cache \
+    --setenv XDG_CONFIG_HOME /home/agent/.config \
+    --setenv XDG_DATA_HOME /home/agent/.local/share \
+    --setenv TMPDIR /tmp \
+    --chdir /workspace \
+    "$AGENT_SANDBOX_BASH" --login -i
