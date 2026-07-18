@@ -38,9 +38,9 @@ in
     config.dbtype = "sqlite";
 
     extraApps = {
-      inherit (nextcloudPackage.packages.apps) user_oidc;
+      inherit (nextcloudPackage.packages.apps) user_oidc calendar tasks;
     };
-    extraAppsEnable = false;
+    extraAppsEnable = true;
 
     secrets.mail_smtppassword = config.sops.secrets.nextcloud-smtp-password.path;
 
