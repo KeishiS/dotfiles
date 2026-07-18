@@ -154,6 +154,16 @@ in
                   "space_cache=v2"
                 ];
               };
+
+              "/sandbox" = {
+                mountpoint = "/sandbox";
+                mountOptions = [
+                  "noatime"
+                  "compress=zstd:3"
+                  "discard=async"
+                  "space_cache=v2"
+                ];
+              };
             };
           };
         };
