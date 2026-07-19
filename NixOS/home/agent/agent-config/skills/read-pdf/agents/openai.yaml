@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read PDF"
+  short_description: "Extract and verify content from PDF documents"
+  default_prompt: "Use $read-pdf to inspect this PDF and summarize its claims with page references."

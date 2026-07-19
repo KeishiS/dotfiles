@@ -35,8 +35,22 @@ fi
 
 # xxxx 部分はランダムな文字列が生成される
 runtime_dir="$(mktemp -d "/tmp/agent-sandbox-$current_uid.XXXXXXXX")"
+readonly runtime_dir
+session_tmp="$runtime_dir/tmp"
+readonly session_tmp
+mkdir --mode=1777 "$session_tmp"
+
 cleanup() {
-    rm -rf "$runtime_dir"
+    status=$?
+    trap - EXIT
+
+    # sandbox内で権限を変更されたファイルも可能な範囲で削除する。
+    chmod -R u+rwX "$runtime_dir" 2>/dev/null || true
+    if ! rm -rf -- "$runtime_dir"; then
+        echo "agent-sandbox-enter: failed to remove temporary directory: $runtime_dir" >&2
+    fi
+
+    exit "$status"
 }
 trap cleanup EXIT
 trap 'exit 130' INT
@@ -110,7 +124,7 @@ bwrap \
     "${device_args[@]}" \
     --bind "$workspace" /workspace \
     --bind "$sandbox_home" /home/agent \
-    --tmpfs /tmp \
+    --bind "$session_tmp" /tmp \
     --setenv HOME /home/agent \
     --setenv AGENT_SANDBOX 1 \
     --setenv USER agent \
