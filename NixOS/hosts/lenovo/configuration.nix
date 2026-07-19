@@ -9,6 +9,7 @@
     ./vaultwarden.nix
     ./jellyfin.nix
     ./nextcloud-media-archive.nix
+    ./ai-services.nix
     ../../modules/services/kanidm-client
     ../../modules/services/nfs-client
   ];

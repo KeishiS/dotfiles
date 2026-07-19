@@ -1,0 +1,73 @@
+name: agent-services
+groupRef: agent-services
+
+incomingAuth:
+  type: oidc
+  oidc:
+    issuer: https://id.sandi05.com/oauth2/openid/toolhive-mcp
+    clientId: toolhive-mcp
+    audience: toolhive-mcp
+    resource: https://mcp.sandi05.com/mcp
+    scopes:
+      - openid
+      - profile
+      - email
+  authz:
+    type: cedar
+    policies:
+      - |
+        permit(
+          principal,
+          action == Action::"tools/list",
+          resource
+        );
+      - |
+        permit(
+          principal,
+          action == Action::"tools/call",
+          resource
+        );
+
+outgoingAuth:
+  source: inline
+  default:
+    type: unauthenticated
+
+aggregation:
+  conflictResolution: prefix
+  conflictResolutionConfig:
+    prefixFormat: "{workload}_"
+  tools:
+    - workload: triliumnext
+      filter:
+        - search_notes
+        - get_note
+        - resolve_note_id
+        - read_attributes
+    - workload: leantime
+      # The connector service itself refuses to start until an explicit
+      # read-tool allowlist has been installed on the host.
+
+operational:
+  timeouts:
+    default: 30s
+    perWorkload:
+      triliumnext: 30s
+      leantime: 30s
+  failureHandling:
+    healthCheckInterval: 30s
+    unhealthyThreshold: 3
+    partialFailureMode: fail
+    circuitBreaker:
+      enabled: true
+      failureThreshold: 5
+      timeout: 60s
+
+audit:
+  component: agent-services-vmcp
+  eventTypes:
+    - mcp_initialize
+    - mcp_tool_call
+  includeRequestData: false
+  includeResponseData: false
+  maxDataSize: 0

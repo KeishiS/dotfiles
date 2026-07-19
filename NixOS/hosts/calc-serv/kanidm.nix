@@ -53,6 +53,14 @@ in
     group = "kanidm";
   };
 
+  sops.secrets.leantime-oidc-client-secret = {
+    format = "binary";
+    sopsFile = ./secrets/leantime-oidc-client-secret.enc;
+    mode = "0400";
+    owner = "kanidm";
+    group = "kanidm";
+  };
+
   services.kanidm = {
     package = pkgs.kanidmWithSecretProvisioning_1_10;
     client = {
@@ -108,6 +116,37 @@ in
           "email"
           "profile"
           "groups_name"
+        ];
+      };
+      systems.oauth2.leantime = {
+        displayName = "Leantime";
+        originUrl = "https://project.sandi05.com/oidc/callback";
+        originLanding = "https://project.sandi05.com";
+        basicSecretFile = config.sops.secrets.leantime-oidc-client-secret.path;
+        preferShortUsername = true;
+        # Leantime 3.9.8 neither sends a PKCE challenge nor accepts ES256
+        # ID-token signatures. Keep both compatibility exceptions scoped to
+        # this confidential client.
+        allowInsecureClientDisablePkce = true;
+        enableLegacyCrypto = true;
+        scopeMaps.server-users = [
+          "openid"
+          "email"
+          "profile"
+        ];
+      };
+      systems.oauth2.toolhive-mcp = {
+        displayName = "AI Agent Services";
+        public = true;
+        originUrl = "http://localhost:8765/callback";
+        originLanding = "https://mcp.sandi05.com";
+        enableLocalhostRedirects = true;
+        preferShortUsername = true;
+        enableLegacyCrypto = false;
+        scopeMaps.server-users = [
+          "openid"
+          "email"
+          "profile"
         ];
       };
     };

@@ -1,0 +1,17 @@
+{
+  "name": "triliumnext",
+  "read": [],
+  "write": [],
+  "network": {
+    "outbound": {
+      "insecure_allow_all": false,
+      "allow_host": [
+        "notes.sandi05.com"
+      ],
+      "allow_port": [
+        443
+      ]
+    }
+  },
+  "privileged": false
+}

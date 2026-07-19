@@ -232,6 +232,155 @@
     };
 
     #---------------------------------------------------------------------
+    # Leantime
+    # --------------------------------------------------------------------
+    virtualHosts."project.sandi05.com-redirect" = {
+      serverName = "project.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
+          port = 80;
+        }
+      ];
+      extraConfig = ''
+        return 301 https://$host$request_uri;
+      '';
+    };
+
+    virtualHosts."project.sandi05.com" = {
+      serverName = "project.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      addSSL = true;
+      useACMEHost = "sandi05.com";
+      locations."/" = {
+        proxyPass = "http://lenovo.sandi05.com:80";
+        proxyWebsockets = true;
+        extraConfig = ''
+          client_max_body_size 256M;
+          proxy_read_timeout 3600s;
+          proxy_send_timeout 3600s;
+        '';
+      };
+    };
+
+    #---------------------------------------------------------------------
+    # TriliumNext
+    # --------------------------------------------------------------------
+    virtualHosts."notes.sandi05.com-redirect" = {
+      serverName = "notes.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
+          port = 80;
+        }
+      ];
+      extraConfig = ''
+        return 301 https://$host$request_uri;
+      '';
+    };
+
+    virtualHosts."notes.sandi05.com" = {
+      serverName = "notes.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      addSSL = true;
+      useACMEHost = "sandi05.com";
+      locations."/" = {
+        proxyPass = "http://lenovo.sandi05.com:80";
+        proxyWebsockets = true;
+        extraConfig = ''
+          client_max_body_size 0;
+          proxy_buffer_size 128k;
+          proxy_buffers 4 256k;
+          proxy_busy_buffers_size 256k;
+          proxy_read_timeout 3600s;
+        '';
+      };
+    };
+
+    # Only the OIDC-protected vMCP endpoint and its RFC 9728 discovery
+    # documents are forwarded. ToolHive's management API is never exposed.
+    virtualHosts."mcp.sandi05.com-redirect" = {
+      serverName = "mcp.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
+          port = 80;
+        }
+      ];
+      extraConfig = ''
+        return 301 https://$host$request_uri;
+      '';
+    };
+
+    virtualHosts."mcp.sandi05.com" = {
+      serverName = "mcp.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      addSSL = true;
+      useACMEHost = "sandi05.com";
+      locations."= /mcp" = {
+        proxyPass = "http://lenovo.sandi05.com:80/mcp";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_buffering off;
+          proxy_read_timeout 3600s;
+          proxy_send_timeout 3600s;
+        '';
+      };
+      locations."= /.well-known/oauth-protected-resource" = {
+        proxyPass = "http://lenovo.sandi05.com:80/.well-known/oauth-protected-resource";
+      };
+      locations."= /.well-known/oauth-protected-resource/mcp" = {
+        proxyPass = "http://lenovo.sandi05.com:80/.well-known/oauth-protected-resource/mcp";
+      };
+      locations."/".return = "404";
+    };
+
+    #---------------------------------------------------------------------
     # Root
     # --------------------------------------------------------------------
     virtualHosts."sandi05.com-redirect" = {
@@ -289,6 +438,9 @@
         "id.sandi05.com"
         "key.sandi05.com"
         "stream.sandi05.com"
+        "project.sandi05.com"
+        "notes.sandi05.com"
+        "mcp.sandi05.com"
       ];
       dnsProvider = "cloudflare";
       environmentFile = config.sops.secrets."sandi05-cloudflare-acme".path;
