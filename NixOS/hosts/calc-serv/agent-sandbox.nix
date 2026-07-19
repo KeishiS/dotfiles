@@ -62,6 +62,10 @@ in
     sandboxFrontend
   ];
 
+  # bwrapの--new-sessionを使わず対話shellのjob controlを維持するため、
+  # sandboxからhost terminalへ入力を注入できるlegacy TIOCSTIをkernel側で禁止する。
+  boot.kernel.sysctl."dev.tty.legacy_tiocsti" = 0;
+
   systemd.tmpfiles.rules = [
     "d ${sandboxRoot} 0711 root root -"
     "d ${sandboxRoot}/by-uid 0711 root root -"

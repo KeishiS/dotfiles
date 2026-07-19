@@ -74,9 +74,12 @@ agent-tools-install
 ```
 
 このコマンドは、Codexをpnpmのglobal packageとして
-`~/.local/share/pnpm`へインストールまたは更新する。
+`~/.local/share/pnpm`へインストールまたは更新し、実行ファイルを
+`~/.local/share/pnpm/bin`へ配置する。
 Claude Codeが未インストールの場合は、Anthropic公式のnative installerを使用して
 `~/.local/bin`と`~/.local/share/claude`へインストールする。
+pnpmのglobal bin directoryとPATHはHome Managerで設定するため、
+`pnpm setup`を手動で実行する必要はない。
 
 これらは第二ホームのwritable領域に保存されるため、sandbox終了後も維持される。
 Home ManagerはNode.js、pnpm、installer補助コマンドおよび各agentの設定ファイルを

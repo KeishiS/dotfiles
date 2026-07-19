@@ -71,7 +71,6 @@ fi
 # dir <dirname>: 空ディレクトリの作成
 bwrap \
     --die-with-parent \
-    --new-session \
     --unshare-user \
     --unshare-ipc \
     --unshare-pid \
@@ -115,7 +114,7 @@ bwrap \
     --setenv USER agent \
     --setenv LOGNAME agent \
     --setenv SHELL "$AGENT_SANDBOX_BASH" \
-    --setenv PATH "$AGENT_SANDBOX_RUNTIME_PATH" \
+    --setenv PATH "/home/agent/.nix-profile/bin:/home/agent/.local/bin:/home/agent/.local/share/pnpm/bin:$AGENT_SANDBOX_RUNTIME_PATH" \
     --setenv TERM "${TERM:-xterm-256color}" \
     --setenv COLORTERM "${COLORTERM:-truecolor}" \
     --setenv SSL_CERT_FILE "$AGENT_SANDBOX_CACERT" \

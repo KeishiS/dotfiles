@@ -12,8 +12,9 @@ let
     ];
     text = ''
       export PNPM_HOME="''${PNPM_HOME:-$HOME/.local/share/pnpm}"
+      export PNPM_CONFIG_GLOBAL_BIN_DIR="$PNPM_HOME/bin"
       export SSL_CERT_FILE="''${SSL_CERT_FILE:-${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt}"
-      mkdir -p "$PNPM_HOME" "$HOME/.local/bin"
+      mkdir -p "$PNPM_CONFIG_GLOBAL_BIN_DIR" "$HOME/.local/bin"
 
       echo "Installing or updating Codex with pnpm..."
       pnpm add --global @openai/codex@latest

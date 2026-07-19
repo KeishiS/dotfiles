@@ -21,13 +21,14 @@
 
     sessionPath = [
       "$HOME/.local/bin"
-      "$HOME/.local/share/pnpm"
+      "$HOME/.local/share/pnpm/bin"
     ];
 
     sessionVariables = {
       EDITOR = "vim";
       VISUAL = "vim";
       PNPM_HOME = "$HOME/.local/share/pnpm";
+      PNPM_CONFIG_GLOBAL_BIN_DIR = "$HOME/.local/share/pnpm/bin";
     };
   };
 
