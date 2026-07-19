@@ -65,6 +65,41 @@ exit
 agent-sandbox
 ```
 
+### CodexとClaude Codeを導入する
+
+Home Manager適用後、第二ホーム内で次を実行する。
+
+```console
+agent-tools-install
+```
+
+このコマンドは、Codexをpnpmのglobal packageとして
+`~/.local/share/pnpm`へインストールまたは更新する。
+Claude Codeが未インストールの場合は、Anthropic公式のnative installerを使用して
+`~/.local/bin`と`~/.local/share/claude`へインストールする。
+
+これらは第二ホームのwritable領域に保存されるため、sandbox終了後も維持される。
+Home ManagerはNode.js、pnpm、installer補助コマンドおよび各agentの設定ファイルを
+管理し、CLI本体の取得時には明示的にnetworkを使用する。
+
+導入結果は次で確認する。
+
+```console
+command -v codex
+codex --version
+command -v claude
+claude --version
+```
+
+Claude Codeは `latest` channelから自動更新する。手動で直ちに更新する場合は、
+次を実行する。
+
+```console
+claude update
+```
+
+Codexを最新版へ更新する場合は、`agent-tools-install`を再実行する。
+
 ## 設定を編集する
 
 第二ホーム内のcheckoutを直接編集する。
