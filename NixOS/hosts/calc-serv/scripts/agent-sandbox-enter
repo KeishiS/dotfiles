@@ -75,6 +75,7 @@ bwrap \
     --unshare-ipc \
     --unshare-pid \
     --unshare-uts \
+    --hostname agent-sandbox \
     --unshare-cgroup-try \
     --cap-drop ALL \
     --clearenv \
@@ -111,6 +112,7 @@ bwrap \
     --bind "$sandbox_home" /home/agent \
     --tmpfs /tmp \
     --setenv HOME /home/agent \
+    --setenv AGENT_SANDBOX 1 \
     --setenv USER agent \
     --setenv LOGNAME agent \
     --setenv SHELL "$AGENT_SANDBOX_BASH" \
