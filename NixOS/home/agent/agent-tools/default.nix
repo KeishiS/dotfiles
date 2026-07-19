@@ -46,6 +46,7 @@ let
 in
 {
   home.packages = [
+    pkgs.gnused
     pkgs.nodejs
     pkgs.pnpm
     agent-tools-install
