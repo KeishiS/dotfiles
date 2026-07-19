@@ -40,7 +40,9 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true; # 補完エンジンの起動
-    autosuggestion.enable = false; # sheldon で管理
+    # zsh-autosuggestions is intentionally disabled because its ZLE redraw
+    # corrupts interactive input in the Bubblewrap agent sandbox.
+    autosuggestion.enable = false;
     syntaxHighlighting.enable = false; # sheldon で管理
 
     shellAliases = {
