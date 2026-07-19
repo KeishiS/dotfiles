@@ -19,5 +19,7 @@
     enable = true;
     settings.PermitRootLogin = "no";
     settings.PasswordAuthentication = false;
+    # gpg-agent socket の RemoteForward 時に前回セッションの残骸ソケットを bind 前に削除させる
+    settings.StreamLocalBindUnlink = "yes";
   };
 }
