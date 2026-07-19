@@ -102,6 +102,11 @@ pnpmのglobal bin directoryとPATHはHome Managerで設定するため、
 Home ManagerはNode.js、pnpm、installer補助コマンドおよび各agentの設定ファイルを
 管理し、CLI本体の取得時には明示的にnetworkを使用する。
 
+`~/.codex/config.toml`はdirectory trustなどをCodex自身が保存するため、例外的に
+writableな通常ファイルとして配置する。Home Managerはファイルが存在しない初回だけ
+`agent-config/codex-config.toml`から初期化し、その後の内容を上書きしない。
+共通指示とskillsは引き続きNix Storeへのread-only linkとして管理する。
+
 導入結果は次で確認する。
 
 ```console
