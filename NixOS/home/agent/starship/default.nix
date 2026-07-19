@@ -5,8 +5,7 @@
 
     settings.env_var.AGENT_SANDBOX = {
       variable = "AGENT_SANDBOX";
-      symbol = "[sandbox]";
-      format = "[$symbol]($style) ";
+      format = "[\\[sandbox\\]]($style) ";
       style = "bold yellow";
     };
   };
