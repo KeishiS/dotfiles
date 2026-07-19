@@ -2,6 +2,7 @@
 {
   imports = [
     ./shell
+    ./starship
     ./vim
     ./zellij
   ];
