@@ -15,9 +15,9 @@
       bat
       eza
       fd
-      (git.override {
-        withLibsecret = true;
-      })
+      # (git.override {
+      #   withLibsecret = true;
+      # })
       jq
       ripgrep
     ];
