@@ -1,4 +1,4 @@
 interface:
-  display_name: "Project Checks"
-  short_description: "Run the appropriate validation for the current project"
-  default_prompt: "Inspect the current project and run its documented checks."
+  display_name: "プロジェクトの検証"
+  short_description: "現在のプロジェクトに適した検証を特定して実行"
+  default_prompt: "$project-checks を使って、この変更に必要な検証を実行してください。"

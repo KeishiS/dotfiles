@@ -90,6 +90,10 @@ in
         server-users = {
           overwriteMembers = false;
         };
+        ai-agent-users = {
+          members = [ "agent" ];
+          overwriteMembers = false;
+        };
         idm_people_self_mail_write = {
           members = [ "server-users" ];
           overwriteMembers = false;
@@ -143,11 +147,7 @@ in
         enableLocalhostRedirects = true;
         preferShortUsername = true;
         enableLegacyCrypto = false;
-        scopeMaps.server-users = [
-          "openid"
-          "email"
-          "profile"
-        ];
+        scopeMaps.ai-agent-users = [ "openid" ];
       };
     };
 

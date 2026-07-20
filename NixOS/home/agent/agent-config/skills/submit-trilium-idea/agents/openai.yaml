@@ -1,0 +1,15 @@
+interface:
+  display_name: "TriliumNextへアイデアを送信"
+  short_description: "アイデアを所定のMarkdown形式でTriliumNextへ保存"
+  default_prompt: "$submit-trilium-idea を使って、このアイデアをIdea Inboxへ保存してください。"
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-services"
+      description: "TriliumNextへ接続するOIDC保護済みMCPサービス"
+      transport: "streamable_http"
+      url: "https://mcp.sandi05.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

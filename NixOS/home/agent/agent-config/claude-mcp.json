@@ -5,6 +5,6 @@
     "clientId": "toolhive-mcp",
     "callbackPort": 8765,
     "authServerMetadataUrl": "https://id.sandi05.com/oauth2/openid/toolhive-mcp/.well-known/oauth-authorization-server",
-    "scopes": "openid profile email"
+    "scopes": "openid"
   }
 }

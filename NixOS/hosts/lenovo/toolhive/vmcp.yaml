@@ -8,24 +8,61 @@ incomingAuth:
     clientId: toolhive-mcp
     audience: toolhive-mcp
     resource: https://mcp.sandi05.com/mcp
+    # Split DNS resolves this pinned, trusted issuer to 192.168.100.20.
+    # ToolHive applies this exception to its OIDC validator HTTP requests.
+    jwksAllowPrivateIp: true
     scopes:
       - openid
-      - profile
-      - email
   authz:
     type: cedar
     policies:
       - |
         permit(
           principal,
-          action == Action::"tools/list",
-          resource
+          action == Action::"call_tool",
+          resource == Tool::"triliumnext_list_children_notes"
         );
       - |
         permit(
           principal,
-          action == Action::"tools/call",
-          resource
+          action == Action::"call_tool",
+          resource == Tool::"triliumnext_search_notes"
+        );
+      - |
+        permit(
+          principal,
+          action == Action::"call_tool",
+          resource == Tool::"triliumnext_get_note"
+        );
+      - |
+        permit(
+          principal,
+          action == Action::"call_tool",
+          resource == Tool::"triliumnext_resolve_note_id"
+        );
+      - |
+        permit(
+          principal,
+          action == Action::"call_tool",
+          resource == Tool::"triliumnext_read_attributes"
+        );
+      - |
+        permit(
+          principal,
+          action == Action::"call_tool",
+          resource == Tool::"triliumnext_create_note"
+        );
+      - |
+        permit(
+          principal,
+          action == Action::"call_tool",
+          resource == Tool::"triliumnext_update_note"
+        );
+      - |
+        permit(
+          principal,
+          action == Action::"call_tool",
+          resource == Tool::"triliumnext_manage_attributes"
         );
 
 outgoingAuth:
@@ -37,16 +74,6 @@ aggregation:
   conflictResolution: prefix
   conflictResolutionConfig:
     prefixFormat: "{workload}_"
-  tools:
-    - workload: triliumnext
-      filter:
-        - search_notes
-        - get_note
-        - resolve_note_id
-        - read_attributes
-    - workload: leantime
-      # The connector service itself refuses to start until an explicit
-      # read-tool allowlist has been installed on the host.
 
 operational:
   timeouts:

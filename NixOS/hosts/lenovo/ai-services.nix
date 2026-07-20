@@ -11,6 +11,7 @@ let
   toolhiveGid = 956;
   toolhiveStateDir = "/var/lib/toolhive";
   toolhiveRuntimeDir = "/run/toolhive";
+  toolhiveUserRuntimeDir = "/run/user/${toString toolhiveUid}";
   toolhiveEnvironment = [
     "HOME=${toolhiveStateDir}"
     "XDG_RUNTIME_DIR=${toolhiveRuntimeDir}"
@@ -25,6 +26,8 @@ let
   toolhiveVmcpConfig = ./toolhive/vmcp.yaml;
   triliumnextPermissionProfile = ./toolhive/triliumnext-permission-profile.json;
   leantimePermissionProfile = ./toolhive/leantime-permission-profile.json;
+  triliumnextMcpUpstreamImage = "ghcr.io/tan-yong-sheng/triliumnext-mcp@sha256:061f5bd7030b11f0165f0bdcd22de29ed069ad44ee52162ee19d78c2c7f03803";
+  triliumnextMcpLocalImage = "localhost/triliumnext-mcp:0.3.17";
   leantimeMcp = pkgs.callPackage ./toolhive/leantime-mcp.nix { };
   leantimeMcpImage = pkgs.dockerTools.buildLayeredImage {
     name = "localhost/leantime-mcp";
@@ -100,6 +103,15 @@ in
     ];
   };
 
+  sops.secrets.toolhive-vmcp-session-hmac-secret = {
+    format = "binary";
+    sopsFile = ./secrets/toolhive-vmcp-session-hmac-secret.enc;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+    restartUnits = [ "toolhive-vmcp.service" ];
+  };
+
   users.groups.leantime.gid = leantimeGid;
   users.users.leantime = {
     isSystemUser = true;
@@ -129,6 +141,7 @@ in
     group = "toolhive";
     home = "/var/lib/toolhive";
     createHome = true;
+    linger = true;
     subUidRanges = [
       {
         startUid = 265536;
@@ -299,6 +312,10 @@ in
   virtualisation.podman.enable = true;
   environment.systemPackages = [ pkgs.toolhive ];
   systemd.tmpfiles.rules = [
+    # Keep the API socket path stable across service restarts. Unlike
+    # RuntimeDirectory=, tmpfiles does not remove it while dependent units
+    # are being restarted in the same transaction.
+    "d ${toolhiveRuntimeDir} 0700 toolhive toolhive -"
     "d ${toolhiveStateDir}/credentials 0750 root toolhive -"
     # Policy files are writable only by root. The ToolHive account can read
     # them but cannot replace an allowlist after a connector compromise.
@@ -314,31 +331,40 @@ in
   systemd.services.toolhive-podman = {
     description = "Rootless Podman API for ToolHive";
     wantedBy = [ "multi-user.target" ];
-    after = [ "local-fs.target" ];
+    after = [
+      "local-fs.target"
+      "user@${toString toolhiveUid}.service"
+    ];
+    requires = [ "user@${toString toolhiveUid}.service" ];
     path = [ config.virtualisation.podman.package ];
     serviceConfig = {
       Type = "simple";
       User = "toolhive";
       Group = "toolhive";
-      RuntimeDirectory = "toolhive";
-      RuntimeDirectoryMode = "0700";
       StateDirectory = "toolhive";
       StateDirectoryMode = "0700";
       CacheDirectory = "toolhive";
       CacheDirectoryMode = "0700";
-      Environment = toolhiveEnvironment;
+      Environment = toolhiveEnvironment ++ [
+        "XDG_RUNTIME_DIR=${toolhiveUserRuntimeDir}"
+        "DBUS_SESSION_BUS_ADDRESS=unix:path=${toolhiveUserRuntimeDir}/bus"
+      ];
       ExecStart = "${config.virtualisation.podman.package}/bin/podman system service --time=0 unix:///run/toolhive/podman.sock";
       Restart = "on-failure";
       RestartSec = "5s";
       # Rootless Podman needs the newuidmap/newgidmap capability wrappers to
       # enter the subordinate UID/GID ranges assigned above.
       NoNewPrivileges = false;
-      ProtectHome = true;
+      # ProtectHome also masks /run/user, which rootless Podman, netavark and
+      # the user bus require. Normal ownership and mode 0700 on user runtime
+      # directories still prevent access to other users' runtime state.
+      ProtectHome = false;
       ProtectSystem = "strict";
       ReadWritePaths = [
         "/var/lib/toolhive"
         "/var/cache/toolhive"
         "/run/toolhive"
+        toolhiveUserRuntimeDir
       ];
     };
   };
@@ -369,9 +395,14 @@ in
   systemd.services.toolhive-triliumnext = {
     description = "TriliumNext MCP connector managed by ToolHive";
     wantedBy = [ "multi-user.target" ];
-    after = [ "toolhive-group.service" ];
-    requires = [ "toolhive-group.service" ];
-    path = [ config.virtualisation.podman.package ];
+    after = [
+      "toolhive-group.service"
+      "toolhive-triliumnext-image.service"
+    ];
+    requires = [
+      "toolhive-group.service"
+      "toolhive-triliumnext-image.service"
+    ];
     unitConfig.ConditionPathExists = config.sops.secrets.triliumnext-etapi-token.path;
     serviceConfig = toolhiveServiceHardening // {
       Type = "simple";
@@ -384,6 +415,9 @@ in
       export TOOLHIVE_SECRETS_PROVIDER=environment
       TOOLHIVE_SECRET_TRILIUM_ETAPI_TOKEN="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/triliumnext-token")"
       export TOOLHIVE_SECRET_TRILIUM_ETAPI_TOKEN
+      # The connector exposes all write implementations as one permission
+      # class. vMCP Cedar policy is the enforcement boundary that permits
+      # creation, updates and attribute management but still denies delete.
       exec ${pkgs.toolhive}/bin/thv run \
         --foreground \
         --name triliumnext \
@@ -392,10 +426,37 @@ in
         --permission-profile ${triliumnextPermissionProfile} \
         --secret TRILIUM_ETAPI_TOKEN,target=TRILIUM_API_TOKEN \
         --env TRILIUM_API_URL=https://notes.sandi05.com/etapi \
-        --env PERMISSIONS=READ \
-        --tools search_notes,get_note,resolve_note_id,read_attributes \
+        --env 'PERMISSIONS=READ;WRITE' \
         --enable-audit \
-        ghcr.io/tan-yong-sheng/triliumnext-mcp@sha256:c34bdc8265f70e8089435fa37358206ea07f36e62bf33855f5df8ccf3864c13c
+        ${triliumnextMcpLocalImage}
+    '';
+  };
+
+  systemd.services.toolhive-triliumnext-image = {
+    description = "Pull the pinned TriliumNext MCP image into rootless Podman";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "toolhive-podman.service" ];
+    requires = [ "toolhive-podman.service" ];
+    path = [ config.virtualisation.podman.package ];
+    serviceConfig = toolhiveServiceHardening // {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      set -eu
+      ${waitForToolhivePodman}
+      image_id="$(podman \
+        --remote \
+        --url unix://${toolhiveRuntimeDir}/podman.sock \
+        pull \
+        --quiet \
+        ${triliumnextMcpUpstreamImage})"
+      podman \
+        --remote \
+        --url unix://${toolhiveRuntimeDir}/podman.sock \
+        tag \
+        "$image_id" \
+        ${triliumnextMcpLocalImage}
     '';
   };
 
@@ -431,7 +492,6 @@ in
       "toolhive-group.service"
       "toolhive-leantime-image.service"
     ];
-    path = [ config.virtualisation.podman.package ];
     unitConfig = {
       ConditionPathExists = [
         "${toolhiveStateDir}/credentials/leantime-api-token"
@@ -485,14 +545,19 @@ in
       "toolhive-triliumnext.service"
       "toolhive-leantime.service"
     ];
-    path = [ config.virtualisation.podman.package ];
-    unitConfig.ConditionPathExists = config.sops.secrets.triliumnext-etapi-token.path;
+    unitConfig.ConditionPathExists = [
+      config.sops.secrets.triliumnext-etapi-token.path
+      config.sops.secrets.toolhive-vmcp-session-hmac-secret.path
+    ];
     serviceConfig = toolhiveServiceHardening // {
       Type = "simple";
       Restart = "on-failure";
       RestartSec = "5s";
+      LoadCredential = "vmcp-session-hmac-secret:${config.sops.secrets.toolhive-vmcp-session-hmac-secret.path}";
     };
     script = ''
+      VMCP_SESSION_HMAC_SECRET="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/vmcp-session-hmac-secret")"
+      export VMCP_SESSION_HMAC_SECRET
       exec ${pkgs.toolhive}/bin/thv vmcp serve \
         --config ${toolhiveVmcpConfig} \
         --host 127.0.0.1 \

@@ -1,21 +1,22 @@
 ---
 name: project-checks
-description: Discover and run the appropriate validation commands for the current project. Use after changing code or configuration, or when asked to test, lint, format, type-check, build, or verify a project.
+description: 現在のプロジェクトに適した検証コマンドを特定して実行する。コードや設定を変更した後、またはテスト、lint、整形、型検査、ビルド、動作確認を依頼された場合に使用する。
 ---
 
-# Project Checks
+# プロジェクトの検証
 
-Identify the checks documented by the repository and run the smallest relevant
-set before expanding to broader or slower validation.
+リポジトリに記載された検証方法を特定し、変更を十分に対象とする最小の検証から
+実行する。必要な場合だけ、より広範囲または時間のかかる検証へ進む。
 
-## Workflow
+## 手順
 
-1. Read applicable `AGENTS.md`, `CLAUDE.md`, and project documentation.
-2. Inspect package scripts, task runners, flake outputs, and CI configuration.
-3. Select checks that cover the changed files and requested behavior.
-4. Run read-only or local checks first.
-5. Do not deploy, publish, push, or mutate external systems unless explicitly requested.
-6. Report each command, its result, and any check that remains unrun.
+1. 適用対象の`AGENTS.md`、`CLAUDE.md`、プロジェクト文書を読む。
+2. パッケージスクリプト、タスクランナー、flake outputs、CI設定を調べる。
+3. 変更ファイルと依頼された動作を対象とする検証を選ぶ。
+4. 読み取り専用またはローカルで完結する検証から実行する。
+5. 明示的な依頼がない限り、デプロイ、公開、push、外部システムの変更を行わない。
+6. 実行したコマンドと結果、および未実行の検証を報告する。
 
-Prefer project-provided commands over invented equivalents. Do not silently
-rewrite files with a formatter unless formatting changes are within the task.
+独自の代替コマンドより、プロジェクトが用意したコマンドを優先する。
+整形による変更が依頼の範囲に含まれない限り、フォーマッタで暗黙にファイルを
+書き換えない。

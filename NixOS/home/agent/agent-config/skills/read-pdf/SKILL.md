@@ -1,73 +1,69 @@
 ---
 name: read-pdf
-description: Inspect and understand PDF documents using metadata inspection, text extraction, page rendering, and OCR. Use when answering questions about a PDF, summarizing a PDF, locating claims or passages, or interpreting equations, figures, tables, scans, and complex page layouts in PDF files.
+description: メタデータ確認、テキスト抽出、ページ画像化、OCRを使ってPDF文書を調査・理解する。PDFに関する質問への回答、要約、主張や記述の検索、数式、図、表、スキャン、複雑なレイアウトの解釈に使用する。
 ---
 
-# Read PDF
+# PDFを読む
 
-Extract searchable text first, then visually verify every part whose meaning
-depends on layout. Preserve the source PDF and put derived files in a temporary
-directory.
+最初に検索可能なテキストを抽出し、意味がレイアウトに依存する箇所はページ画像で
+確認する。元のPDFは変更せず、生成物は一時ディレクトリへ置く。
 
-## Workflow
+## 手順
 
-1. Inspect the document before reading it.
+1. 読み始める前に文書情報を確認する。
 
     ```bash
     pdfinfo document.pdf
     ```
 
-    Record the page count and check for encryption.
-    Do not attempt to bypass access controls.
+    ページ数を記録し、暗号化の有無を確認する。
+    アクセス制御を回避しようとしてはならない。
 
-2. Extract text while retaining approximate layout.
+2. おおよそのレイアウトを保持してテキストを抽出する。
 
     ```bash
     workdir="$(mktemp -d)"
     pdftotext -layout document.pdf "$workdir/document.txt"
     ```
 
-    Search the extracted text to locate relevant sections. Treat extraction order
-    as provisional for multi-column pages, footnotes, tables, and marginal text.
+    抽出テキストを検索して関連箇所を特定する。段組み、脚注、表、傍注では、
+    抽出順序を暫定的なものとして扱う。
 
-3. Detect image-only or poorly extracted documents. If the extracted text is
-   empty, severely garbled, or clearly incomplete, create a searchable copy with
-   OCR and extract from that copy.
+3. 画像のみの文書や、抽出品質の低い文書を検出する。抽出結果が空、著しく文字化け
+   している、または明らかに不完全な場合は、OCRで検索可能なコピーを作ってから
+   再度抽出する。
 
     ```bash
     ocrmypdf --skip-text -l jpn+eng document.pdf "$workdir/document-ocr.pdf"
     pdftotext -layout "$workdir/document-ocr.pdf" "$workdir/document-ocr.txt"
     ```
 
-    Select only the languages supported by the installed OCR data and actually
-    present in the document. Clearly label text inferred from OCR because it may
-    contain recognition errors.
+    インストール済みのOCRデータが対応し、実際に文書で使用されている言語だけを
+    選ぶ。OCR由来のテキストには認識誤りがあり得るため、その旨を明記する。
 
-4. Render relevant pages whenever layout affects interpretation.
+4. レイアウトが解釈に影響する場合は、関連ページを画像化する。
 
     ```bash
     pdftoppm -png -r 150 -f 3 -l 3 document.pdf "$workdir/page"
     ```
 
-    Inspect the resulting image directly. Always perform visual verification for:
+    生成した画像を直接確認する。次の要素は必ず目視で検証する。
 
-    - equations and mathematical notation;
-    - figures, diagrams, plots, and captions;
-    - tables and aligned columns;
-    - multi-column reading order;
-    - footnotes, annotations, and unusual typography;
-    - passages on which a precise quotation or important conclusion depends.
+    - 数式と数学記号
+    - 図、ダイアグラム、プロット、キャプション
+    - 表と列の対応
+    - 段組みの読み順
+    - 脚注、注釈、特殊な組版
+    - 正確な引用または重要な結論の根拠となる箇所
 
-5. Answer from the verified content. Distinguish the document's explicit claims
-   from interpretation or inference. Include PDF page numbers for important
-   claims and quotations. If printed page labels differ from the PDF page index,
-   identify which numbering system is used.
+5. 検証済みの内容に基づいて回答する。文書に明記された主張と、解釈または推論を
+   区別する。重要な主張と引用にはPDFのページ番号を付ける。印刷上のページ番号と
+   PDF内のページ位置が異なる場合は、どちらを用いたか明示する。
 
-## Reliability Rules
+## 信頼性に関する規則
 
-- Do not infer missing symbols or table cells solely from `pdftotext` output.
-- Do not present OCR output as an exact quotation without checking the page image.
-- Use short quotations only when needed; otherwise paraphrase faithfully.
-- State which pages or sections could not be read.
-- Remove the temporary directory after completing the task unless its artifacts
-  are needed for continuing work.
+- `pdftotext`の出力だけから欠落した記号や表のセルを推測しない。
+- ページ画像を確認せず、OCR出力を正確な引用として提示しない。
+- 引用は必要な場合に限って短く使用し、それ以外は忠実に要約する。
+- 読み取れなかったページまたは節を明記する。
+- 継続作業に生成物が必要な場合を除き、完了後に一時ディレクトリを削除する。

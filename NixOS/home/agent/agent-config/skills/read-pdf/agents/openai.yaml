@@ -1,4 +1,4 @@
 interface:
-  display_name: "Read PDF"
-  short_description: "Extract and verify content from PDF documents"
-  default_prompt: "Use $read-pdf to inspect this PDF and summarize its claims with page references."
+  display_name: "PDFを読む"
+  short_description: "PDFの内容を抽出し、ページ画像と照合して確認"
+  default_prompt: "$read-pdf を使って、このPDFの主張をページ番号付きで要約してください。"
