@@ -38,6 +38,45 @@ skillsおよびMCP OAuth credentialを共有し、すべてのプロジェクト
 抑える境界であり、プロジェクト間の機密性を保証する境界ではない。sandboxの第二ホームへは、
 全プロジェクトから利用されてもよい専用credentialだけを保存する。
 
+## AIクライアントのcommand policy
+
+Home Managerは、CodexとClaude Codeへ共通方針のcommand policyをread-onlyで配置する。
+`agent-config/claude-settings.json`をsource of truthとし、Codex側のruleはその
+`permissions`を同じ判定になるよう反映する。
+
+| 分類 | 方針 | 例 |
+| --- | --- | --- |
+| 許可 | 追加承認なし | `rg`、`fd`、Gitの参照・stage・commit・push・worktree・rebase・merge |
+| 毎回確認 | 実行前に利用者へ確認 | `git cherry-pick`、`git revert`、`nix flake update`、`home-manager switch` |
+| 禁止 | AIクライアントから実行しない | 権限昇格、SSH・file転送、`nixos-rebuild`、`systemctl` |
+
+Codexのpolicyは次へ配置する。
+
+```text
+~/.codex/rules/agent-command-policy.rules
+```
+
+sourceは`agent-config/codex-command-policy.rules`であり、Codexの
+`prefix_rule`によって`allow`、`prompt`、`forbidden`を判定する。変更後はCodexを
+再起動する。Codexのexec policyはsandbox外での実行要求を評価するものであり、
+Codex sandbox内ですでに許可されているcommandに追加のOS制限を課すものではない。
+ruleの動作は次のように確認できる。
+
+```console
+codex execpolicy check --pretty \
+  --rules ~/.codex/rules/agent-command-policy.rules \
+  -- git cherry-pick COMMIT
+```
+
+Claude Codeでは`agent-config/claude-settings.json`の`permissions.allow`、
+`permissions.ask`、`permissions.deny`を使用する。このfileは
+`~/.claude/settings.json`へread-only linkとして配置する。変更後はClaude Codeを
+再起動し、`/permissions`で読込結果を確認する。
+
+これらはAIクライアントの承認動作を統一するpolicyであり、OSレベルのsecurity
+boundaryではない。host filesystem、credential、namespaceなどの強制的な隔離は
+引き続き`agent-sandbox`のBubblewrap設定が担う。
+
 ## sandbox内外の識別
 
 `agent-sandbox` 内では、Starship promptに黄色の `[sandbox]` を表示する。

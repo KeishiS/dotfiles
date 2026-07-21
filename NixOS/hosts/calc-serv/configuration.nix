@@ -32,6 +32,12 @@ in
 
   services.libinput.enable = true;
 
+  services.tailscale = {
+    enable = true;
+    openFirewall = true;
+    extraUpFlags = [ "--accept-dns=false" ];
+  };
+
   users.users.keishis.extraGroups = [
     "render"
     "video"

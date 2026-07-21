@@ -1,4 +1,0 @@
-interface:
-  display_name: "プロジェクトの検証"
-  short_description: "現在のプロジェクトに適した検証を特定して実行"
-  default_prompt: "$project-checks を使って、この変更に必要な検証を実行してください。"
