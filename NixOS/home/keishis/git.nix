@@ -6,6 +6,7 @@
     settings = {
       user.name = "KeishiS";
       user.email = "sando.keishi.sp@alumni.tsukuba.ac.jp";
+      user.signingKey = "11D7A68D97E0C636DF487CA1C55CCC13D8D16739";
       core = {
         editor = "vim";
         quotepath = false;

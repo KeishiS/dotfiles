@@ -1,4 +1,4 @@
-{ consumer }:
+{ consumer, triliumnextProxyPort }:
 let
   allowedTools = [
     "triliumnext_list_children_notes"
@@ -21,6 +21,18 @@ in
 {
   name = "agent-services-${consumer.id}";
   groupRef = "agent-services";
+
+  # `thv vmcp serve --config` otherwise selects Kubernetes-only group
+  # discovery.  The managed ToolHive workloads on this host run through the
+  # local rootless Podman runtime, so declare their loopback MCP endpoints
+  # explicitly.  Keep groupRef for grouping and future workload discovery.
+  backends = [
+    {
+      name = "triliumnext";
+      url = "http://127.0.0.1:${toString triliumnextProxyPort}/mcp";
+      transport = "streamable-http";
+    }
+  ];
 
   incomingAuth = {
     type = "oidc";

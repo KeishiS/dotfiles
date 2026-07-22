@@ -219,6 +219,25 @@ curl -i http://127.0.0.1/codex/mcp
 curl -i http://127.0.0.1/claude-code/mcp
 ```
 
+TriliumNext connectorのToolHive proxy portは`35353`に固定している。vMCPのstatic
+backend URLも同じNix定数から生成するため、connectorを再起動した後に次を確認する。
+
+```bash
+systemctl restart toolhive-triliumnext.service
+sudo -u toolhive env \
+  HOME=/var/lib/toolhive \
+  XDG_RUNTIME_DIR=/run/toolhive \
+  XDG_CONFIG_HOME=/var/lib/toolhive/runtime-config \
+  XDG_DATA_HOME=/var/lib/toolhive/data \
+  XDG_STATE_HOME=/var/lib/toolhive/state \
+  XDG_CACHE_HOME=/var/cache/toolhive \
+  TOOLHIVE_PODMAN_SOCKET=/run/toolhive/podman.sock \
+  thv list
+```
+
+`triliumnext`のURLは`http://127.0.0.1:35353/mcp`でなければならない。異なる値の場合は
+vMCPを起動せず、connectorの起動設定を修正する。
+
 consumerだけを停止する場合は、対応する`toolhive-vmcp-<consumer>.service`を停止する。
 connector workloadと他consumerのvMCPは停止しない。再有効化は同unitを起動する。
 client側のcredentialを破棄して再認証する場合は次を使用する。

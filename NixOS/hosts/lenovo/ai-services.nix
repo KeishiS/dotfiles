@@ -16,6 +16,7 @@ let
   toolhiveStateDir = "/var/lib/toolhive";
   toolhiveRuntimeDir = "/run/toolhive";
   toolhiveUserRuntimeDir = "/run/user/${toString toolhiveUid}";
+  triliumnextProxyPort = 35353;
   toolhiveEnvironment = [
     "HOME=${toolhiveStateDir}"
     "XDG_RUNTIME_DIR=${toolhiveRuntimeDir}"
@@ -32,7 +33,7 @@ let
     name: consumer:
     yamlFormat.generate "agent-services-${name}-vmcp.yaml" (
       import ../../modules/services/agent-services/vmcp-config.nix {
-        inherit consumer;
+        inherit consumer triliumnextProxyPort;
       }
     )
   ) enabledAgentServicesConsumers;
@@ -137,10 +138,19 @@ let
         value = {
           proxyPass = "http://127.0.0.1:${toString consumer.port}/mcp";
           proxyWebsockets = true;
+          recommendedProxySettings = false;
           extraConfig = ''
             proxy_buffering off;
             proxy_read_timeout 3600s;
             proxy_send_timeout 3600s;
+            # ToolHive validates Host and X-Forwarded-Host against its local
+            # bind address. Do not inherit NixOS's public-host proxy headers.
+            proxy_set_header Host 127.0.0.1:${toString consumer.port};
+            proxy_set_header X-Forwarded-Host "";
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Authorization $http_authorization;
           '';
         };
       }
@@ -479,6 +489,7 @@ in
         --name triliumnext \
         --group agent-services \
         --transport stdio \
+        --proxy-port ${toString triliumnextProxyPort} \
         --permission-profile ${triliumnextPermissionProfile} \
         --secret TRILIUM_ETAPI_TOKEN,target=TRILIUM_API_TOKEN \
         --env TRILIUM_API_URL=https://notes.sandi05.com/etapi \
