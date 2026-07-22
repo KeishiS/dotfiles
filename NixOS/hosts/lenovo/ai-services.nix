@@ -5,6 +5,10 @@
   ...
 }:
 let
+  agentServicesConsumers = import ../../home/agent/agent-services-consumers.nix;
+  enabledAgentServicesConsumers = lib.filterAttrs (
+    _: consumer: consumer.enabled
+  ) agentServicesConsumers;
   leantimeUid = 955;
   leantimeGid = 955;
   toolhiveUid = 956;
@@ -23,7 +27,18 @@ let
     "TOOLHIVE_PODMAN_SOCKET=${toolhiveRuntimeDir}/podman.sock"
     "TOOLHIVE_SKIP_UPDATE_CHECK=true"
   ];
-  toolhiveVmcpConfig = ./toolhive/vmcp.yaml;
+  yamlFormat = pkgs.formats.yaml { };
+  toolhiveVmcpConfigs = lib.mapAttrs (
+    name: consumer:
+    yamlFormat.generate "agent-services-${name}-vmcp.yaml" (
+      import ../../modules/services/agent-services/vmcp-config.nix {
+        inherit consumer;
+      }
+    )
+  ) enabledAgentServicesConsumers;
+  toolhiveVmcpUnitNames = lib.mapAttrsToList (
+    name: _: "toolhive-vmcp-${name}.service"
+  ) enabledAgentServicesConsumers;
   triliumnextPermissionProfile = ./toolhive/triliumnext-permission-profile.json;
   leantimePermissionProfile = ./toolhive/leantime-permission-profile.json;
   triliumnextMcpUpstreamImage = "ghcr.io/tan-yong-sheng/triliumnext-mcp@sha256:061f5bd7030b11f0165f0bdcd22de29ed069ad44ee52162ee19d78c2c7f03803";
@@ -81,8 +96,64 @@ let
       "AF_UNIX"
     ];
   };
+  toolhiveVmcpServices = lib.mapAttrs' (
+    name: consumer:
+    lib.nameValuePair "toolhive-vmcp-${name}" {
+      description = "OIDC-protected ToolHive virtual MCP endpoint for ${name}";
+      wantedBy = [ "multi-user.target" ];
+      after = [
+        "toolhive-triliumnext.service"
+        "toolhive-leantime.service"
+      ];
+      wants = [
+        "toolhive-triliumnext.service"
+        "toolhive-leantime.service"
+      ];
+      unitConfig.ConditionPathExists = [
+        config.sops.secrets.triliumnext-etapi-token.path
+        config.sops.secrets.toolhive-vmcp-session-hmac-secret.path
+      ];
+      serviceConfig = toolhiveServiceHardening // {
+        Type = "simple";
+        Restart = "on-failure";
+        RestartSec = "5s";
+        LoadCredential = "vmcp-session-hmac-secret:${config.sops.secrets.toolhive-vmcp-session-hmac-secret.path}";
+      };
+      script = ''
+        VMCP_SESSION_HMAC_SECRET="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/vmcp-session-hmac-secret")"
+        export VMCP_SESSION_HMAC_SECRET
+        exec ${pkgs.toolhive}/bin/thv vmcp serve \
+          --config ${toolhiveVmcpConfigs.${name}} \
+          --host 127.0.0.1 \
+          --port ${toString consumer.port} \
+          --enable-audit
+      '';
+    }
+  ) enabledAgentServicesConsumers;
+  toolhiveVmcpLocations = lib.listToAttrs (
+    lib.concatMap (consumer: [
+      {
+        name = "= ${consumer.basePath}/mcp";
+        value = {
+          proxyPass = "http://127.0.0.1:${toString consumer.port}/mcp";
+          proxyWebsockets = true;
+          extraConfig = ''
+            proxy_buffering off;
+            proxy_read_timeout 3600s;
+            proxy_send_timeout 3600s;
+          '';
+        };
+      }
+      {
+        name = "= /.well-known/oauth-protected-resource${consumer.basePath}/mcp";
+        value.proxyPass = "http://127.0.0.1:${toString consumer.port}/.well-known/oauth-protected-resource/mcp";
+      }
+    ]) (lib.attrValues enabledAgentServicesConsumers)
+  );
 in
 {
+  imports = [ { systemd.services = toolhiveVmcpServices; } ];
+
   sops.secrets.leantime-env = {
     format = "dotenv";
     sopsFile = ./secrets/leantime.env.enc;
@@ -99,8 +170,8 @@ in
     mode = "0400";
     restartUnits = [
       "toolhive-triliumnext.service"
-      "toolhive-vmcp.service"
-    ];
+    ]
+    ++ toolhiveVmcpUnitNames;
   };
 
   sops.secrets.toolhive-vmcp-session-hmac-secret = {
@@ -109,7 +180,7 @@ in
     owner = "root";
     group = "root";
     mode = "0400";
-    restartUnits = [ "toolhive-vmcp.service" ];
+    restartUnits = toolhiveVmcpUnitNames;
   };
 
   users.groups.leantime.gid = leantimeGid;
@@ -286,23 +357,8 @@ in
         proxy_buffers 4 256k;
         proxy_busy_buffers_size 256k;
       '';
-      "mcp.sandi05.com" = {
-        locations."= /mcp" = {
-          proxyPass = "http://127.0.0.1:4483/mcp";
-          proxyWebsockets = true;
-          extraConfig = ''
-            proxy_buffering off;
-            proxy_read_timeout 3600s;
-            proxy_send_timeout 3600s;
-          '';
-        };
-        locations."= /.well-known/oauth-protected-resource" = {
-          proxyPass = "http://127.0.0.1:4483/.well-known/oauth-protected-resource";
-        };
-        locations."= /.well-known/oauth-protected-resource/mcp" = {
-          proxyPass = "http://127.0.0.1:4483/.well-known/oauth-protected-resource/mcp";
-        };
-        locations."/".return = "404";
+      "mcp.sandi05.com".locations = toolhiveVmcpLocations // {
+        "/".return = "404";
       };
     };
   };
@@ -531,38 +587,6 @@ in
         --auth-method Bearer \
         --max-retries 5 \
         --retry-delay 2000
-    '';
-  };
-
-  systemd.services.toolhive-vmcp = {
-    description = "OIDC-protected ToolHive virtual MCP endpoint";
-    wantedBy = [ "multi-user.target" ];
-    after = [
-      "toolhive-triliumnext.service"
-      "toolhive-leantime.service"
-    ];
-    wants = [
-      "toolhive-triliumnext.service"
-      "toolhive-leantime.service"
-    ];
-    unitConfig.ConditionPathExists = [
-      config.sops.secrets.triliumnext-etapi-token.path
-      config.sops.secrets.toolhive-vmcp-session-hmac-secret.path
-    ];
-    serviceConfig = toolhiveServiceHardening // {
-      Type = "simple";
-      Restart = "on-failure";
-      RestartSec = "5s";
-      LoadCredential = "vmcp-session-hmac-secret:${config.sops.secrets.toolhive-vmcp-session-hmac-secret.path}";
-    };
-    script = ''
-      VMCP_SESSION_HMAC_SECRET="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/vmcp-session-hmac-secret")"
-      export VMCP_SESSION_HMAC_SECRET
-      exec ${pkgs.toolhive}/bin/thv vmcp serve \
-        --config ${toolhiveVmcpConfig} \
-        --host 127.0.0.1 \
-        --port 4483 \
-        --enable-audit
     '';
   };
 

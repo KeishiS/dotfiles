@@ -61,10 +61,16 @@
               bind "Backspace" { GoToPreviousTab; }
               bind "n" { NewTab; SwitchToMode "normal"; }
               bind "x" { CloseTab; SwitchToMode "normal"; }
+              bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
               bind "h" "Left" { GoToPreviousTab; }
               bind "l" "Right" { GoToNextTab; }
               bind "i" { MoveTab "Left"; }
               bind "o" { MoveTab "Right"; }
+          }
+
+          renametab {
+              bind "Ctrl c" { SwitchToMode "normal"; }
+              bind "Esc" { UndoRenameTab; SwitchToMode "tab"; }
           }
 
           resize {

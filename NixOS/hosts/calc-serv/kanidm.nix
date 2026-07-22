@@ -1,9 +1,27 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
 let
+  agentServicesConsumers = import ../../home/agent/agent-services-consumers.nix;
+  enabledAgentServicesConsumers = lib.filterAttrs (
+    _: consumer: consumer.enabled
+  ) agentServicesConsumers;
+  agentServicesOauthClients = lib.mapAttrs' (
+    _: consumer:
+    lib.nameValuePair consumer.oauthClientId {
+      displayName = "AI Agent Services (${consumer.id})";
+      inherit (consumer) public;
+      originUrl = consumer.callbackUrls;
+      originLanding = "https://${consumer.hostname}${consumer.basePath}";
+      enableLocalhostRedirects = consumer.public;
+      preferShortUsername = true;
+      enableLegacyCrypto = false;
+      scopeMaps.ai-agent-users = consumer.scopes;
+    }
+  ) enabledAgentServicesConsumers;
   domain = "id.sandi05.com";
   cert = config.security.acme.certs.${domain};
 in
@@ -99,55 +117,47 @@ in
           overwriteMembers = false;
         };
       };
-      systems.oauth2.vaultwarden = {
-        displayName = "Vaultwarden";
-        originUrl = "https://key.sandi05.com/identity/connect/oidc-signin";
-        originLanding = "https://key.sandi05.com/#/sso";
-        preferShortUsername = true;
-        scopeMaps.server-users = [
-          "openid"
-          "email"
-          "profile"
-        ];
-      };
-      systems.oauth2.nextcloud = {
-        displayName = "Nextcloud";
-        originUrl = "https://storage.sandi05.com/apps/user_oidc/code";
-        originLanding = "https://storage.sandi05.com";
-        preferShortUsername = true;
-        scopeMaps.server-users = [
-          "openid"
-          "email"
-          "profile"
-          "groups_name"
-        ];
-      };
-      systems.oauth2.leantime = {
-        displayName = "Leantime";
-        originUrl = "https://project.sandi05.com/oidc/callback";
-        originLanding = "https://project.sandi05.com";
-        basicSecretFile = config.sops.secrets.leantime-oidc-client-secret.path;
-        preferShortUsername = true;
-        # Leantime 3.9.8 neither sends a PKCE challenge nor accepts ES256
-        # ID-token signatures. Keep both compatibility exceptions scoped to
-        # this confidential client.
-        allowInsecureClientDisablePkce = true;
-        enableLegacyCrypto = true;
-        scopeMaps.server-users = [
-          "openid"
-          "email"
-          "profile"
-        ];
-      };
-      systems.oauth2.toolhive-mcp = {
-        displayName = "AI Agent Services";
-        public = true;
-        originUrl = "http://localhost:8765/callback";
-        originLanding = "https://mcp.sandi05.com";
-        enableLocalhostRedirects = true;
-        preferShortUsername = true;
-        enableLegacyCrypto = false;
-        scopeMaps.ai-agent-users = [ "openid" ];
+      systems.oauth2 = agentServicesOauthClients // {
+        vaultwarden = {
+          displayName = "Vaultwarden";
+          originUrl = "https://key.sandi05.com/identity/connect/oidc-signin";
+          originLanding = "https://key.sandi05.com/#/sso";
+          preferShortUsername = true;
+          scopeMaps.server-users = [
+            "openid"
+            "email"
+            "profile"
+          ];
+        };
+        nextcloud = {
+          displayName = "Nextcloud";
+          originUrl = "https://storage.sandi05.com/apps/user_oidc/code";
+          originLanding = "https://storage.sandi05.com";
+          preferShortUsername = true;
+          scopeMaps.server-users = [
+            "openid"
+            "email"
+            "profile"
+            "groups_name"
+          ];
+        };
+        leantime = {
+          displayName = "Leantime";
+          originUrl = "https://project.sandi05.com/oidc/callback";
+          originLanding = "https://project.sandi05.com";
+          basicSecretFile = config.sops.secrets.leantime-oidc-client-secret.path;
+          preferShortUsername = true;
+          # Leantime 3.9.8 neither sends a PKCE challenge nor accepts ES256
+          # ID-token signatures. Keep both compatibility exceptions scoped to
+          # this confidential client.
+          allowInsecureClientDisablePkce = true;
+          enableLegacyCrypto = true;
+          scopeMaps.server-users = [
+            "openid"
+            "email"
+            "profile"
+          ];
+        };
       };
     };
 

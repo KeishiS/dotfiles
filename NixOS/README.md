@@ -13,16 +13,17 @@
 
 ## よく使うコマンド
 
-通常の開発用 shell に入る。
+通常の開発用 shell に入る。calc-serv の `agent-sandbox` 内ではこちらを使用する。
 
 ```sh
-nix develop .#plain
+nix develop
 ```
 
-`nix develop` は sandbox 用 entrypoint に入る。`shellHook` を抑止したい場合は以下を使う。
+`agent-sandbox` の外で一時的な Bubblewrap sandbox を利用する場合は、
+`plain-sandbox` を指定する。
 
 ```sh
-SKIP_AGENT_BWRAP=1 nix develop
+nix develop .#plain-sandbox
 ```
 
 一時的な鍵生成

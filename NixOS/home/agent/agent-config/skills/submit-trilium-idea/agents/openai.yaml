@@ -9,7 +9,7 @@ dependencies:
       value: "agent-services"
       description: "TriliumNextへ接続するOIDC保護済みMCPサービス"
       transport: "streamable_http"
-      url: "https://mcp.sandi05.com/mcp"
+      url: "https://mcp.sandi05.com/codex/mcp"
 
 policy:
   allow_implicit_invocation: true

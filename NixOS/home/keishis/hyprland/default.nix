@@ -49,6 +49,13 @@ in
     ./hyprpaper.nix
   ];
 
+  # Home Manager installs the Hyprland portal backend in ~/.nix-profile.
+  # Keep GTK's FileChooser backend in the same profile for portal clients.
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;

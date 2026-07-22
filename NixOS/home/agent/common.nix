@@ -15,7 +15,6 @@
       bat
       eza
       fd
-      gitFull
       jq
       ripgrep
     ];
