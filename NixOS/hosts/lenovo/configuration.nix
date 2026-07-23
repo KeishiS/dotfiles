@@ -10,6 +10,7 @@
     ./jellyfin.nix
     ./nextcloud-media-archive.nix
     ./ai-services.nix
+    ./marginalis
     ../../modules/services/kanidm-client
     ../../modules/services/nfs-client
   ];

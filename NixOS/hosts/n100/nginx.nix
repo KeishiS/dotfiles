@@ -348,6 +348,59 @@ in
     };
 
     #---------------------------------------------------------------------
+    # Marginalis
+    # --------------------------------------------------------------------
+    virtualHosts."marginalis.sandi05.com-redirect" = {
+      serverName = "marginalis.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
+          port = 80;
+        }
+      ];
+      extraConfig = ''
+        return 301 https://$host$request_uri;
+      '';
+    };
+
+    virtualHosts."marginalis.sandi05.com" = {
+      serverName = "marginalis.sandi05.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      addSSL = true;
+      useACMEHost = "sandi05.com";
+      locations."/" = {
+        proxyPass = "http://lenovo.sandi05.com:3456";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Host $host;
+
+          client_max_body_size 256M;
+          proxy_read_timeout 3600s;
+          proxy_send_timeout 3600s;
+        '';
+      };
+    };
+
+    #---------------------------------------------------------------------
     # TriliumNext
     # --------------------------------------------------------------------
     virtualHosts."notes.sandi05.com-redirect" = {
@@ -457,6 +510,7 @@ in
         "project.sandi05.com"
         "notes.sandi05.com"
         "mcp.sandi05.com"
+        "marginalis.sandi05.com"
       ];
       dnsProvider = "cloudflare";
       environmentFile = config.sops.secrets."sandi05-cloudflare-acme".path;

@@ -79,6 +79,14 @@ in
     group = "kanidm";
   };
 
+  sops.secrets.marginalis-oidc-client-secret = {
+    format = "binary";
+    sopsFile = ./secrets/marginalis-oidc-client-secret.enc;
+    mode = "0400";
+    owner = "kanidm";
+    group = "kanidm";
+  };
+
   services.kanidm = {
     package = pkgs.kanidmWithSecretProvisioning_1_10;
     client = {
@@ -156,6 +164,19 @@ in
             "openid"
             "email"
             "profile"
+          ];
+        };
+
+        marginalis = {
+          displayName = "Marginalis";
+          originUrl = "https://marginalis.sandi05.com/auth/oidc/callback";
+          originLanding = "https://marginalis.sandi05.com";
+          basicSecretFile = config.sops.secrets.marginalis-oidc-client-secret.path;
+          preferShortUsername = true;
+          scopeMaps.server-users = [
+            "openid"
+            "profile"
+            "email"
           ];
         };
       };
