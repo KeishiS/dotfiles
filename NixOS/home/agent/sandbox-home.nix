@@ -9,8 +9,11 @@
   home.homeDirectory = "/home/agent";
 
   home.packages = with pkgs; [
+    gawk
+    gnugrep
     ocrmypdf
     poppler-utils
+    procps
     (tesseract.override {
       enableLanguages = [
         "eng"
