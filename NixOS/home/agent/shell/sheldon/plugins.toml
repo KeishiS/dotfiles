@@ -7,6 +7,11 @@ dir = "src"
 apply = ["fpath"]
 profiles = ["completion"]
 
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+use = ["{{ name }}.zsh"]
+profiles = ["interactive"]
+
 [plugins.zsh-syntax-highlighting]
 github = "zsh-users/zsh-syntax-highlighting"
 profiles = ["interactive"]

@@ -40,10 +40,10 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true; # 補完エンジンの起動
-    # zsh-autosuggestions is intentionally disabled because its ZLE redraw
-    # corrupts interactive input in the Bubblewrap agent sandbox.
+    # Zsh plugins are managed by Sheldon to avoid loading them twice through
+    # both Home Manager and Sheldon.
     autosuggestion.enable = false;
-    syntaxHighlighting.enable = false; # sheldon で管理
+    syntaxHighlighting.enable = false;
 
     shellAliases = {
       ls = "eza --group-directories-first --icons=auto";
