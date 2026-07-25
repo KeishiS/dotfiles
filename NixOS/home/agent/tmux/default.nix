@@ -25,6 +25,7 @@
       unbind -a -T copy-mode
       unbind -a -T copy-mode-vi
       unbind -aq -T tab
+      unbind -aq -T session
 
       bind -T root M-[ previous-window
       bind -T root M-] next-window
@@ -38,6 +39,7 @@
       bind -T root M-8 select-window -t :=8
       bind -T root M-9 select-window -t :=9
       bind -T root M-t switch-client -T tab
+      bind -T root M-o switch-client -T session
 
       # Alt+t の次の一打だけを Zellij と共通のタブ操作として扱う。
       bind -T tab Escape switch-client -T root
@@ -49,6 +51,11 @@
       bind -T tab l next-window
       bind -T tab i swap-window -d -t -1
       bind -T tab o swap-window -d -t +1
+
+      # Alt+o の次の一打だけを Zellij と共通のセッション操作として扱う。
+      bind -T session Escape switch-client -T root
+      bind -T session Enter switch-client -T root
+      bind -T session d detach-client
 
       # マウススクロールだけは維持し、クリックやドラッグ操作は許可しない。
       bind -T root WheelUpPane if-shell -F \
