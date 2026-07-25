@@ -165,6 +165,18 @@ claude update
 
 Codexを最新版へ更新する場合は、`agent-tools-install`を再実行する。
 
+## GitHub CLIの認証
+
+`agent-sandbox`ではGitHub CLIを導入し、Bash起動時に次のファイルが読み取り可能な場合は、
+その内容を`GH_TOKEN`として読み込む。
+
+```text
+~/.config/gh/token
+```
+
+tokenファイル自体はHome Managerで管理しない。権限は`0600`に設定する。
+設定後はsandboxへ入り直し、`gh auth status`で認証状態を確認する。
+
 ## 共通skills
 
 `agent-config/skills/`配下のskillsは、Home Managerによって次の両方へ同じ内容で
