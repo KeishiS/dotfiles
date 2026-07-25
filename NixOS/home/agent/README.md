@@ -80,6 +80,7 @@ boundaryではない。host filesystem、credential、namespaceなどの強制�
 ## sandbox内外の識別
 
 `agent-sandbox` 内では、Starship promptに黄色の `[sandbox]` を表示する。
+ホストの `agent` は対話シェルをZshへ切り替え、`agent-sandbox` はBashを使用する。
 コマンドから確認する場合は、環境変数またはhostnameを使用する。
 
 ```console

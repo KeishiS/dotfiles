@@ -24,7 +24,10 @@
     historySize = 10000;
 
     profileExtra = ''
-      if [[ $- == *i* ]] && command -v zsh >/dev/null 2>&1; then
+      if [[ $- == *i* ]] \
+        && [[ -z "''${AGENT_SANDBOX:-}" ]] \
+        && command -v zsh >/dev/null 2>&1
+      then
         exec zsh -l
       fi
     '';
