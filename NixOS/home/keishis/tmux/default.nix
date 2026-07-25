@@ -19,7 +19,12 @@
       set -g set-clipboard on
       set -as terminal-features ',xterm-256color:RGB'
 
-      # Zellij と同じ Alt 配列。Alt+f/b/d はシェルの単語操作用に空ける。
+      # Alt+f/b/d は Zsh が所有するため、tmux では明示的に解除する。
+      unbind -nq M-f
+      unbind -nq M-b
+      unbind -nq M-d
+
+      # Zellij と同じ Alt 配列。既存割り当てを解除してから設定する。
       unbind -nq M-h
       unbind -nq M-j
       unbind -nq M-k

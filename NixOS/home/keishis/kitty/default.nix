@@ -68,7 +68,7 @@ in
       "ctrl+shift+w" = "close_tab";
       "ctrl+shift+a" = "set_tab_title";
 
-      # Explicitly pass tmux's Alt namespace through to the child process.
+      # Explicitly pass the Alt namespaces owned by tmux and Zsh through.
       "alt+h" = "no_op";
       "alt+j" = "no_op";
       "alt+k" = "no_op";
@@ -87,6 +87,9 @@ in
       "alt+7" = "no_op";
       "alt+8" = "no_op";
       "alt+9" = "no_op";
+      "alt+f" = "no_op";
+      "alt+b" = "no_op";
+      "alt+d" = "no_op";
     };
   };
 }

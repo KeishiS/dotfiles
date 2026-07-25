@@ -27,30 +27,34 @@
         fi
       '')
 
-      # tmux が所有する Alt 名前空間を ZLE から明示的に解除する。
-      (lib.mkOrder 1900 ''
+      # zsh-syntax-highlighting must be loaded after completion, custom ZLE
+      # widgets, and other shell integrations.
+      (lib.mkOrder 2000 ''
+        eval "$(SHELDON_PROFILE=interactive ${pkgs.sheldon}/bin/sheldon source)"
+      '')
+
+      # プラグイン読込後に、Alt キーの最終的な所有権を明示する。
+      (lib.mkOrder 2100 ''
         typeset -a tmux_meta_keys=(
           $'\eh' $'\ej' $'\ek' $'\el'
           $'\e[' $'\e]' $'\e\r' $'\ez' $'\et'
           $'\e1' $'\e2' $'\e3' $'\e4' $'\e5'
           $'\e6' $'\e7' $'\e8' $'\e9'
         )
-        for tmux_meta_key in "''${tmux_meta_keys[@]}"; do
-          bindkey -M emacs -r "$tmux_meta_key" 2>/dev/null || true
-          bindkey -M viins -r "$tmux_meta_key" 2>/dev/null || true
+        typeset -a tmux_zle_keymaps=(
+          emacs viins vicmd viopp visual isearch command
+        )
+        for tmux_zle_keymap in "''${tmux_zle_keymaps[@]}"; do
+          for tmux_meta_key in "''${tmux_meta_keys[@]}"; do
+            bindkey -M "$tmux_zle_keymap" -r "$tmux_meta_key" 2>/dev/null || true
+          done
         done
-        unset tmux_meta_key tmux_meta_keys
+        unset tmux_meta_key tmux_meta_keys tmux_zle_keymap tmux_zle_keymaps
 
-        # シェルの単語操作用 Alt キーは tmux で奪わず、ZLE に固定する。
+        # Alt+t の transpose-words は上で解除済み。Alt+f/b/d は Zsh が所有する。
         bindkey -M emacs $'\ef' forward-word
         bindkey -M emacs $'\eb' backward-word
         bindkey -M emacs $'\ed' kill-word
-      '')
-
-      # zsh-syntax-highlighting must be loaded after completion, custom ZLE
-      # widgets, and other shell integrations.
-      (lib.mkOrder 2000 ''
-        eval "$(SHELDON_PROFILE=interactive ${pkgs.sheldon}/bin/sheldon source)"
       '')
     ];
   };
