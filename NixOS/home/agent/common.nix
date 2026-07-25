@@ -3,6 +3,7 @@
   imports = [
     ./shell
     ./starship
+    ./tmux
     ./vim
     ./zellij
   ];
