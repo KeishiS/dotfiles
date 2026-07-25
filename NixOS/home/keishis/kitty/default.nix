@@ -59,6 +59,7 @@ in
       color15 = theme.palette."15";
     };
     keybindings = {
+      # Local tab operations are owned by Kitty.
       "ctrl+shift+t" = "new_tab";
       "ctrl+shift+[" = "previous_tab";
       "ctrl+shift+]" = "next_tab";
@@ -66,6 +67,26 @@ in
       "ctrl+shift+." = "move_tab_forward";
       "ctrl+shift+w" = "close_tab";
       "ctrl+shift+a" = "set_tab_title";
+
+      # Explicitly pass tmux's Alt namespace through to the child process.
+      "alt+h" = "no_op";
+      "alt+j" = "no_op";
+      "alt+k" = "no_op";
+      "alt+l" = "no_op";
+      "alt+[" = "no_op";
+      "alt+]" = "no_op";
+      "alt+enter" = "no_op";
+      "alt+z" = "no_op";
+      "alt+t" = "no_op";
+      "alt+1" = "no_op";
+      "alt+2" = "no_op";
+      "alt+3" = "no_op";
+      "alt+4" = "no_op";
+      "alt+5" = "no_op";
+      "alt+6" = "no_op";
+      "alt+7" = "no_op";
+      "alt+8" = "no_op";
+      "alt+9" = "no_op";
     };
   };
 }
