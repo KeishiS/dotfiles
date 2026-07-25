@@ -18,6 +18,8 @@
       fd
       jq
       ripgrep
+      (git.override { withLibsecret = true; })
+      git-crypt
     ];
 
     sessionPath = [
