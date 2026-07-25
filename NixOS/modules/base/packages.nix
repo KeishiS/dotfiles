@@ -1,8 +1,7 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    git
-    git-crypt
+    (git.override { withLibsecret = true; })
     nano
     ghostty.terminfo
     lsof
