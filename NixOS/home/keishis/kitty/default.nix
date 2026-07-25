@@ -62,6 +62,8 @@ in
       "ctrl+shift+t" = "new_tab";
       "ctrl+shift+[" = "previous_tab";
       "ctrl+shift+]" = "next_tab";
+      "ctrl+shift+," = "move_tab_backward";
+      "ctrl+shift+." = "move_tab_forward";
       "ctrl+shift+w" = "close_tab";
       "ctrl+shift+a" = "set_tab_title";
     };
