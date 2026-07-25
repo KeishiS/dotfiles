@@ -11,7 +11,7 @@ in
       local wezterm = require 'wezterm'
       local config = wezterm.config_builder()
 
-      config.front_end = "WebGpu" -- workaround
+      config.front_end = "OpenGL"
       config.window_background_opacity = 0.8
       config.use_ime = true
       config.default_cursor_style = 'SteadyBar'
@@ -65,48 +65,6 @@ in
               end
             end),
           },
-        },
-        {
-          --[[ Split the current local pane downward ]]
-          mods = 'CTRL|SHIFT',
-          key = 'E',
-          action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' },
-        },
-        {
-          --[[ Split the current local pane to the right ]]
-          mods = 'CTRL|SHIFT',
-          key = 'O',
-          action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' },
-        },
-        {
-          --[[ Toggle zoom for the current local pane ]]
-          mods = 'CTRL|SHIFT',
-          key = 'Z',
-          action = wezterm.action.TogglePaneZoomState,
-        },
-        {
-          --[[ Move to Left Pane ]]
-          mods = 'CTRL|SHIFT',
-          key = 'h',
-          action = wezterm.action.ActivatePaneDirection("Left"),
-        },
-        {
-          --[[ Move to Right Pane ]]
-          mods = 'CTRL|SHIFT',
-          key = 'l',
-          action = wezterm.action.ActivatePaneDirection("Right"),
-        },
-        {
-          --[[ Move to Down Pane ]]
-          mods = 'CTRL|SHIFT',
-          key = 'j',
-          action = wezterm.action.ActivatePaneDirection("Down"),
-        },
-        {
-          --[[ Move to Up Pane ]]
-          mods = 'CTRL|SHIFT',
-          key = 'k',
-          action = wezterm.action.ActivatePaneDirection("Up"),
         },
         {
           --[[ Leave Ctrl+Tab available to applications such as Vim/tmux ]]

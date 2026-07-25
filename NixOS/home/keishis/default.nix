@@ -25,6 +25,7 @@
 
     # terminal
     ./ghostty
+    ./kitty
     ./tmux
     ./zellij
     ./rio
