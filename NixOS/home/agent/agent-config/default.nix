@@ -10,7 +10,6 @@ in
 {
   home.file = {
     ".codex/AGENTS.md".source = ./AGENTS.md;
-
     ".claude/CLAUDE.md".source = ./CLAUDE.md;
     ".claude/settings.json".source = ./claude-settings.json;
 
