@@ -54,6 +54,19 @@ in
           action = wezterm.action.CloseCurrentTab { confirm = true },
         },
         {
+          --[[ Rename the current local tab ]]
+          mods = 'CTRL|SHIFT',
+          key = 'A',
+          action = wezterm.action.PromptInputLine {
+            description = 'Enter a new tab name',
+            action = wezterm.action_callback(function(window, _, line)
+              if line then
+                window:active_tab():set_title(line)
+              end
+            end),
+          },
+        },
+        {
           --[[ Split the current local pane downward ]]
           mods = 'CTRL|SHIFT',
           key = 'E',
