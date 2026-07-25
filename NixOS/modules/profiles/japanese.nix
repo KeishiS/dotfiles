@@ -11,6 +11,11 @@
         kdePackages.fcitx5-qt
       ];
 
+      settings.globalOptions."Hotkey/TriggerKeys" = {
+        "0" = "Zenkaku_Hankaku";
+        "1" = "Hangul";
+      };
+
       /*
         settings.inputMethod = {
           GroupOrder."0" = "Default";

@@ -20,7 +20,6 @@ Composition	Ctrl p	ConvertToFullAlphanumeric
 Composition	Ctrl Right	MoveCursorToEnd
 Composition	Ctrl s	MoveCursorLeft
 Composition	Ctrl Shift Space	InsertFullSpace
-Composition	Ctrl Space	InsertHalfSpace
 Composition	Ctrl t	ConvertToHalfAlphanumeric
 Composition	Ctrl u	ConvertToHiragana
 Composition	Ctrl Up	MoveCursorToBeginning
@@ -75,7 +74,6 @@ Conversion	Ctrl p	ConvertToFullAlphanumeric
 Conversion	Ctrl Right	SegmentFocusLast
 Conversion	Ctrl s	SegmentFocusLeft
 Conversion	Ctrl Shift Space	InsertFullSpace
-Conversion	Ctrl Space	InsertHalfSpace
 Conversion	Ctrl t	ConvertToHalfAlphanumeric
 Conversion	Ctrl u	ConvertToHiragana
 Conversion	Ctrl Up	ConvertPrev
@@ -137,8 +135,6 @@ Prediction	Ctrl Delete	DeleteSelectedCandidate
 Suggestion	Down	PredictAndConvert
 Suggestion	Shift Enter	CommitFirstSuggestion
 DirectInput	Muhenkan	IMEOff
-DirectInput	Ctrl Space	IMEOn
-Precomposition	Ctrl Space	CancelAndIMEOff
 Composition	ASCII	InsertCharacter
 Composition	Kanji	IMEOff
 Composition	OFF	IMEOff
