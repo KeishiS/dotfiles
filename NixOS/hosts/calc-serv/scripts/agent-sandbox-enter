@@ -6,13 +6,18 @@ die() {
     exit 1
 }
 
-if [ "$#" -ne 1 ]; then
-    die "expected a workspace path"
+if [ "$#" -ne 2 ]; then
+    die "expected a workspace path and GPU flag"
 fi
 
 workspace="$(realpath "$1")"
-if [ "$workspace" = "/" ] || [ ! -d "$workspace" ] || [ -L "$workspace" ]; then
+if [ "$workspace" = "/" ] || [ ! -d "$workspace" ]; then
     die "invalid workspace: $workspace"
+fi
+
+gpu_enabled="$2"
+if [ "$gpu_enabled" != 0 ] && [ "$gpu_enabled" != 1 ]; then
+    die "invalid GPU flag: $gpu_enabled"
 fi
 
 current_uid="$(id -u)"
@@ -72,11 +77,14 @@ printf '%s\n' \
 chmod 600 "$runtime_dir/passwd" "$runtime_dir/group" "$runtime_dir/nsswitch.conf"
 
 device_args=()
-if [ -e /dev/dri ]; then
-    device_args+=(--dev-bind /dev/dri /dev/dri)
-fi
-if [ -e /dev/kfd ]; then
-    device_args+=(--dev-bind /dev/kfd /dev/kfd)
+if [ "$gpu_enabled" = 1 ]; then
+    device_args+=(--ro-bind-try /sys /sys)
+    if [ -e /dev/dri ]; then
+        device_args+=(--dev-bind /dev/dri /dev/dri)
+    fi
+    if [ -e /dev/kfd ]; then
+        device_args+=(--dev-bind /dev/kfd /dev/kfd)
+    fi
 fi
 
 # die-with-parent: bwrap 自身または親プロセスが終了した際に内部でのコマンドも SIGKILL
@@ -122,7 +130,6 @@ bwrap \
     --ro-bind "$runtime_dir/nsswitch.conf" /etc/nsswitch.conf \
     --ro-bind "$runtime_dir/passwd" /etc/passwd \
     --ro-bind "$runtime_dir/group" /etc/group \
-    --ro-bind-try /sys /sys \
     --proc /proc \
     --dev /dev \
     "${device_args[@]}" \

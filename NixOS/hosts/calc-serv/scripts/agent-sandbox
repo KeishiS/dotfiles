@@ -7,10 +7,20 @@ die() {
     exit 1
 }
 
-# `agent-sandbox` は引数なしで実行するため，
-# 何らかの引数がある場合は何もせず終了
-if [ "$#" -ne 0 ]; then
-    die "usage: agent-sandbox"
+gpu_enabled=0
+case "${1:-}" in
+    "")
+        ;;
+    --gpu)
+        gpu_enabled=1
+        ;;
+    *)
+        die "usage: agent-sandbox [--gpu]"
+        ;;
+esac
+
+if [ "$#" -gt 1 ]; then
+    die "usage: agent-sandbox [--gpu]"
 fi
 
 caller_uid="$(id -u)"
@@ -37,10 +47,10 @@ if [ "$is_server_user" -ne 1 ]; then
     die "$caller_name is not a member of server-users"
 fi
 
-# workspace として以下のものは指定できない
+# symlinkを含む場合は実体のパスへ正規化する。
 workspace="$(realpath "$PWD")"
-## ルートディレクトリ，ディレクトリでないもの，シンボリックリンク
-if [ "$workspace" = "/" ] || [ ! -d "$workspace" ] || [ -L "$workspace" ]; then
+# ルートディレクトリやディレクトリでないものはworkspaceに指定できない。
+if [ "$workspace" = "/" ] || [ ! -d "$workspace" ]; then
     die "invalid workspace: $workspace"
 fi
 ## 読み書き権限がなかったり，探索可能でないディレクトリ
@@ -60,4 +70,13 @@ if [ -L "$sandbox_home" ] || [ ! -d "$sandbox_home" ]; then
     die "sandbox home was not prepared correctly: $sandbox_home"
 fi
 
-"$AGENT_SANDBOX_ENTER" "$workspace"
+if [ "$gpu_enabled" = 1 ]; then
+    gpu_status=enabled
+else
+    gpu_status=disabled
+fi
+
+printf 'workspace: %s\npersistent home: %s\nGPU: %s\n' \
+    "$workspace" "$sandbox_home" "$gpu_status"
+
+"$AGENT_SANDBOX_ENTER" "$workspace" "$gpu_enabled"
