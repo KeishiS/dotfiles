@@ -25,7 +25,9 @@
     ./sops-nix
 
     # terminal
+    ./alacritty
     ./ghostty
+    ./tmux
     ./zellij
     ./rio
     ./foot
