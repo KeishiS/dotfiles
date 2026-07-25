@@ -35,6 +35,8 @@
 
       # プラグイン読込後に、Alt キーの最終的な所有権を明示する。
       (lib.mkOrder 2100 ''
+        bindkey -e
+
         typeset -a reserved_meta_keys=(
           $'\eh' $'\ej' $'\ek' $'\el'
           $'\e[' $'\e]' $'\e\r' $'\ez' $'\et'
