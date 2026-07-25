@@ -67,8 +67,10 @@ in
       "ctrl+shift+." = "move_tab_forward";
       "ctrl+shift+w" = "close_tab";
       "ctrl+shift+a" = "set_tab_title";
+      "ctrl+shift+c" = "copy_to_clipboard";
+      "ctrl+shift+v" = "paste_from_clipboard";
 
-      # Explicitly pass the Alt namespaces owned by tmux and Zsh through.
+      # Do not let Kitty capture Alt keys owned by tmux/Zsh or disabled below.
       "alt+h" = "no_op";
       "alt+j" = "no_op";
       "alt+k" = "no_op";

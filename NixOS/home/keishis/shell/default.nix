@@ -35,23 +35,24 @@
 
       # プラグイン読込後に、Alt キーの最終的な所有権を明示する。
       (lib.mkOrder 2100 ''
-        typeset -a tmux_meta_keys=(
+        typeset -a reserved_meta_keys=(
           $'\eh' $'\ej' $'\ek' $'\el'
           $'\e[' $'\e]' $'\e\r' $'\ez' $'\et'
           $'\e1' $'\e2' $'\e3' $'\e4' $'\e5'
           $'\e6' $'\e7' $'\e8' $'\e9'
         )
-        typeset -a tmux_zle_keymaps=(
+        typeset -a reserved_zle_keymaps=(
           emacs viins vicmd viopp visual isearch command
         )
-        for tmux_zle_keymap in "''${tmux_zle_keymaps[@]}"; do
-          for tmux_meta_key in "''${tmux_meta_keys[@]}"; do
-            bindkey -M "$tmux_zle_keymap" -r "$tmux_meta_key" 2>/dev/null || true
+        for reserved_zle_keymap in "''${reserved_zle_keymaps[@]}"; do
+          for reserved_meta_key in "''${reserved_meta_keys[@]}"; do
+            bindkey -M "$reserved_zle_keymap" -r "$reserved_meta_key" 2>/dev/null || true
           done
         done
-        unset tmux_meta_key tmux_meta_keys tmux_zle_keymap tmux_zle_keymaps
+        unset reserved_meta_key reserved_meta_keys reserved_zle_keymap reserved_zle_keymaps
 
-        # Alt+t の transpose-words は上で解除済み。Alt+f/b/d は Zsh が所有する。
+        # Alt+t とタブ操作は tmux が所有し、旧ペイン操作用 Alt キーは無効。
+        # Alt+f/b/d だけは Zsh が所有する。
         bindkey -M emacs $'\ef' forward-word
         bindkey -M emacs $'\eb' backward-word
         bindkey -M emacs $'\ed' kill-word
