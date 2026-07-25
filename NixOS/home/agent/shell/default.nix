@@ -1,6 +1,9 @@
 { lib, pkgs, ... }:
 {
-  home.packages = [ pkgs.sheldon ];
+  home.packages = [
+    pkgs.blesh
+    pkgs.sheldon
+  ];
 
   xdg.configFile."sheldon/plugins.toml".source = ./sheldon/plugins.toml;
 
@@ -33,6 +36,10 @@
     '';
 
     initExtra = ''
+      if [[ -n "''${AGENT_SANDBOX:-}" ]]; then
+        source -- ${pkgs.blesh}/share/blesh/ble.sh
+      fi
+
       mkdir -p "$HOME/.local/state/bash"
       if [[ -d /workspace ]]; then
         cd /workspace
