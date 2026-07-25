@@ -19,18 +19,17 @@
     ./swaylock
     ./wofi
     ./waybar
-    ./wezterm
     ./hyprland
     ./i3
     ./sops-nix
 
     # terminal
-    ./alacritty
     ./ghostty
     ./tmux
     ./zellij
     ./rio
     ./foot
+    ./wezterm
 
     # editor
     ./vim

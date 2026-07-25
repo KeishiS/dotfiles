@@ -17,7 +17,7 @@
     extraConfig = ''
       set -g renumber-windows on
       set -g set-clipboard on
-      set -as terminal-features ',alacritty:RGB'
+      set -as terminal-features ',xterm-256color:RGB'
 
       # Zellij と同じ Alt 配列。Alt+f/b/d はシェルの単語操作用に空ける。
       bind -n M-h select-pane -L

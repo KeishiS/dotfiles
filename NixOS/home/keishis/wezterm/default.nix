@@ -28,41 +28,48 @@ in
         }
       }
 
-      config.leader = {
-        mods = 'CTRL',
-        key = 'q',
-        timeout_milliseconds = 1000,
-      }
       config.keys = {
         {
-          --[[ Create New Tab ]]
-          mods = 'LEADER',
-          key = 'c',
+          --[[ Create a new local tab ]]
+          mods = 'CTRL|SHIFT',
+          key = 'T',
           action = wezterm.action.SpawnTab 'CurrentPaneDomain',
         },
         {
-          --[[ Move to Next Tab ]]
-          mods = 'CTRL',
-          key = 'Tab',
-          action = wezterm.action.ActivateTabRelative(1),
-        },
-        {
-          --[[ Move to the Previous Tab ]]
-          mods = 'SHIFT',
-          key = 'Tab',
+          --[[ Move to the previous local tab (Ctrl+Shift+[) ]]
+          mods = 'CTRL|SHIFT',
+          key = '{',
           action = wezterm.action.ActivateTabRelative(-1),
         },
         {
-          --[[ Divide Current Pane ]]
-          mods = 'LEADER',
-          key = 'h',
-          action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
+          --[[ Move to the next local tab (Ctrl+Shift+]) ]]
+          mods = 'CTRL|SHIFT',
+          key = '}',
+          action = wezterm.action.ActivateTabRelative(1),
         },
         {
-          --[[ Divide Current Pane ]]
-          mods = 'LEADER',
-          key = 'v',
-          action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+          --[[ Close the current local tab ]]
+          mods = 'CTRL|SHIFT',
+          key = 'W',
+          action = wezterm.action.CloseCurrentTab { confirm = true },
+        },
+        {
+          --[[ Split the current local pane downward ]]
+          mods = 'CTRL|SHIFT',
+          key = 'E',
+          action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' },
+        },
+        {
+          --[[ Split the current local pane to the right ]]
+          mods = 'CTRL|SHIFT',
+          key = 'O',
+          action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' },
+        },
+        {
+          --[[ Toggle zoom for the current local pane ]]
+          mods = 'CTRL|SHIFT',
+          key = 'Z',
+          action = wezterm.action.TogglePaneZoomState,
         },
         {
           --[[ Move to Left Pane ]]
@@ -89,10 +96,16 @@ in
           action = wezterm.action.ActivatePaneDirection("Up"),
         },
         {
-          --[[ Activate Copy Mode ]]
-          mods = 'LEADER',
-          key = '[',
-          action = wezterm.action.ActivateCopyMode,
+          --[[ Leave Ctrl+Tab available to applications such as Vim/tmux ]]
+          mods = 'CTRL',
+          key = 'Tab',
+          action = wezterm.action.DisableDefaultAssignment,
+        },
+        {
+          --[[ Leave Alt+Enter available for tmux ]]
+          mods = 'ALT',
+          key = 'Enter',
+          action = wezterm.action.SendKey { key = 'Enter', mods = 'ALT' },
         },
       }
 
