@@ -15,6 +15,24 @@ in
     defaultFonts.monospace = [ "Noto Sans Mono CJK JP" ];
     defaultFonts.sansSerif = [ "Noto Sans CJK JP" ];
     defaultFonts.serif = [ "Noto Serif CJK JP" ];
+    configFile.moralerspace-krypton-monospace = {
+      enable = true;
+      priority = 90;
+      text = ''
+        <?xml version="1.0"?>
+        <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+        <fontconfig>
+          <match target="scan">
+            <test name="family" compare="eq">
+              <string>Moralerspace Krypton</string>
+            </test>
+            <edit name="spacing" mode="assign">
+              <int>100</int>
+            </edit>
+          </match>
+        </fontconfig>
+      '';
+    };
   };
 
   gtk = {
