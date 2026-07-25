@@ -113,6 +113,9 @@ in
       idmAdminPasswordFile = config.sops.secrets.kanidm-idm-admin.path;
       extraJsonFile = ./kanidm-provision.json;
       groups = {
+        server-admins = {
+          members = [ "keishi" ];
+        };
         server-users = {
           overwriteMembers = false;
         };
@@ -121,7 +124,10 @@ in
           overwriteMembers = false;
         };
         idm_people_self_mail_write = {
-          members = [ "server-users" ];
+          members = [
+            "server-admins"
+            "server-users"
+          ];
           overwriteMembers = false;
         };
       };
@@ -177,6 +183,7 @@ in
             "openid"
             "profile"
             "email"
+            "groups_name"
           ];
         };
       };
