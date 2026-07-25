@@ -44,6 +44,10 @@ cleanup() {
     status=$?
     trap - EXIT
 
+    # sandbox内のTUIがKitty keyboard protocolを戻さず終了した場合でも、
+    # host shellへ戻る前にlegacy keyboard modeへ復元する。
+    printf '\033[=0u' >/dev/tty 2>/dev/null || true
+
     # sandbox内で権限を変更されたファイルも可能な範囲で削除する。
     chmod -R u+rwX "$runtime_dir" 2>/dev/null || true
     if ! rm -rf -- "$runtime_dir"; then
