@@ -53,9 +53,9 @@ in
     group = "kanidm";
   };
 
-  sops.secrets.leantime-oidc-client-secret = {
+  sops.secrets.marginalis-oidc-client-secret = {
     format = "binary";
-    sopsFile = ./secrets/leantime-oidc-client-secret.enc;
+    sopsFile = ./secrets/marginalis-oidc-client-secret.enc;
     mode = "0400";
     owner = "kanidm";
     group = "kanidm";
