@@ -12,10 +12,6 @@ let
     };
 in
 {
-    home.shellAliases = {
-        codex-default = "codex --profile default";
-        claude-default = "claude --settings ~/.claude/common.settings.json";
-    };
     home.packages = [ agent-tools-install ];
     home.file = {
         ".agents/skills" = {
