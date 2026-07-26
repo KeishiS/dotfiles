@@ -13,8 +13,8 @@ let
 in
 {
     home.shellAliases = {
-        codex = "codex --profile default";
-        claude = "claude --settings ~/.claude/common.settings.json";
+        codex-default = "codex --profile default";
+        claude-default = "claude --settings ~/.claude/common.settings.json";
     };
     home.packages = [ agent-tools-install ];
     home.file = {
