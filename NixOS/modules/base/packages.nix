@@ -32,7 +32,7 @@
     yubikey-personalization # for using `ykchalresp`
     sops
 
-    sed
+    gnused
     awk
     gnugrep
     ps
