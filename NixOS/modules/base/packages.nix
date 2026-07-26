@@ -5,6 +5,9 @@
     git-crypt
     nano
     ghostty.terminfo
+    kitty.terminfo
+    alacritty.terminfo
+    wezterm.terminfo
     lsof
     curl
     wget

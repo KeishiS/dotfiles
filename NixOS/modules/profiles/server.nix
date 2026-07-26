@@ -8,7 +8,6 @@
   environment.systemPackages = with pkgs; [
     julia_110-bin
     lapack
-    # mackerel-agent
     nfs-utils
     uv
   ];
