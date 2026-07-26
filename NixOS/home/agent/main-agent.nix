@@ -13,7 +13,7 @@
       VISUAL = "vim";
     };
     shellAliases = {
-      sandbox = "agent-sandbox --mount-file /sandbox/by-uid/$(id -u) /workspace/.codex/config.toml";
+      sandbox = "agent-sandbox --mount-file /sandbox/by-uid/$(id -u)/codex-config-template.toml /workspace/.codex/config.toml";
     };
   };
 
