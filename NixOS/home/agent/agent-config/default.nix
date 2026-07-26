@@ -2,7 +2,7 @@
 let
     agent-tools-install = pkgs.writeShellApplication {
         name = "agent-tools-install";
-        text = buildins.readFile ./scripts/agent-tools-install;
+        text = builtins.readFile ./scripts/agent-tools-install;
         runtimeInputs = with pkgs; [
             bash
             curl
