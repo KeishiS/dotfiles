@@ -88,18 +88,6 @@ session、skillsおよびMCP OAuth credentialがプロジェクト間で共有�
 リポジトリから管理対象を削除した場合、activationは旧manifestに記録されたsymlink
 だけを削除する。通常ファイル、credential、sessionおよび履歴は削除しない。
 
-## パッケージ管理
-
-隔離環境には独立したHome Manager package profileを作成しない。プロジェクトごとに
-必要なコマンドは、各プロジェクトの`flake.nix`が提供する開発環境へ含める。
-
-```console
-nix develop
-```
-
-Codex本体もPATH上に必要である。永続workdirの`.local/bin/codex`はCodex本体ではなく、
-PATH上の実体へ`--profile agent-sandbox`を付けて起動するwrapperである。
-
 ## Codex設定
 
 Codex設定は、可変設定とリポジトリ管理設定に分離する。
@@ -190,10 +178,10 @@ tokenファイル自体は管理しない。権限は`0600`に設定する。
 
 現在管理するskills:
 
-| skill | 用途 |
-| --- | --- |
-| `read-pdf` | PDFのtext抽出とページ画像の照合に基づいて内容を調査する |
-| `submit-trilium-idea` | アイデアを規定のMarkdown形式でTriliumNextへ保存する |
+| skill                 | 用途                                                    |
+| --------------------- | ------------------------------------------------------- |
+| `read-pdf`            | PDFのtext抽出とページ画像の照合に基づいて内容を調査する |
+| `submit-trilium-idea` | アイデアを規定のMarkdown形式でTriliumNextへ保存する     |
 
 `submit-trilium-idea`は`agent-services` MCPを使用し、`Idea Inbox`配下へ
 `type=code`、`mime=text/markdown`のnoteを作成する。ETAPI tokenやOAuth tokenなどの

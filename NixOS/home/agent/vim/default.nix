@@ -4,7 +4,7 @@
     enable = true;
     defaultEditor = true;
     extraConfig = ''
-      " 自分用マッピングの名前空間（修飾キーゼロで拡張できる一等地）
+      "
       let mapleader=" "
 
       set number hidden

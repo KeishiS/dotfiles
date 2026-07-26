@@ -58,6 +58,7 @@ let
     ".config/tmux/tmux.conf" = "${config.home-files}/.config/tmux/tmux.conf";
     ".config/zellij/config.kdl" = "${config.home-files}/.config/zellij/config.kdl";
     ".local/bin/codex" = "${codexWrapper}/bin/codex";
+    ".nix-profile" = config.home.path;
     ".profile" = "${config.home-files}/.profile";
     ".vimrc" = vimConfig;
   };

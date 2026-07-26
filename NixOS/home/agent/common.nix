@@ -1,37 +1,18 @@
 { pkgs, ... }:
 {
   imports = [
-    ./shell
-    ./starship
-    ./tmux
+    # ./shell
+    # ./starship
     ./vim
-    ./zellij
   ];
 
   home = {
-    username = "agent";
     stateVersion = "26.05";
 
-    packages = with pkgs; [
-      bat
-      eza
-      fd
-      jq
-      ripgrep
-      (git.override { withLibsecret = true; })
-      git-crypt
-    ];
-
-    sessionPath = [
-      "$HOME/.local/bin"
-      "$HOME/.local/share/pnpm/bin"
-    ];
+    sessionPath = [ "$HOME/.local/bin" ];
 
     sessionVariables = {
       EDITOR = "vim";
-      VISUAL = "vim";
-      PNPM_HOME = "$HOME/.local/share/pnpm";
-      PNPM_CONFIG_GLOBAL_BIN_DIR = "$HOME/.local/share/pnpm/bin";
     };
   };
 
