@@ -1,5 +1,4 @@
 { pkgs, ... }:{
-    # imports = [ ./common.nix ];
     imports = [];
     home = {
         username = "agent";
@@ -38,9 +37,9 @@
         source $HOME/.profile
 
         source ${pkgs.blesh}/share/blesh/ble.sh
-        bleopt complete_auto_complete=1
-        bleopt complete_auto_delay=300
-        bleopt complete_menu_style=desc
+        bleopt complete_auto_complete=1 # 入力中に補完候補を表示
+        bleopt complete_auto_delay=100  # 自動補完を表示するまでの待ち時間
+        bleopt complete_menu_style=desc # 補完メニュを表示するスタイル
       '';
     };
 }
