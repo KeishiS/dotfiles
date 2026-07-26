@@ -11,4 +11,6 @@
 **/*.tfvars.json
 **/*.tfplan
 
+issues/
+
 rtx830.generated.conf
