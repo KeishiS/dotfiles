@@ -1,8 +1,8 @@
 { pkgs, ... }:
 {
   imports = [
-    # ./starship
-    # ./vim
+    ./starship
+    ./vim
   ];
 
   home.stateVersion = "26.05";
