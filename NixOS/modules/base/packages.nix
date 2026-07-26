@@ -32,8 +32,13 @@
     yubikey-personalization # for using `ykchalresp`
     sops
 
-    eza
+    sed
+    awk
+    gnugrep
+    ps
     bat
+    eza
+    fd
     jq
     ripgrep
 
