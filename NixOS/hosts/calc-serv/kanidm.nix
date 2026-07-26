@@ -1,27 +1,9 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
 let
-  agentServicesConsumers = import ../../home/agent/agent-services-consumers.nix;
-  enabledAgentServicesConsumers = lib.filterAttrs (
-    _: consumer: consumer.enabled
-  ) agentServicesConsumers;
-  agentServicesOauthClients = lib.mapAttrs' (
-    _: consumer:
-    lib.nameValuePair consumer.oauthClientId {
-      displayName = "AI Agent Services (${consumer.id})";
-      inherit (consumer) public;
-      originUrl = consumer.callbackUrls;
-      originLanding = "https://${consumer.hostname}${consumer.basePath}";
-      enableLocalhostRedirects = consumer.public;
-      preferShortUsername = true;
-      enableLegacyCrypto = false;
-      scopeMaps.ai-agent-users = consumer.scopes;
-    }
-  ) enabledAgentServicesConsumers;
   domain = "id.sandi05.com";
   cert = config.security.acme.certs.${domain};
 in
@@ -79,14 +61,6 @@ in
     group = "kanidm";
   };
 
-  sops.secrets.marginalis-oidc-client-secret = {
-    format = "binary";
-    sopsFile = ./secrets/marginalis-oidc-client-secret.enc;
-    mode = "0400";
-    owner = "kanidm";
-    group = "kanidm";
-  };
-
   services.kanidm = {
     package = pkgs.kanidmWithSecretProvisioning_1_10;
     client = {
@@ -113,9 +87,6 @@ in
       idmAdminPasswordFile = config.sops.secrets.kanidm-idm-admin.path;
       extraJsonFile = ./kanidm-provision.json;
       groups = {
-        server-admins = {
-          members = [ "keishi" ];
-        };
         server-users = {
           overwriteMembers = false;
         };
@@ -124,68 +95,46 @@ in
           overwriteMembers = false;
         };
         idm_people_self_mail_write = {
-          members = [
-            "server-admins"
-            "server-users"
-          ];
+          members = [ "server-users" ];
           overwriteMembers = false;
         };
       };
-      systems.oauth2 = agentServicesOauthClients // {
-        vaultwarden = {
-          displayName = "Vaultwarden";
-          originUrl = "https://key.sandi05.com/identity/connect/oidc-signin";
-          originLanding = "https://key.sandi05.com/#/sso";
-          preferShortUsername = true;
-          scopeMaps.server-users = [
-            "openid"
-            "email"
-            "profile"
-          ];
-        };
-        nextcloud = {
-          displayName = "Nextcloud";
-          originUrl = "https://storage.sandi05.com/apps/user_oidc/code";
-          originLanding = "https://storage.sandi05.com";
-          preferShortUsername = true;
-          scopeMaps.server-users = [
-            "openid"
-            "email"
-            "profile"
-            "groups_name"
-          ];
-        };
-        leantime = {
-          displayName = "Leantime";
-          originUrl = "https://project.sandi05.com/oidc/callback";
-          originLanding = "https://project.sandi05.com";
-          basicSecretFile = config.sops.secrets.leantime-oidc-client-secret.path;
-          preferShortUsername = true;
-          # Leantime 3.9.8 neither sends a PKCE challenge nor accepts ES256
-          # ID-token signatures. Keep both compatibility exceptions scoped to
-          # this confidential client.
-          allowInsecureClientDisablePkce = true;
-          enableLegacyCrypto = true;
-          scopeMaps.server-users = [
-            "openid"
-            "email"
-            "profile"
-          ];
-        };
+      systems.oauth2.vaultwarden = {
+        displayName = "Vaultwarden";
+        originUrl = "https://key.sandi05.com/identity/connect/oidc-signin";
+        originLanding = "https://key.sandi05.com/#/sso";
+        preferShortUsername = true;
+        scopeMaps.server-users = [
+          "openid"
+          "email"
+          "profile"
+        ];
+      };
+      systems.oauth2.nextcloud = {
+        displayName = "Nextcloud";
+        originUrl = "https://storage.sandi05.com/apps/user_oidc/code";
+        originLanding = "https://storage.sandi05.com";
+        preferShortUsername = true;
+        scopeMaps.server-users = [
+          "openid"
+          "email"
+          "profile"
+          "groups_name"
+        ];
+      };
 
-        marginalis = {
-          displayName = "Marginalis";
-          originUrl = "https://marginalis.sandi05.com/auth/oidc/callback";
-          originLanding = "https://marginalis.sandi05.com";
-          basicSecretFile = config.sops.secrets.marginalis-oidc-client-secret.path;
-          preferShortUsername = true;
-          scopeMaps.server-users = [
-            "openid"
-            "profile"
-            "email"
-            "groups_name"
-          ];
-        };
+      systems.oauth2.marginalis = {
+        displayName = "Marginalis";
+        originUrl = "https://marginalis.sandi05.com/auth/oidc/callback";
+        originLanding = "https://marginalis.sandi05.com";
+        basicSecretFile = config.sops.secrets.marginalis-oidc-client-secret.path;
+        preferShortUsername = true;
+        scopeMaps.server-users = [
+          "openid"
+          "profile"
+          "email"
+          "groups_name"
+        ];
       };
     };
 
