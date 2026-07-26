@@ -62,9 +62,9 @@ in
     configType = "hyprlang";
     settings = {
       "$mod" = "SUPER";
-      "$terminal" = "ghostty";
+      "$terminal" = "kitty";
       bind = [
-        "$mod, Return, exec, ghostty"
+        "$mod, Return, exec, kitty"
         "$mod, q, killactive"
         "$mod, d, exec, wofi -S run"
         "$mod, t, togglegroup"
