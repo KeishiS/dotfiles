@@ -8,20 +8,26 @@ die() {
 }
 
 gpu_enabled=0
-case "${1:-}" in
-    "")
-        ;;
-    --gpu)
-        gpu_enabled=1
-        ;;
-    *)
-        die "usage: agent-sandbox [--gpu]"
-        ;;
-esac
-
-if [ "$#" -gt 1 ]; then
-    die "usage: agent-sandbox [--gpu]"
-fi
+mount_args=()
+usage="usage: agent-sandbox [--gpu] [--mount-file HOST_PATH SANDBOX_PATH]..."
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --gpu)
+            gpu_enabled=1
+            shift
+            ;;
+        --mount-file)
+            if [ "$#" -lt 3 ]; then
+                die "$usage"
+            fi
+            mount_args+=("$2" "$3")
+            shift 3
+            ;;
+        *)
+            die "$usage"
+            ;;
+    esac
+done
 
 caller_uid="$(id -u)"
 caller_name="$(id -un)"
@@ -79,4 +85,4 @@ fi
 printf 'workspace: %s\npersistent workdir: %s\nGPU: %s\n' \
     "$workspace" "$persistent_workdir" "$gpu_status"
 
-"$AGENT_SANDBOX_ENTER" "$workspace" "$gpu_enabled"
+"$AGENT_SANDBOX_ENTER" "$workspace" "$gpu_enabled" "${mount_args[@]}"

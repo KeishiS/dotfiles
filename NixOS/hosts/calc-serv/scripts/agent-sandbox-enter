@@ -6,8 +6,8 @@ die() {
     exit 1
 }
 
-if [ "$#" -ne 2 ]; then
-    die "expected a workspace path and GPU flag"
+if [ "$#" -lt 2 ] || [ $((($# - 2) % 2)) -ne 0 ]; then
+    die "expected a workspace path, GPU flag, and pairs of file mount paths"
 fi
 
 workspace="$(realpath "$1")"
@@ -19,6 +19,33 @@ gpu_enabled="$2"
 if [ "$gpu_enabled" != 0 ] && [ "$gpu_enabled" != 1 ]; then
     die "invalid GPU flag: $gpu_enabled"
 fi
+shift 2
+
+file_mount_args=()
+while [ "$#" -gt 0 ]; do
+    if ! host_path="$(realpath -- "$1")"; then
+        die "mount source does not exist: $1"
+    fi
+    sandbox_path="$2"
+
+    if [ ! -f "$host_path" ] || [ ! -r "$host_path" ]; then
+        die "mount source is not a readable file: $host_path"
+    fi
+    case "$sandbox_path" in
+        /*)
+            ;;
+        *)
+            die "mount destination must be an absolute path: $sandbox_path"
+            ;;
+    esac
+    sandbox_path="$(realpath --canonicalize-missing -- "$sandbox_path")"
+    if [ "$sandbox_path" = "/" ]; then
+        die "mount destination must identify a file: $sandbox_path"
+    fi
+
+    file_mount_args+=(--ro-bind "$host_path" "$sandbox_path")
+    shift 2
+done
 
 current_uid="$(id -u)"
 current_gid="$(id -g)"
@@ -136,6 +163,7 @@ bwrap \
     --bind "$workspace" /workspace \
     --bind "$persistent_workdir" /home/agent \
     --bind "$session_tmp" /tmp \
+    "${file_mount_args[@]}" \
     --setenv HOME /home/agent \
     --setenv AGENT_SANDBOX 1 \
     --setenv USER agent \
