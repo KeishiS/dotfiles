@@ -46,6 +46,8 @@
         bleopt complete_auto_complete=1 # 入力中に補完候補を表示
         bleopt complete_auto_delay=100  # 自動補完を表示するまでの待ち時間
         bleopt complete_menu_style=desc # 補完メニュを表示するスタイル
+
+        export GH_TOKEN=$(cat $HOME/.config/gh/token)
       '';
     };
 }

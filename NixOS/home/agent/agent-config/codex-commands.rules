@@ -1,0 +1,29 @@
+prefix_rule(
+    pattern = ["nix", "develop", "-c"],
+    decision = "allow",
+    justification = "Nixの開発環境に入っているコマンドの実行を許可する"
+)
+
+prefix_rule(
+    pattern = ["nix", "build"],
+    decision = "allow",
+    justification = "Nixによるビルドを許可する"
+)
+
+prefix_rule(
+    pattern = ["git", ["diff", "log", "show", "status"]],
+    decision = "allow",
+    justification = "Gitでの読み取り操作を許可する"
+)
+
+prefix_rule(
+    pattern = ["cargo", ["build", "check", "clippy", "doc", "fmt", "metadata", "test", "tree"]],
+    decision = "allow",
+    justification = "Rustの構築・読み取り・検証操作を許可する"
+)
+
+prefix_rule(
+    pattern = ["cargo", "make"],
+    decision = "allow",
+    justification = "Makefile.tomlに定義したタスクを許可する"
+)

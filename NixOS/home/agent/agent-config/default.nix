@@ -14,12 +14,17 @@ in
 {
     home.shellAliases = {
         codex = "codex --profile default";
-        claude = "claude --settings ~/.claude/default.settings.json";
+        claude = "claude --settings ~/.claude/common.settings.json";
     };
     home.packages = [ agent-tools-install ];
     home.file = {
         ".agents/skills" = {
             source = ./skills;
+            recursive = true;
+        };
+
+        ".codex/rules/commands.rules" = {
+            source = ./codex-commands.rules;
             recursive = true;
         };
 
@@ -31,6 +36,6 @@ in
         ".codex/AGENTS.md".source = ./AGENTS.md;
         ".claude/CLAUDE.md".source = ./CLAUDE.md;
         ".codex/default.config.toml".source = ./codex-config.toml;
-        ".claude/default.settings.json".source = ./claude-settings.json;
+        ".claude/common.settings.json".source = ./claude-settings.json;
     };
 }

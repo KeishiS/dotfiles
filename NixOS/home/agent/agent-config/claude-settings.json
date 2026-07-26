@@ -6,5 +6,29 @@
         "GIT_AUTHOR_EMAIL": "nobuta05+claude@gmail.com",
         "GIT_COMMITTER_NAME": "Claude Code",
         "GIT_COMMITTER_EMAIL": "nobuta05+claude@gmail.com"
+    },
+    "permissions": {
+        "allow": [
+            "Bash(nix develop -c:*)",
+            "Bash(nix build:*)",
+
+            "Bash(git diff:*)",
+            "Bash(git log:*)",
+            "Bash(git show:*)",
+            "Bash(git status:*)",
+
+            "Bash(cargo build:*)",
+            "Bash(cargo check:*)",
+            "Bash(cargo clippy:*)",
+            "Bash(cargo doc:*)",
+            "Bash(cargo fmt:*)",
+            "Bash(cargo metadata:*)",
+            "Bash(cargo test:*)",
+            "Bash(cargo tree:*)",
+
+            "Bash(cargo make:*)"
+        ],
+        "ask": [],
+        "deny": ["Bash(git clean:*)"]
     }
 }
