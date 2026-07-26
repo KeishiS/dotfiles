@@ -1,5 +1,7 @@
 { pkgs, ... }:{
-    imports = [];
+    imports = [
+        ./agent-config
+    ];
     home = {
         username = "agent";
         homeDirectory = "/home/agent";
