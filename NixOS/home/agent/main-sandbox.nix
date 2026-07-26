@@ -12,6 +12,7 @@
         ];
 
         sessionPath = [
+            "$HOME/.local/bin"
             "$HOME/.nix-profile/bin"
             "$HOME/.local/share/pnpm/bin"
         ];
