@@ -11,7 +11,10 @@
             nodejs_26
         ];
 
-        sessionPath = [ "$HOME/.nix-profile/bin" ];
+        sessionPath = [
+            "$HOME/.nix-profile/bin"
+            "$HOME/.local/share/pnpm/bin"
+        ];
 
         sessionVariables = {
             PNPM_HOME = "$HOME/.local/share/pnpm";
