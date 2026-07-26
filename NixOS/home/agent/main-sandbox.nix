@@ -9,6 +9,7 @@
     packages = with pkgs; [
       pnpm_11
       nodejs_26
+      kitty.terminfo
     ];
 
     sessionPath = [
