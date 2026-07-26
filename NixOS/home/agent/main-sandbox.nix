@@ -1,4 +1,4 @@
-{...}:{
+{ pkgs, ... }:{
     home = {
         username = "agent";
         homeDirectory = "/home/agent";
