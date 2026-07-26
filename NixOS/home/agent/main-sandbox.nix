@@ -1,6 +1,6 @@
 { pkgs, ... }:{
     imports = [
-        # ./agent-config
+        ./agent-config
     ];
     home = {
         username = "agent";
