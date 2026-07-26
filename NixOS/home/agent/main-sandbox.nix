@@ -12,6 +12,8 @@
             nodejs_26
         ];
 
+        sessionPath = [ "$HOME/.nix-profile/bin" ];
+
         sessionVariables = {
             PNPM_HOME = "$HOME/.local/share/pnpm";
             PNPM_CONFIG_GLOBAL_BIN_DIR = "$HOME/.local/share/pnpm/bin";
@@ -35,6 +37,8 @@
       ];
 
       initExtra = ''
+        source $HOME/.profile
+
         source ${pkgs.blesh}/share/blesh/ble.sh
         bleopt complete_auto_complete=1
         bleopt complete_auto_delay=300

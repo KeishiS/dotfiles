@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   imports = [
-    # ./shell
     ./starship
     ./vim
   ];
