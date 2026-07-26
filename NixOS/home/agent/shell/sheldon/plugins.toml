@@ -1,6 +1,5 @@
 shell = "zsh"
 
-# 補完定義の追加
 [plugins.zsh-completions]
 github = "zsh-users/zsh-completions"
 dir = "src"
