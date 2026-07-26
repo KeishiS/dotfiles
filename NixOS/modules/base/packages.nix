@@ -33,7 +33,7 @@
     sops
 
     gnused
-    awk
+    gawk
     gnugrep
     ps
     bat
