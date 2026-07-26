@@ -12,6 +12,9 @@
       EDITOR = "vim";
       VISUAL = "vim";
     };
+    shellAliases = {
+      sandbox = "agent-sandbox --mount-file /sandbox/by-uid/$(id -u) /workspace/.codex/config.toml";
+    };
   };
 
   programs.zsh = {

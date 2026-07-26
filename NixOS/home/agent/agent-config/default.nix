@@ -12,9 +12,6 @@ let
   };
 in
 {
-  home.shellAliases = {
-    sandbox = "agent-sandbox --mount-file /sandbox/by-uid/$(id -u) /workspace/.codex/config.toml";
-  };
   home.packages = [ agent-tools-install ];
   home.file = {
     ".agents/skills" = {
