@@ -1,217 +1,203 @@
 # Agent home
 
-AI エージェントの活用を前提としたユーザ環境
+AIエージェントの活用を前提としたユーザー環境
 
-## Home Manager出力
+## 管理対象
 
-このflakeは2つのHome Manager設定を提供する。
+このflakeは`agent`用のHome Manager設定を一つ提供する。
 
-| 出力 | 配置先 | 用途 |
-| --- | --- | --- |
-| `agent` | `/users/agent` | calc-servのagentユーザーの第一ホーム |
-| `agent-sandbox` | `/home/agent` | `agent-sandbox` 内の第二ホーム |
+```text
+homeConfigurations.agent
+```
 
-shell、Vim、Zellijなどの基本設定は両方へ適用する。
-Codex、Claude Code、skillsの設定は `agent-sandbox` のみに適用する。
+Home Managerは第一ホーム`/users/agent`を通常のホームとして管理する。calc-servの
+`agent-sandbox`が使用する`/sandbox/by-uid/<uid>`はHome Managerのホームとして扱わず、
+`#agent`のactivationから隔離環境用ファイルだけを配備する。
 
-第一ホームへ適用する場合は、第一ホーム側で次を実行する。
+永続workdirは隔離環境内で`/home/agent`へbind mountされる。隔離環境から見れば
+`HOME=/home/agent`だが、独立したHome Manager profileは持たない。
+
+## 初回適用
+
+永続workdirは`agent-sandbox`の起動時にroot権限で作成される。初回のHome Manager適用
+より先に、対象workspaceから一度起動して終了する。
+
+```console
+agent-sandbox
+exit
+```
+
+その後、第一ホーム側のcheckoutから`#agent`を適用する。
 
 ```console
 home-manager switch --flake /path/to/NixOS/home/agent#agent
 ```
 
+activationは次を検査し、不一致がある場合は適用を失敗させる。
+
+- `/sandbox`がmountpointであること
+- `/sandbox/by-uid/<uid>`がsymlinkではないdirectoryであること
+- 所有者が適用ユーザーのUIDとGIDであること
+- modeが`0700`であること
+
 ## 分離モデル
 
-`agent-sandbox` の主目的は、プロジェクトごとにAIエージェントを完全隔離することではなく、
-普段使用する環境とAIエージェント用の環境を分離することである。
+`agent-sandbox`の目的は、普段使用する環境とAIエージェント用の環境を分離することである。
+第一ホームのSSH鍵、GPG agent、Git global configおよびその他のcredentialは隔離環境へ
+公開しない。
 
-普段使用する第一ホームの個人用SSH鍵、GPG agent、Git global configおよびその他の
-credentialはsandboxへ公開しない。AIエージェントは、永続化された専用の第二ホームと、
-作業対象として明示したworkspaceだけを使用する。
+永続workdirは同じユーザーの複数プロジェクトで共有する。Codex・Claude Codeの設定、
+session、skillsおよびMCP OAuth credentialがプロジェクト間で共有されることは意図した
+設計である。この境界は第一ホームへの影響を抑えるが、プロジェクト間の機密性は保証しない。
 
-第二ホームはプロジェクト間で共有する。Codex・Claude Codeの設定、session、
-skillsおよびMCP OAuth credentialを共有し、すべてのプロジェクトから共通のMCPを
-利用できることは意図した設計である。また、Web検索、ソース取得、Home Manager適用
-などの利便性を保つため、sandboxからのネットワーク接続とNix daemonの利用を許可する。
+## 配備ファイル
 
-したがって、このsandboxはAIエージェント用環境から普段使用する環境への影響を
-抑える境界であり、プロジェクト間の機密性を保証する境界ではない。sandboxの第二ホームへは、
-全プロジェクトから利用されてもよい専用credentialだけを保存する。
+`#agent`のactivationは、永続workdirへ次のファイルをNix Storeへのread-only symlink
+として配備する。
+
+```text
+.bash_profile
+.bashrc
+.profile
+.vimrc
+.config/sheldon/plugins.toml
+.config/starship.toml
+.config/tmux/tmux.conf
+.config/zellij/config.kdl
+.codex/AGENTS.md
+.codex/agent-sandbox.config.toml
+.claude/CLAUDE.md
+.claude/settings.json
+.agents/skills
+.claude/skills
+.local/bin/codex
+```
+
+第一ホーム用のGit設定とcredentialは配備しない。既存の通常ファイルやdirectoryと
+配備先が競合する場合は、初回だけ`.pre-agent-home-manager`を末尾に付けて退避する。
+
+管理対象の一覧は次に保存する。
+
+```text
+~/.local/state/agent-sandbox/managed-files
+```
+
+この`~`はHome Managerを適用する第一ホーム`/users/agent`を指す。manifestは隔離環境へ
+公開しない。
+
+リポジトリから管理対象を削除した場合、activationは旧manifestに記録されたsymlink
+だけを削除する。通常ファイル、credential、sessionおよび履歴は削除しない。
+
+## パッケージ管理
+
+隔離環境には独立したHome Manager package profileを作成しない。プロジェクトごとに
+必要なコマンドは、各プロジェクトの`flake.nix`が提供する開発環境へ含める。
+
+```console
+nix develop
+```
+
+Codex本体もPATH上に必要である。永続workdirの`.local/bin/codex`はCodex本体ではなく、
+PATH上の実体へ`--profile agent-sandbox`を付けて起動するwrapperである。
+
+## Codex設定
+
+Codex設定は、可変設定とリポジトリ管理設定に分離する。
+
+```text
+~/.codex/config.toml
+~/.codex/agent-sandbox.config.toml
+```
+
+`config.toml`はCodexがdirectory trustなどを追記する通常ファイルである。
+`agent-sandbox.config.toml`は
+`agent-config/codex-config.toml`を参照するread-only symlinkである。
+
+wrapperは次と同等の起動を行う。
+
+```console
+codex --profile agent-sandbox
+```
+
+profileは`config.toml`の上に重ねて読み込まれるため、同じキーが両方に存在する場合は
+リポジトリ管理設定が優先される。
+
+旧構成から初めて移行する際は、既存の`config.toml`を次へ退避し、空の書き込み可能な
+`config.toml`をmode `0600`で作成する。
+
+```text
+~/.codex/config.toml.pre-profile
+```
+
+旧ファイルに保存されていたdirectory trustは新しい`config.toml`へ自動移行しない。
+必要なworkspaceは移行後に再度trustする。退避ファイルは確認が終わるまで削除しない。
+
+Codexのprofileと`AGENTS.md`は新しいprocessで読み込まれるため、`#agent`適用後は既存の
+Codexを終了して新しいsessionを開始する。
+
+## Claude Code設定
+
+Claude Codeの共通指示、settingsおよびskillsはread-only symlinkとして配備する。
+認証情報、session、履歴およびプロジェクト固有の設定は管理しない。
 
 ## 起動方法
 
 `agent-sandbox`は、起動時のカレントディレクトリを読み書き可能なworkspaceとして
-`/workspace`へ公開する。どのディレクトリから起動するかは利用者が判断する。
-カレントディレクトリのパスにsymlinkが含まれる場合は、実体のパスへ正規化する。
-起動前には、workspace、永続ホーム、GPUの有効状態を表示する。
-
-通常はGPUを公開せずに起動する。
+`/workspace`へ公開する。
 
 ```console
 agent-sandbox
 ```
 
-GPUが必要な場合だけ`--gpu`を指定し、ホストの`/dev/dri`、`/dev/kfd`および
-`/sys`を公開する。`/sys`は読み取り専用で公開する。
+GPUが必要な場合だけ`--gpu`を指定する。
 
 ```console
 agent-sandbox --gpu
 ```
 
-## sandbox内外の識別
-
-`agent-sandbox` 内では、Starship promptに黄色の `[sandbox]` を表示する。
-ホストの `agent` は対話シェルをZshへ切り替え、`agent-sandbox` はBashを使用する。
-ZshプラグインはSheldonで管理し、sandboxのBashではNixpkgsの`ble.sh`を使用する。
-コマンドから確認する場合は、環境変数またはhostnameを使用する。
+隔離環境ではStarship promptに黄色の`[sandbox]`を表示し、対話shellにはBashを使用する。
 
 ```console
 echo "${AGENT_SANDBOX:-outside}"
 hostname
 ```
 
-sandbox内の期待値:
+期待値:
 
 ```text
 1
 agent-sandbox
 ```
 
-## 第二ホーム内で Git 管理
+## GitHub CLI認証
 
-`NixOS/home/agent` を含む dotfiles repository を第二ホーム内へクローンし
-その checkout を Home Manager 設定の source of truth として使用する．
-
-以下の操作は `agent-sandbox` 内で実行
-
-### Repository clone
-
-repository 全体が大きい場合は sparse checkout を使用する．
-
-```console
-mkdir -p ~/.config
-
-nix shell nixpkgs#git -c \
-  git clone --filter=blob:none --sparse \
-  <repository-url> \
-  ~/.config/dotfiles
-
-cd ~/.config/dotfiles
-git sparse-checkout set NixOS/home/agent
-```
-
-`<repository-url>` は実際の dotfiles repository URLへ置き換える。
-
-### Home Managerを初回適用する
-
-```console
-nix run github:nix-community/home-manager/release-26.05 -- \
-  switch \
-  -b backup \
-  --flake ~/.config/dotfiles/NixOS/home/agent#agent-sandbox
-```
-
-`-b backup` は、Home Manager管理前から存在する `.bashrc`、`.zshrc` などを
-退避するために初回だけ指定する。すでに同名のbackupが存在する場合は、内容を確認して
-別の場所へ移動してから再実行する。
-
-適用後は一度sandboxを終了し、入り直す。
-
-```console
-exit
-agent-sandbox
-```
-
-### CodexとClaude Codeを導入する
-
-Home Manager適用後、第二ホーム内で次を実行する。
-
-```console
-agent-tools-install
-```
-
-このコマンドは、Codexをpnpmのglobal packageとして
-`~/.local/share/pnpm`へインストールまたは更新し、実行ファイルを
-`~/.local/share/pnpm/bin`へ配置する。
-Claude Codeが未インストールの場合は、Anthropic公式のnative installerを使用して
-`~/.local/bin`と`~/.local/share/claude`へインストールする。
-pnpmのglobal bin directoryとPATHはHome Managerで設定するため、
-`pnpm setup`を手動で実行する必要はない。
-
-これらは第二ホームのwritable領域に保存されるため、sandbox終了後も維持される。
-Home ManagerはNode.js、pnpm、installer補助コマンドおよび各agentの設定ファイルを
-管理し、CLI本体の取得時には明示的にnetworkを使用する。
-
-`~/.codex/config.toml`はdirectory trustなどをCodex自身が保存するため、例外的に
-writableな通常ファイルとして配置する。Home Managerはファイルが存在しない初回だけ
-`agent-config/codex-config.toml`から初期化し、その後の内容を上書きしない。
-共通指示とskillsは引き続きNix Storeへのread-only linkとして管理する。
-
-導入結果は次で確認する。
-
-```console
-command -v codex
-codex --version
-command -v claude
-claude --version
-```
-
-Claude Codeは `latest` channelから自動更新する。手動で直ちに更新する場合は、
-次を実行する。
-
-```console
-claude update
-```
-
-Codexを最新版へ更新する場合は、`agent-tools-install`を再実行する。
-
-## GitHub CLIの認証
-
-`agent-sandbox`ではGitHub CLIを導入し、Bash起動時に次のファイルが読み取り可能な場合は、
-その内容を`GH_TOKEN`として読み込む。
+Bash起動時に次のファイルが読み取り可能な場合、その内容を`GH_TOKEN`として読み込む。
 
 ```text
 ~/.config/gh/token
 ```
 
-tokenファイル自体はHome Managerで管理しない。権限は`0600`に設定する。
-設定後はsandboxへ入り直し、`gh auth status`で認証状態を確認する。
+tokenファイル自体は管理しない。権限は`0600`に設定する。
 
 ## 共通skills
 
-`agent-config/skills/`配下のskillsは、Home Managerによって次の両方へ同じ内容で
-配置される。
+`agent-config/skills/`を次の両方へ配備する。
 
 ```text
-~/.agents/skills/   # Codex
-~/.claude/skills/   # Claude Code
+~/.agents/skills/
+~/.claude/skills/
 ```
 
 現在管理するskills:
 
 | skill | 用途 |
 | --- | --- |
-| `project-checks` | repositoryに適したtest、lint、buildなどを特定して実行する |
 | `read-pdf` | PDFのtext抽出とページ画像の照合に基づいて内容を調査する |
 | `submit-trilium-idea` | アイデアを規定のMarkdown形式でTriliumNextへ保存する |
 
-skillsの本文とUI metadataは日本語で管理する。skill directory名とfrontmatterの
-`name`は、Codex・Claude Codeから安定して参照できるよう英小文字のhyphen-caseを
-使用する。
-
 `submit-trilium-idea`は`agent-services` MCPを使用し、`Idea Inbox`配下へ
-`type=code`、`mime=text/markdown`のnoteを作成する。本文は概要、背景・課題、提案、
-期待する効果、懸念・未決事項、次のアクションで構成し、次のlabelを付ける。
-
-```text
-idea
-status=inbox
-source=mcp
-```
-
-skillは送信形式と操作手順を規定するが、server側の認可境界ではない。利用可能なtoolは
-lenovoのToolHive vMCP Cedar policyで制限し、`delete_note`はskillの指示とCedarの
-両方で禁止する。ETAPI tokenやOAuth tokenなどの秘密情報をnoteへ保存しない。
+`type=code`、`mime=text/markdown`のnoteを作成する。ETAPI tokenやOAuth tokenなどの
+秘密情報をnoteへ保存しない。
 
 明示的にskillを指定する場合の例:
 
@@ -219,20 +205,14 @@ lenovoのToolHive vMCP Cedar policyで制限し、`delete_note`はskillの指示
 $submit-trilium-idea を使って、このアイデアをIdea Inboxへ保存してください。
 ```
 
-Home Manager適用後は既存sessionにskillを再読込させるため、CodexまたはClaude Codeを
-終了して新しいsessionを開始する。
+## 設定変更
 
-## 設定を編集する
-
-第二ホーム内のcheckoutを直接編集する。
+第一ホーム側のcheckoutを編集する。
 
 ```console
-cd ~/.config/dotfiles/NixOS/home/agent
-
+cd /path/to/NixOS/home/agent
 vim agent-config/AGENTS.md
 git diff
-git add agent-config/AGENTS.md
-git commit
 ```
 
 主な編集対象:
@@ -248,67 +228,42 @@ vim/
 zellij/
 ```
 
-## 変更を反映する
-
-編集後はHome Managerを再適用する。
+変更後は同じcheckoutから`#agent`を再適用する。
 
 ```console
-nix run github:nix-community/home-manager/release-26.05 -- \
-  switch \
-  --flake ~/.config/dotfiles/NixOS/home/agent#agent-sandbox
+home-manager switch --flake /path/to/NixOS/home/agent#agent
 ```
 
-`AGENTS.md`やskillを確実に再読込させるには、Home Manager適用後にCodexまたは
-Claude Codeのsessionを新しく開始する。
-
-## Repositoryを更新する
-
-```console
-cd ~/.config/dotfiles
-nix shell nixpkgs#git -c git pull --ff-only
-
-nix run github:nix-community/home-manager/release-26.05 -- \
-  switch \
-  --flake ~/.config/dotfiles/NixOS/home/agent#agent-sandbox
-```
+永続workdir内にdotfilesの別checkoutを作成する必要はない。
 
 ## Git認証
 
-第一ホームのSSH agent、GPG agent、Git global configはsandboxへ公開されない。
-private repositoryを使用する場合は、以下のいずれかを第二ホーム内で別途設定する。
-
-- HTTPS credential
-- 第二ホーム専用のSSH key
-- 第二ホーム専用のGit credential helper
-
-秘密情報はこのrepositoryへcommitしない。
+第一ホームのSSH agent、GPG agentおよびGit global configは隔離環境へ公開しない。
+private repositoryを使用する場合は、隔離環境専用のHTTPS credential、SSH鍵または
+Git credential helperを永続workdirへ設定する。秘密情報はこのrepositoryへcommitしない。
 
 ## サブエージェント情報の分離
 
-第二ホームは複数projectで共有するが、session transcriptは各toolがprojectごとに
+永続workdirは複数projectで共有するが、session transcriptは各toolがprojectごとに
 識別して保存する。
 
 Codex:
 
 ```text
-~/.codex/agents/             user共通のカスタムagent定義
-~/.codex/sessions/           session履歴
-~/.codex/archived_sessions/  archive済みsession
+~/.codex/agents/
+~/.codex/sessions/
+~/.codex/archived_sessions/
 ```
 
 Claude Code:
 
 ```text
-~/.claude/agents/            user共通のカスタムagent定義
+~/.claude/agents/
 ~/.claude/projects/<project>/<session-id>.jsonl
 ~/.claude/projects/<project>/<session-id>/subagents/agent-<agent-id>.jsonl
 ```
 
-Claude Codeの `<project>` はworking directoryから生成されるため、通常はproject間で
-transcriptが混在しない。Codexのsessionにもworking directoryなどのsession情報が
-記録される。
-
-一方、以下は全projectから参照されるため、project固有の内容を置かない。
+次の場所は全projectから参照されるため、project固有の内容を置かない。
 
 ```text
 ~/.codex/AGENTS.md
@@ -319,7 +274,7 @@ transcriptが混在しない。Codexのsessionにもworking directoryなどのse
 ~/.claude/skills/
 ```
 
-project固有の指示、subagent、skillはrepository内に置く。
+project固有の指示、subagentおよびskillはrepository内に置く。
 
 ```text
 <repository>/AGENTS.md
@@ -330,7 +285,8 @@ project固有の指示、subagent、skillはrepository内に置く。
 <repository>/.claude/skills/
 ```
 
-Codexは次の上限を `~/.codex/config.toml` で設定する。
+Codexの同時稼働数と入れ子の上限は
+`~/.codex/agent-sandbox.config.toml`で設定する。
 
 ```toml
 [agents]
@@ -338,42 +294,20 @@ max_threads = 4
 max_depth = 1
 ```
 
-Claude Codeを含む共通の運用方針としても、親agentを含む同時稼働数を最大4、
-subagentの入れ子を1階層までとする。
+## Zellijによるセッション継続
 
-Claude Codeでsubagentの永続memoryを使用する場合は、複数projectで共有される
-user scopeを避け、原則としてprojectまたはlocal scopeを選ぶ。
-
-## Zellij でのセッション継続
-
-zellij を起動のうえ作業することで，切断/再接続を可能とする．
-
-### 名前付き session の起動
+Zellijを起動してから`agent-sandbox`を使用すると、SSH切断後もsessionを継続できる。
 
 ```console
 zellij --session <session-name>
-```
-
-zellij の pane/tab で複数の作業を行うことができる．
-
-```console
 cd /path/to/project
 agent-sandbox
 ```
 
-### デタッチ
-
-`Alt+o d` ででタッチできるキー設定になっている．
-デタッチによって SSH 接続を閉じても zellij session が継続する．
-
-### 再接続
+`Alt+o d`でdetachし、次のコマンドで再接続する。
 
 ```console
-zellij list-sessions
-# 再接続
 zellij attach <session-name>
-# セッションの削除
-zellij kill-session <session-name>
 ```
 
-calc-serv を再起動した場合は Zellij session が保持されない点を注意すること．
+calc-servを再起動した場合はZellij sessionも終了する。

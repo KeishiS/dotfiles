@@ -38,6 +38,19 @@
     initExtra = ''
       if [[ -n "''${AGENT_SANDBOX:-}" ]]; then
         source -- ${pkgs.blesh}/share/blesh/ble.sh
+        export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+        export TMUX_TMPDIR="$HOME/.local/state/tmux"
+        mkdir -p "$TMUX_TMPDIR"
+
+        github_token_file="$HOME/.config/gh/token"
+        if [[ -r "$github_token_file" ]]; then
+          export GH_TOKEN="$(<"$github_token_file")"
+        fi
+        unset github_token_file
+
+        codex() {
+          "$HOME/.local/bin/codex" "$@"
+        }
       fi
 
       mkdir -p "$HOME/.local/state/bash"

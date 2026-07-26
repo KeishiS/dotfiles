@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+target_root=/target
+old_manifest="${1:-}"
+new_manifest="$2"
+shift 2
+
+die() {
+    echo "deploy-agent-sandbox-workdir: $*" >&2
+    exit 1
+}
+
+validate_relative_path() {
+    relative_path="$1"
+    case "$relative_path" in
+    "" | /* | */ | *//* | "." | ".." | ./* | ../* | */./* | */../* | */. | */..)
+        die "不正な管理対象パスです: $relative_path"
+        ;;
+    esac
+}
+
+ensure_parent_directories() {
+    relative_path="$1"
+    parent_path="$(dirname "$relative_path")"
+    if [ "$parent_path" = "." ]; then
+        return
+    fi
+
+    current_path="$target_root"
+    IFS=/ read -r -a path_components <<<"$parent_path"
+    for path_component in "${path_components[@]}"; do
+        current_path="$current_path/$path_component"
+        if [ -L "$current_path" ]; then
+            die "管理対象の親directoryがsymlinkです: $current_path"
+        elif [ -e "$current_path" ]; then
+            if [ ! -d "$current_path" ]; then
+                die "管理対象の親pathがdirectoryではありません: $current_path"
+            fi
+        else
+            mkdir -- "$current_path"
+        fi
+    done
+}
+
+deploy_link() {
+    relative_path="$1"
+    source_path="$2"
+    validate_relative_path "$relative_path"
+    ensure_parent_directories "$relative_path"
+
+    target_path="$target_root/$relative_path"
+    if [ -L "$target_path" ]; then
+        rm -- "$target_path"
+    elif [ -e "$target_path" ]; then
+        backup_path="$target_path.pre-agent-home-manager"
+        if [ -e "$backup_path" ] || [ -L "$backup_path" ]; then
+            die "既存ファイルと退避先が競合しています: $target_path"
+        fi
+        mv --no-target-directory "$target_path" "$backup_path"
+    fi
+
+    ln --symbolic --no-target-directory "$source_path" "$target_path"
+}
+
+if [ "$#" -eq 0 ] || [ $(( $# % 2 )) -ne 0 ]; then
+    die "管理対象pathとsourceは組で指定してください"
+fi
+
+codex_dir="$target_root/.codex"
+if [ -L "$codex_dir" ]; then
+    die "Codex設定directoryがsymlinkです: $codex_dir"
+elif [ -e "$codex_dir" ] && [ ! -d "$codex_dir" ]; then
+    die "Codex設定pathがdirectoryではありません: $codex_dir"
+fi
+mkdir --parents "$codex_dir"
+
+migration_marker="$codex_dir/.profile-migration-complete"
+codex_config="$codex_dir/config.toml"
+codex_config_backup="$codex_dir/config.toml.pre-profile"
+if [ -L "$migration_marker" ]; then
+    die "Codex設定の移行markerがsymlinkです: $migration_marker"
+fi
+if [ ! -e "$migration_marker" ]; then
+    if [ -e "$codex_config" ] || [ -L "$codex_config" ]; then
+        if [ -e "$codex_config_backup" ] || [ -L "$codex_config_backup" ]; then
+            die "Codex設定の退避先がすでに存在します: $codex_config_backup"
+        fi
+        mv --no-target-directory "$codex_config" "$codex_config_backup"
+    fi
+    install --mode 0600 /dev/null "$codex_config"
+    touch "$migration_marker"
+elif [ -L "$codex_config" ] || [ ! -f "$codex_config" ]; then
+    die "Codexの可変設定が通常ファイルではありません: $codex_config"
+fi
+
+if [ -n "$old_manifest" ]; then
+    while IFS= read -r old_target; do
+        if [ -z "$old_target" ]; then
+            continue
+        fi
+        validate_relative_path "$old_target"
+        if ! grep \
+            --fixed-strings \
+            --line-regexp \
+            --quiet \
+            -- "$old_target" \
+            "$new_manifest"; then
+            ensure_parent_directories "$old_target"
+            old_target_path="$target_root/$old_target"
+            if [ -L "$old_target_path" ]; then
+                rm -- "$old_target_path"
+            fi
+        fi
+    done <"$old_manifest"
+fi
+
+while [ "$#" -gt 0 ]; do
+    deploy_link "$1" "$2"
+    shift 2
+done
