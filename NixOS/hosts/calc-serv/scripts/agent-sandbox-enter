@@ -140,6 +140,7 @@ bwrap \
     --setenv AGENT_SANDBOX 1 \
     --setenv USER agent \
     --setenv LOGNAME agent \
+    --setenv NIX_PATH "$NIX_PATH" \
     --setenv SHELL "$AGENT_SANDBOX_BASH" \
     --setenv PATH "/run/current-system/sw/bin:$AGENT_SANDBOX_RUNTIME_PATH" \
     --setenv TERM "${TERM:-xterm-256color}" \
