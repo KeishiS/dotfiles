@@ -1,8 +1,6 @@
 { pkgs, ... }:{
     # imports = [ ./common.nix ];
-    imports = [
-
-    ];
+    imports = [];
     home = {
         username = "agent";
         homeDirectory = "/home/agent";
