@@ -32,6 +32,11 @@
     yubikey-personalization # for using `ykchalresp`
     sops
 
+    eza
+    bat
+    jq
+    ripgrep
+
     openblas
   ];
 
