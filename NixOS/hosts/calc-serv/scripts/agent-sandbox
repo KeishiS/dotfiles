@@ -62,12 +62,12 @@ if [ ! -x /run/wrappers/bin/sudo ]; then
     die "sudo wrapper is unavailable"
 fi
 
-# 隔離環境用のホームディレクトリの作成
+# 隔離環境用の永続workdirの作成
 /run/wrappers/bin/sudo -n "$AGENT_SANDBOX_HOME_HELPER"
 
-sandbox_home="$sandbox_root/by-uid/$caller_uid"
-if [ -L "$sandbox_home" ] || [ ! -d "$sandbox_home" ]; then
-    die "sandbox home was not prepared correctly: $sandbox_home"
+persistent_workdir="$sandbox_root/by-uid/$caller_uid"
+if [ -L "$persistent_workdir" ] || [ ! -d "$persistent_workdir" ]; then
+    die "persistent workdir was not prepared correctly: $persistent_workdir"
 fi
 
 if [ "$gpu_enabled" = 1 ]; then
@@ -76,7 +76,7 @@ else
     gpu_status=disabled
 fi
 
-printf 'workspace: %s\npersistent home: %s\nGPU: %s\n' \
-    "$workspace" "$sandbox_home" "$gpu_status"
+printf 'workspace: %s\npersistent workdir: %s\nGPU: %s\n' \
+    "$workspace" "$persistent_workdir" "$gpu_status"
 
 "$AGENT_SANDBOX_ENTER" "$workspace" "$gpu_enabled"

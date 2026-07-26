@@ -23,16 +23,16 @@ fi
 current_uid="$(id -u)"
 current_gid="$(id -g)"
 readonly sandbox_root="${AGENT_SANDBOX_ROOT:?AGENT_SANDBOX_ROOT is not set}"
-sandbox_home="$sandbox_root/by-uid/$current_uid"
+persistent_workdir="$sandbox_root/by-uid/$current_uid"
 
-if [ -L "$sandbox_home" ] || [ ! -d "$sandbox_home" ]; then
-    die "sandbox home is missing or invalid: $sandbox_home"
+if [ -L "$persistent_workdir" ] || [ ! -d "$persistent_workdir" ]; then
+    die "persistent workdir is missing or invalid: $persistent_workdir"
 fi
-if [ "$(stat -c '%u:%g' "$sandbox_home")" != "$current_uid:$current_gid" ]; then
-    die "sandbox home has an unexpected owner: $sandbox_home"
+if [ "$(stat -c '%u:%g' "$persistent_workdir")" != "$current_uid:$current_gid" ]; then
+    die "persistent workdir has an unexpected owner: $persistent_workdir"
 fi
-if [ "$(stat -c '%a' "$sandbox_home")" != "700" ]; then
-    die "sandbox home must have mode 0700: $sandbox_home"
+if [ "$(stat -c '%a' "$persistent_workdir")" != "700" ]; then
+    die "persistent workdir must have mode 0700: $persistent_workdir"
 fi
 if [ ! -S /nix/var/nix/daemon-socket/socket ]; then
     die "Nix daemon socket is unavailable"
@@ -134,14 +134,14 @@ bwrap \
     --dev /dev \
     "${device_args[@]}" \
     --bind "$workspace" /workspace \
-    --bind "$sandbox_home" /home/agent \
+    --bind "$persistent_workdir" /home/agent \
     --bind "$session_tmp" /tmp \
     --setenv HOME /home/agent \
     --setenv AGENT_SANDBOX 1 \
     --setenv USER agent \
     --setenv LOGNAME agent \
     --setenv SHELL "$AGENT_SANDBOX_BASH" \
-    --setenv PATH "/home/agent/.nix-profile/bin:/home/agent/.local/bin:/home/agent/.local/share/pnpm/bin:$AGENT_SANDBOX_RUNTIME_PATH" \
+    --setenv PATH "/home/agent/.local/bin:/home/agent/.local/share/pnpm/bin:$AGENT_SANDBOX_RUNTIME_PATH" \
     --setenv TERM "${TERM:-xterm-256color}" \
     --setenv COLORTERM "${COLORTERM:-truecolor}" \
     --setenv LANG C.UTF-8 \

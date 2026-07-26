@@ -149,19 +149,17 @@ Kanidm client、vMCP、両段nginxおよびHome Manager設定はこの定義か�
 | Codex | `https://mcp.sandi05.com/codex/mcp` | `agent-services-codex` |
 | Claude Code | `https://mcp.sandi05.com/claude-code/mcp` | `agent-services-claude-code` |
 
-第二homeへHome Manager設定を反映すると、CodexとClaude Codeにそれぞれ専用の
-endpointとOAuth clientが設定される。初回の
-`agent-sandbox`内にはstandaloneの`home-manager`やzshはまだないため、
-Home Managerは`nix run`で起動する。
+calc-servの第一ホームへ`#agent`を適用すると、永続workdirへCodexとClaude Codeの
+設定が配備される。初回だけ先に`agent-sandbox`を起動し、UIDごとの永続workdirを
+作成する。
 
 ```bash
-nix run github:nix-community/home-manager/release-26.05 -- \
-  switch \
-  -b backup \
-  --flake /workspace/NixOS/home/agent#agent-sandbox
+agent-sandbox
+exit
+home-manager switch --flake /path/to/NixOS/home/agent#agent
 ```
 
-適用後はsandboxを一度終了して、同じworkspaceから入り直す。
+適用後は同じworkspaceから入り直す。
 
 ```bash
 exit
@@ -182,9 +180,9 @@ portをforwardして接続する。
 ssh -L 8765:127.0.0.1:8765 calc-serv
 ```
 
-第二homeへ保存されるのはconsumer別のToolHive用OAuth tokenだけである。このtokenはupstreamの
+永続workdirへ保存されるのはconsumer別のToolHive用OAuth tokenだけである。このtokenはupstreamの
 ETAPI tokenやLeantime API keyではなく、Kanidm側でuser単位に失効できる。Codexの
-credential fileとClaudeのmutable設定fileはmode 0600、第二homeはagent専用とする。
+credential fileとClaudeのmutable設定fileはmode 0600、永続workdirはagent専用とする。
 agent-sandboxはdesktop keyringとD-Bus sessionを公開しないため、Codexには
 `mcp_oauth_credentials_store = "file"`を設定する。`auto`または`keyring`へ戻すと、
 login/logout時にkeyring操作が失敗する可能性がある。

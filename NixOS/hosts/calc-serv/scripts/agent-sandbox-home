@@ -80,19 +80,19 @@ for path in "$sandbox_root" "$homes_root"; do
     fi
 done
 
-home="$homes_root/$caller_uid"
-if mkdir -m 0700 "$home" 2>/dev/null; then
-    chown "$caller_uid:$caller_gid" "$home"
+persistent_workdir="$homes_root/$caller_uid"
+if mkdir -m 0700 "$persistent_workdir" 2>/dev/null; then
+    chown "$caller_uid:$caller_gid" "$persistent_workdir"
 else
-    if [ -L "$home" ] || [ ! -d "$home" ]; then
-        die "$home exists but is not a non-symlink directory"
+    if [ -L "$persistent_workdir" ] || [ ! -d "$persistent_workdir" ]; then
+        die "$persistent_workdir exists but is not a non-symlink directory"
     fi
 fi
 
-if [ "$(stat -c '%u:%g' "$home")" != "$caller_uid:$caller_gid" ]; then
-    die "$home has an unexpected owner"
+if [ "$(stat -c '%u:%g' "$persistent_workdir")" != "$caller_uid:$caller_gid" ]; then
+    die "$persistent_workdir has an unexpected owner"
 fi
 
-if [ "$(stat -c '%a' "$home")" != "700" ]; then
-    die "$home must have mode 0700"
+if [ "$(stat -c '%a' "$persistent_workdir")" != "700" ]; then
+    die "$persistent_workdir must have mode 0700"
 fi
