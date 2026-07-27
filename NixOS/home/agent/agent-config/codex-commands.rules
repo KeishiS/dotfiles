@@ -5,9 +5,9 @@ prefix_rule(
 )
 
 prefix_rule(
-    pattern = ["nix", ["build", "fmt"]],
+    pattern = ["nix", ["build", "fmt", "eval"]],
     decision = "allow",
-    justification = "Nixによるフォーマット・ビルドを許可する"
+    justification = "Nixによるフォーマット・ビルド・評価を許可する"
 )
 
 prefix_rule(
@@ -16,7 +16,7 @@ prefix_rule(
 )
 
 prefix_rule(
-    pattern = ["git", ["diff", "log", "show", "status"]],
+    pattern = ["git", ["diff", "log", "show", "status", "fetch", "ls-remote"]],
     decision = "allow",
     justification = "Gitでの読み取り操作を許可する"
 )
@@ -54,7 +54,7 @@ prefix_rule(
 )
 
 prefix_rule(
-    pattern = ["gh", "run", ["list", "view", "rerun", "cancel"]],
+    pattern = ["gh", "run", ["list", "view", "rerun", "cancel", "watch"]],
     decision = "allow"
 )
 
