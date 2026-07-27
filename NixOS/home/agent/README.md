@@ -65,7 +65,6 @@ session、skillsおよびMCP OAuth credentialがプロジェクト間で共有�
 .config/tmux/tmux.conf
 .config/zellij/config.kdl
 .codex/AGENTS.md
-.codex/agent-sandbox.config.toml
 .claude/CLAUDE.md
 .claude/settings.json
 .agents/skills
@@ -87,41 +86,6 @@ session、skillsおよびMCP OAuth credentialがプロジェクト間で共有�
 
 リポジトリから管理対象を削除した場合、activationは旧manifestに記録されたsymlink
 だけを削除する。通常ファイル、credential、sessionおよび履歴は削除しない。
-
-## Codex設定
-
-Codex設定は、可変設定とリポジトリ管理設定に分離する。
-
-```text
-~/.codex/config.toml
-~/.codex/agent-sandbox.config.toml
-```
-
-`config.toml`はCodexがdirectory trustなどを追記する通常ファイルである。
-`agent-sandbox.config.toml`は
-`agent-config/codex-config.toml`を参照するread-only symlinkである。
-
-wrapperは次と同等の起動を行う。
-
-```console
-codex --profile agent-sandbox
-```
-
-profileは`config.toml`の上に重ねて読み込まれるため、同じキーが両方に存在する場合は
-リポジトリ管理設定が優先される。
-
-旧構成から初めて移行する際は、既存の`config.toml`を次へ退避し、空の書き込み可能な
-`config.toml`をmode `0600`で作成する。
-
-```text
-~/.codex/config.toml.pre-profile
-```
-
-旧ファイルに保存されていたdirectory trustは新しい`config.toml`へ自動移行しない。
-必要なworkspaceは移行後に再度trustする。退避ファイルは確認が終わるまで削除しない。
-
-Codexのprofileと`AGENTS.md`は新しいprocessで読み込まれるため、`#agent`適用後は既存の
-Codexを終了して新しいsessionを開始する。
 
 ## Claude Code設定
 
@@ -260,15 +224,6 @@ project固有の指示、subagentおよびskillはrepository内に置く。
 <repository>/CLAUDE.md
 <repository>/.claude/agents/
 <repository>/.claude/skills/
-```
-
-Codexの同時稼働数と入れ子の上限は
-`~/.codex/agent-sandbox.config.toml`で設定する。
-
-```toml
-[agents]
-max_threads = 4
-max_depth = 1
 ```
 
 ## Zellijによるセッション継続
