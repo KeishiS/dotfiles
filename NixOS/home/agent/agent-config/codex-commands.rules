@@ -11,6 +11,11 @@ prefix_rule(
 )
 
 prefix_rule(
+    pattern = ["nix", "flake", "check"],
+    decision = "allow"
+)
+
+prefix_rule(
     pattern = ["git", ["diff", "log", "show", "status"]],
     decision = "allow",
     justification = "Gitでの読み取り操作を許可する"
