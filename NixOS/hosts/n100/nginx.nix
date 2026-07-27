@@ -1,35 +1,8 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
-let
-  agentServicesConsumers = import ../../home/agent/agent-services-consumers.nix;
-  enabledAgentServicesConsumers = lib.filterAttrs (
-    _: consumer: consumer.enabled
-  ) agentServicesConsumers;
-  agentServicesLocations = lib.listToAttrs (
-    lib.concatMap (consumer: [
-      {
-        name = "= ${consumer.basePath}/mcp";
-        value = {
-          proxyPass = "http://lenovo.sandi05.com:80${consumer.basePath}/mcp";
-          proxyWebsockets = true;
-          extraConfig = ''
-            proxy_buffering off;
-            proxy_read_timeout 3600s;
-            proxy_send_timeout 3600s;
-          '';
-        };
-      }
-      {
-        name = "= /.well-known/oauth-protected-resource${consumer.basePath}/mcp";
-        value.proxyPass = "http://lenovo.sandi05.com:80/.well-known/oauth-protected-resource${consumer.basePath}/mcp";
-      }
-    ]) (lib.attrValues enabledAgentServicesConsumers)
-  );
-in
 {
   users.users.nginx.extraGroups = [ "acme" ];
   services.nginx = {
@@ -38,44 +11,6 @@ in
     recommendedTlsSettings = true;
     recommendedGzipSettings = true;
     recommendedProxySettings = true;
-
-    virtualHosts."mcp.sandi05.com-redirect" = {
-      serverName = "mcp.sandi05.com";
-      listen = [
-        {
-          addr = "0.0.0.0";
-          port = 80;
-        }
-        {
-          addr = "[::]";
-          port = 80;
-        }
-      ];
-      extraConfig = ''
-        return 301 https://$host$request_uri;
-      '';
-    };
-
-    virtualHosts."mcp.sandi05.com" = {
-      serverName = "mcp.sandi05.com";
-      listen = [
-        {
-          addr = "0.0.0.0";
-          port = 443;
-          ssl = true;
-        }
-        {
-          addr = "[::]";
-          port = 443;
-          ssl = true;
-        }
-      ];
-      addSSL = true;
-      useACMEHost = "sandi05.com";
-      locations = agentServicesLocations // {
-        "/".return = "404";
-      };
-    };
 
     #---------------------------------------------------------------------
     # Nextcloud
@@ -509,7 +444,6 @@ in
         "stream.sandi05.com"
         "project.sandi05.com"
         "notes.sandi05.com"
-        "mcp.sandi05.com"
         "marginalis.sandi05.com"
       ];
       dnsProvider = "cloudflare";

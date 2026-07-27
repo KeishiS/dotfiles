@@ -205,7 +205,7 @@ consumerの追加・変更は`home/agent/agent-services-consumers.nix`だけを�
 hyphen-caseのID、重複しないOAuth client ID・endpoint・vMCP port、正確なcallback URLを
 設定する。callback URLが未確定のconsumerは`enabled = false`のままとし、wildcardや
 別applicationのcallbackを流用しない。consumerを有効化すると、calc-servのKanidm
-client、lenovoのvMCP unitとnginx、n100のnginx locationが同じ定義から生成される。
+clientとlenovoのvMCP unitおよびnginxが同じ定義から生成される。
 
 反映後はlenovoで次を確認する。
 
