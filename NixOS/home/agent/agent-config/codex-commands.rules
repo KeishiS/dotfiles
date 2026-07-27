@@ -25,6 +25,12 @@ prefix_rule(
 )
 
 prefix_rule(
+    pattern = ["git", "switch", "-c"],
+    decision = "allow",
+    justification = "新しい作業ブランチの作成を許可する"
+)
+
+prefix_rule(
     pattern = ["cargo", ["build", "check", "clippy", "doc", "fmt", "metadata", "test", "tree"]],
     decision = "allow",
     justification = "Rustの構築・読み取り・検証操作を許可する"
