@@ -1,329 +1,85 @@
-# AI service integration の導入手順
+# AIサービス
 
-この host では、Leantime、MariaDB、TriliumNext、および ToolHive 用の
-rootless Podman API を動かす。稼働データは内蔵 NVMe の `/var/lib` 以下に置き、
-`/storage` と `/users` は使用しない。backup は issue 010 の対象外である。
+lenovoでは、Leantime、MariaDB、TriliumNextおよびMarginalisを運用します。
+外部公開用のTLS終端はn100が担当し、lenovoのnginxへHTTPで転送します。
 
-## 反映順序
+## 構成の反映
 
-最初に Cloudflare で次の record を n100 と同じ公開 address へ向ける。
+変更したホストごとに、最初に`test`で確認します。
 
-- `project.sandi05.com`
-- `notes.sandi05.com`
-- `mcp.sandi05.com`
-
-次に各 host で、設定を一時反映して状態を確認する。
-
-```bash
-# calc-serv: Kanidm OIDC clients（Leantime・ToolHive）
+```console
+# calc-serv
 sudo nixos-rebuild test --flake .#nixos-sandi-calc-serv
 
-# lenovo: MariaDB, Leantime, TriliumNext, rootless Podman
+# lenovo
 sudo nixos-rebuild test --flake .#nixos-sandi-lenovo
 
-# n100: TLS reverse proxy
+# n100
 sudo nixos-rebuild test --flake .#nixos-sandi-n100
 ```
 
-問題がなければ、同じ順序で `test` を `switch` に変えて永続化する。
+反映後は、lenovoで次を確認します。
 
-現在の `flake.lock` が固定する private `KeishiS/streaming` input は、匿名 HTTPS の
-GitHub archive から取得できない。n100 の通常の評価は、本構成へ到達する前にこの
-既存 input の取得で失敗する。n100 へ反映する前に、取得可能な URL・revision へ
-`streaming` input を更新するか、認証を必要としない配置へ移すこと。Issue 010 の
-nginx 構成自体は、同じ option を持つ local stub で置換したフルビルドに成功している。
-この問題は calc-serv と lenovo の反映を妨げない。
-
-## 基盤の確認
-
-lenovo で次を確認する。
-
-```bash
-getent passwd 955 956
+```console
 systemctl status mysql leantime-database-user podman-leantime trilium-server
-systemctl status toolhive-podman
-sudo -u leantime podman ps
-sudo ss -lntp
-curl -fsS -H 'Host: project.sandi05.com' http://127.0.0.1/
-curl -fsS -H 'Host: notes.sandi05.com' http://127.0.0.1/
+curl -I http://127.0.0.1:8080
+curl -I http://127.0.0.1:8081
 ```
 
-反映前の`getent`で、UID 955・956が意図しない既存accountに割り当てられていない
-ことを確認する。反映後はそれぞれ`leantime`・`toolhive`になっていることを確認する。
+n100から公開URLも確認します。
 
-`8080` と `8081` は loopback だけから利用し、LAN から直接公開しない。
-lenovo の port 80 は n100 (`192.168.100.31`) からだけ firewall で許可する。
-現在の`lenovo.sandi05.com`はA recordだけを持つためIPv4 ruleで十分である。AAAA record
-を追加する場合は、n100のIPv6 source addressを許可するip6tables ruleも同時に追加する。
-
-n100 では次を確認する。
-
-```bash
+```console
 curl -I https://project.sandi05.com
 curl -I https://notes.sandi05.com
-curl -I https://mcp.sandi05.com
 ```
 
-credentialが未配置ならvMCPは起動せず、対応するconsumer pathは`502`になる。
-起動後も公開するのはconsumer別MCP endpointとRFC 9728 discovery pathだけで、
-その他のpathは`404`になる。
+現在の`flake.lock`が固定するprivate `KeishiS/streaming` inputは、匿名HTTPSの
+GitHub archiveから取得できません。n100の評価は、このinputの取得時に失敗します。
+n100へ反映する前に、取得可能なURL・revisionへ更新するか、認証を必要としない配置へ
+移してください。この問題はcalc-servとlenovoの評価を妨げません。
 
-## 初期設定と OIDC
+## Leantime
 
-Leantime では最初に local administrator を作成し、通常の Web UI が動くことを確認
-する。Kanidm login は `leantime` client を使用し、callback は
-`https://project.sandi05.com/oidc/callback` である。自動 user 作成を有効にする場合も、
-既定 role を administrator にしない。
+Leantimeはrootless Podman containerとして実行します。永続データにはPodman volumeを使用し、
+MariaDBはlenovo上のsystem serviceとして実行します。
 
-TriliumNext はlocal passwordとMFAで保護する。0.102.2・0.103.0のOIDC実装はKanidm
-1.10.4との間でtoken endpoint認証方式とID token署名方式の明示が必要となり、配布済み
-bundleへのlocal patchを継続保守する複雑性に見合わないため、Kanidm OIDCは使用しない。
+接続情報とsession secretは`secrets/leantime.env.enc`で暗号化して管理します。
+平文のcredentialをNix式、Git、Nix Storeまたはcommand lineへ含めてはいけません。
 
-Leantime 3.9.8 の OIDC client は PKCE challenge を送らず、ID token は RS256 だけを
-検証できる。このため Kanidm の `leantime` client に限りPKCE必須化を解除し、legacy
-crypto（RS256）を有効にしている。ToolHiveにはこの例外を適用しない。
-login に失敗した場合は issuer、callback、client ID、時刻同期、discovery document
-の順に確認する。
+MariaDBのaccountは`leantime-database-user.service`が作成します。このunitは
+`LEAN_DB_PASSWORD`が16進文字列であることを確認してから、local TCP接続用accountへ反映します。
 
-## ToolHive credentialの配置
+最初にlocal administratorを作成し、通常のWeb UIが動くことを確認します。自動user作成を
+有効にする場合も、既定roleをadministratorにしないでください。
 
-ToolHive の管理用 Podman socket は `/run/toolhive/podman.sock` にあり、
-`toolhive` user だけが使用する。この socket、`/var/lib/toolhive`、upstream token を
-calc-serv や `agent-sandbox` へ共有してはならない。
-rootless Podmanとaardvark-dnsがsystemd user scopeを利用できるよう、`toolhive` userは
-lingerを有効にし、Podman serviceを`user@956.service`の起動後に開始する。Podman
-serviceでは`ProtectHome`が`/run/user`も隠してrootless runtimeを破壊するため無効に
-する。他のToolHive unitでは有効なままとし、user runtimeのmode `0700`と通常のUnix
-権限により他userのruntime stateへのアクセスを防ぐ。
+container設定はOIDC client IDとして`leantime`、issuerとして
+`https://id.sandi05.com/oauth2/openid/leantime/`を参照します。client secretは
+`leantime.env.enc`からcontainerへ渡します。Kanidm側のLeantime clientはこのリポジトリで
+宣言していないため、OIDCを利用する場合はclientの存在、callback URL
+`https://project.sandi05.com/oidc/callback`およびscopeを別途確認してください。
 
-tokenをcommand line引数、shell history、chatへ貼り付けない。TriliumNextのAI専用
-ETAPI tokenは次のsops-nix binary secretとして暗号化管理する。
+Leantime 3.9.8のOIDC clientはPKCE challengeを送らず、ID tokenはRS256だけを検証します。
+loginに失敗した場合は、issuer、callback URL、client ID、時刻同期、discovery documentの
+順に確認します。
 
-```text
-hosts/lenovo/secrets/triliumnext-etapi-token.enc
-```
+## TriliumNext
 
-復号後のfileはsops-nixが`root:root`、mode `0400`で`/run/secrets`へ配置する。
-`toolhive-triliumnext`だけがsystemd credentialとして受け取り、secret更新時は
-connectorとvMCPを自動再起動する。平文fileをrepositoryや`/var/lib/toolhive`へ
-配置しない。
+TriliumNextは`services.trilium-server`で実行し、データを`/var/lib/trilium`へ保存します。
+serviceはloopbackのport 8081で待ち受け、lenovoとn100のnginxを経由して
+`https://notes.sandi05.com`として公開します。
 
-Leantimeの公式MCP pluginを導入してAI専用API keyまたはPATを作成した後、同様に配置する。
+最初にlocal passwordを設定し、MFAを有効にしてください。TriliumNext 0.102.2・0.103.0の
+OIDC実装はKanidm 1.10.4との間で追加の互換対応が必要になるため、現在はKanidm OIDCを
+使用しません。
 
-```bash
-read -rsp 'Leantime API token: ' token
-printf '%s' "$token" |
-  sudo install -m 0440 -o root -g toolhive /dev/stdin \
-    /var/lib/toolhive/credentials/leantime-api-token
-unset token
-echo
-```
+backupはTriliumNext組み込み機能ではなく、ホスト側のbackup方針に従います。
 
-Leantime connectorはread tool名のallowlistが空なら起動しない。購入したpluginの
-`tools/list`を確認し、読み取り専用であることを確認したtoolだけを一行に一つ記録する。
+## ネットワーク境界
 
-```bash
-sudo install -m 0640 -o root -g toolhive /dev/stdin \
-  /var/lib/toolhive/config/leantime-read-tools
-```
+LeantimeとTriliumNextのapplication portはloopbackだけで待ち受けます。LANからlenovoへ
+直接到達できるのはnginxのport 80だけです。n100の公開proxy以外へ転送先を増やす場合は、
+firewall、Host headerおよびTLS終端の責務を同じ変更で確認します。
 
-標準入力へtool名を入力して`Ctrl-D`で終了する。`delete`、user管理、設定変更、一括更新
-toolを含めない。その後に起動する。
-
-```bash
-sudo systemctl restart toolhive-leantime toolhive-vmcp
-```
-
-ToolHiveはsystemd credentialからtokenを読み、connector containerへenvironment
-secretとして渡す。Leantime bridgeにはupstreamが対応する`LEANTIME_API_TOKEN`として
-渡すため、token値はprocessのcommand line、ToolHiveのRunConfig、systemd unit、
-Nix Storeには入らない。
-
-## AgentからのOAuth login
-
-consumer定義は`NixOS/home/agent/agent-services-consumers.nix`をsource of truthとする。
-Kanidm client、vMCP、両段nginxおよびHome Manager設定はこの定義から導出する。
-
-| consumer | endpoint | OAuth client |
-| --- | --- | --- |
-| Codex | `https://mcp.sandi05.com/codex/mcp` | `agent-services-codex` |
-| Claude Code | `https://mcp.sandi05.com/claude-code/mcp` | `agent-services-claude-code` |
-
-calc-servの第一ホームへ`#agent`を適用すると、永続workdirへCodexとClaude Codeの
-設定が配備される。初回だけ先に`agent-sandbox`を起動し、UIDごとの永続workdirを
-作成する。
-
-```bash
-agent-sandbox
-exit
-home-manager switch --flake /path/to/NixOS/home/agent#agent
-```
-
-適用後は同じworkspaceから入り直す。
-
-```bash
-exit
-agent-sandbox
-codex mcp login agent-services --scopes openid
-```
-
-Claude Codeでは起動後に`/mcp`を開き、`agent-services`を認証する。両clientは
-public client、PKCE、固定callback `http://localhost:8765/callback`を使用するが、
-OAuth client ID、issuer、audience、resourceおよびcredentialは共有しない。
-要求するscopeは、OIDCで安定したユーザー識別子`sub`を得るための`openid`だけとする。
-`profile`と`email`は認可に使用しないため要求しない。
-
-SSH先のcalc-servでagentを動かし、browserを手元の端末で開く場合は、最初からcallback
-portをforwardして接続する。
-
-```bash
-ssh -L 8765:127.0.0.1:8765 calc-serv
-```
-
-永続workdirへ保存されるのはconsumer別のToolHive用OAuth tokenだけである。このtokenはupstreamの
-ETAPI tokenやLeantime API keyではなく、Kanidm側でuser単位に失効できる。Codexの
-credential fileとClaudeのmutable設定fileはmode 0600、永続workdirはagent専用とする。
-agent-sandboxはdesktop keyringとD-Bus sessionを公開しないため、Codexには
-`mcp_oauth_credentials_store = "file"`を設定する。`auto`または`keyring`へ戻すと、
-login/logout時にkeyring操作が失敗する可能性がある。
-
-Kanidm 1.10.4はAuthorization Code交換時にrefresh tokenを発行し、rotationする。
-既定の有効期限は16時間であり、`offline_access` scopeは不要である。一方、discovery
-metadataは`refresh_token` grantとpublic client用の`none`認証方式を広告しない。
-このmetadata上の制約を理由にclient secretをpublic CLIへ埋め込んだり、PKCEを無効化
-したりしない。16時間以内の再起動で再認証になる場合は、次を秘密値を表示せず確認する。
-
-```bash
-stat -c '%U:%G %a %n' ~/.codex/* ~/.claude.json
-codex mcp get agent-services
-journalctl --user --since today | grep -i oauth
-```
-
-### consumerの運用
-
-consumerの追加・変更は`home/agent/agent-services-consumers.nix`だけを起点にする。
-hyphen-caseのID、重複しないOAuth client ID・endpoint・vMCP port、正確なcallback URLを
-設定する。callback URLが未確定のconsumerは`enabled = false`のままとし、wildcardや
-別applicationのcallbackを流用しない。consumerを有効化すると、calc-servのKanidm
-clientとlenovoのvMCP unitおよびnginxが同じ定義から生成される。
-
-反映後はlenovoで次を確認する。
-
-```bash
-systemctl status toolhive-vmcp-codex toolhive-vmcp-claude-code
-ss -lnt '( sport = :4483 or sport = :4484 )'
-journalctl -u toolhive-vmcp-codex -u toolhive-vmcp-claude-code -b
-curl -i http://127.0.0.1/codex/mcp
-curl -i http://127.0.0.1/claude-code/mcp
-```
-
-TriliumNext connectorのToolHive proxy portは`35353`に固定している。vMCPのstatic
-backend URLも同じNix定数から生成するため、connectorを再起動した後に次を確認する。
-
-```bash
-systemctl restart toolhive-triliumnext.service
-sudo -u toolhive env \
-  HOME=/var/lib/toolhive \
-  XDG_RUNTIME_DIR=/run/toolhive \
-  XDG_CONFIG_HOME=/var/lib/toolhive/runtime-config \
-  XDG_DATA_HOME=/var/lib/toolhive/data \
-  XDG_STATE_HOME=/var/lib/toolhive/state \
-  XDG_CACHE_HOME=/var/cache/toolhive \
-  TOOLHIVE_PODMAN_SOCKET=/run/toolhive/podman.sock \
-  thv list
-```
-
-`triliumnext`のURLは`http://127.0.0.1:35353/mcp`でなければならない。異なる値の場合は
-vMCPを起動せず、connectorの起動設定を修正する。
-
-consumerだけを停止する場合は、対応する`toolhive-vmcp-<consumer>.service`を停止する。
-connector workloadと他consumerのvMCPは停止しない。再有効化は同unitを起動する。
-client側のcredentialを破棄して再認証する場合は次を使用する。
-
-```bash
-codex mcp logout agent-services
-codex mcp login agent-services --scopes openid
-```
-
-Claude Codeは`/mcp`から対象serverをdisconnectして再認証する。OAuth sessionを強制的に
-失効させる場合はKanidmで対象userのsessionを失効させる。client definitionの削除は
-そのconsumer全体を廃止する場合だけに行い、別consumerのclientには触れない。
-
-### hosted serviceの追加
-
-ChatGPT、Claudeのhosted serviceなど、browser上のserviceにも必ず固有consumerと
-OAuth clientを割り当てる。ChatGPTではcustom appのdraftを作成して表示された正確な
-callback URLを確認し、そのURLだけを`chatgpt.callbackUrls`へ設定してから有効化する。
-client secretが必要な場合はsops-nixで管理し、consumer定義、Git、Nix Storeへ平文で
-含めない。ChatGPTだけを前提にした共通名や共用clientは作らない。
-
-Device Authorization Flowは将来のheadless consumerとして別IDで追加する。Kanidm、
-ToolHive、利用clientの3者がRFC 8628を実装し、device authorization endpointをmetadata
-で公開するまで有効化しない。
-
-## TriliumNextへのアイデア送信
-
-`NixOS/home/agent/agent-config/skills/submit-trilium-idea`をCodexとClaude Codeの
-共通skillとして配布する。ユーザーがTriliumNextへの保存を依頼した場合、skillは
-`Idea Inbox`を解決し、次の形式でnoteを作成する。
-
-| 項目 | 値 |
-| --- | --- |
-| note type | `code` |
-| MIME type | `text/markdown` |
-| 親note | `Idea Inbox` |
-| label | `idea` |
-| label value | `status=inbox`、`source=mcp` |
-
-Markdown本文は「概要」「背景・課題」「提案」「期待する効果」「懸念・未決事項」
-「次のアクション」の順とする。note titleはTriliumNextのtitle fieldへ保存し、本文に
-同じH1を重複させない。情報がない節を推測で補わず、「未記入」または未決事項として
-明示する。
-
-送信にはprefix後の`triliumnext_resolve_note_id`、`triliumnext_create_note`、
-`triliumnext_read_attributes`、`triliumnext_manage_attributes`を使用する。
-既存noteを更新する場合は、先に`triliumnext_get_note`で現在の本文を取得してから
-`triliumnext_update_note`を呼び、無関係な内容を保持する。途中で失敗した再実行では、
-作成済みnote IDを確認して属性だけを補い、同じnoteを重複作成しない。
-
-skillはclient側の形式・手順を統一するものであり、security boundaryではない。
-実際のtool制限はvMCPのCedar allowlistで強制する。`delete_note`は公開せず、ETAPI
-token、OAuth token、passwordなどの秘密情報をnote本文やattributeへ保存しない。
-
-## 残る導入作業
-
-リポジトリ上のTriliumNext、vMCP、Kanidm OAuth、Codex、Claude構成は実装済みである。
-実hostへの反映後にconsumer別login、token再利用、cross-consumer token拒否を確認する。
-ChatGPTはcustom appが発行するcallback URLを取得してから有効化する。その他の残作業は
-Leantime MCP連携を扱うissue 011と、両serviceのbackup・restoreを扱う別issueへ分離する。
-
-候補の TriliumNext connector は
-`tan-yong-sheng/triliumnext-mcp` である。permission classでreadとwriteを切り替え
-られる一方、write classは作成・更新・削除を分離できず、upstream自身もprototypeと
-明記している。このため、固定revisionのsource reviewとCedar tool allowlistを維持し、
-問題があれば
-`perfectra1n/triliumnext-mcp` などを再比較する。
-
-固定imageはrevision `1af5b220aba23632f3034765f9fde1ab6d228b8e`（0.3.17）に対応する。
-connectorのWRITE permissionは作成・更新・削除・属性変更を一括して有効化するため、
-vMCPのCedar policyで`list_children_notes`、`search_notes`、`get_note`、
-`resolve_note_id`、`read_attributes`、`create_note`、`update_note`、
-`manage_attributes`だけを許可する。`delete_note`は一覧にも表示せず、呼び出しも
-拒否する。
-ToolHive自身はdigest形式のregistry pullを扱えない
-ため、`toolhive-triliumnext-image`がrootless Podmanへdigest固定で事前pullし、
-`localhost/triliumnext-mcp:0.3.17`を付けてからconnectorへ渡す。`latest`は使用しない。
-vMCPのincoming OIDC issuerはconsumerごとに
-`https://id.sandi05.com/oauth2/openid/agent-services-<consumer>`とし、末尾に`/`を付けない。
-lenovoではsplit DNSによりこのissuerがLAN内addressへ解決されるため、
-`jwksAllowPrivateIp`は有効にする。このflagはToolHiveのOIDC validator全体に作用する
-ため、issuerは固定した信頼済みKanidm以外へ変更しない。一般のoutbound URL検証は
-緩和しない。
-ToolHiveのCedar authorizationではtool実行actionを`Action::"call_tool"`と記述する。
-`tools/list`は独立した許可対象ではなく、`call_tool`を許可されたtoolだけが一覧へ
-残るresponse filtering方式である。ToolHive 0.26.1のfilter不具合を避けるため、
-TriliumNextのtool境界はprefix後のCedar `Tool` resource allowlistで強制する。
-Kanidmで`agent-services-*` clientを利用できるのは`ai-agent-users` groupだけとする。
-
-agentに渡すのはKanidmが発行するvMCP用access tokenだけとし、ETAPI token、
-Leantime API credential、Podman socket、ToolHive 管理 API は渡さない。
+現在の`lenovo.sandi05.com`はA recordだけを持つため、IPv4のfirewall ruleを使用します。
+AAAA recordを追加する場合は、n100のIPv6 source addressを許可するip6tables ruleも
+同時に追加してください。
