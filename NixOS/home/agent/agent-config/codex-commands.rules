@@ -27,3 +27,43 @@ prefix_rule(
     decision = "allow",
     justification = "Makefile.tomlに定義したタスクを許可する"
 )
+
+prefix_rule(
+    pattern = ["gh", "auth", "status"],
+    decision = "allow"
+)
+
+prefix_rule(
+    pattern = ["gh", "repo", ["view", "list", "read-file"]],
+    decision = "allow"
+)
+
+prefix_rule(
+    pattern = ["gh", "pr", ["list", "view", "diff", "checks", "status", "create", "comment", "update-branch"]],
+    decision = "allow"
+)
+
+prefix_rule(
+    pattern = ["gh", "issue", ["list", "view", "create", "comment"]],
+    decision = "allow"
+)
+
+prefix_rule(
+    pattern = ["gh", "run", ["list", "view", "rerun", "cancel"]],
+    decision = "allow"
+)
+
+prefix_rule(
+    pattern = ["gh", "workflow", ["list", "run"]],
+    decision = "allow"
+)
+
+prefix_rule(
+    pattern = ["gh", "release", ["list", "view", "create"]],
+    decision = "allow"
+)
+
+prefix_rule(
+    pattern = ["gh", "label", "list"],
+    decision = "allow"
+)
