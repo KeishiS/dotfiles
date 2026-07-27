@@ -1,0 +1,184 @@
+= コントリビューションガイド
+
+このリポジトリへの変更は短命なブランチで作業し、pull requestを通して`main`へ統合します。
+個人環境とサーバの実構成を管理しているため、変更対象、影響するホスト、検証結果を明確にしてください。
+
+== 開発環境
+
+NixOS関連の作業は`NixOS/`を起点に行います。開発用shellへ入るには、次を実行してください。
+
+[source,console]
+----
+cd NixOS
+nix develop
+----
+
+一時的なBubblewrap sandboxを利用する場合は、`plain-sandbox`を指定します。
+
+[source,console]
+----
+cd NixOS
+nix develop .#plain-sandbox
+----
+
+== 作業の進め方
+
+. `main`を最新にし、変更の目的に合う短命なブランチを作成します。
++
+[source,console]
+----
+git switch main
+git pull --ff-only origin main
+git switch -c fix/<topic>
+----
+
+. 一つのブランチでは一つの目的に集中し、実装と対応する文書を更新します。
+. xref:#verification[変更内容に応じた検証]を実行します。
+. 最新の`origin/main`へrebaseし、ブランチをpushしてpull requestを作成します。
++
+[source,console]
+----
+git fetch origin main
+git rebase origin/main
+git push -u origin fix/<topic>
+gh pr create
+----
+
+. pull request完了後は作業ブランチを削除します。
+
+このリポジトリではGit worktreeを使用しません。競合の解消が難しい場合や変更の目的が増えた場合は、
+pull requestを分割してください。
+
+== ブランチ名
+
+変更内容に応じて、次の接頭辞を使用します。
+
+[cols="1,3",options="header"]
+|===
+|接頭辞 |用途
+
+|`feat/<topic>`
+|新しい構成や機能の追加
+
+|`fix/<topic>`
+|不具合や設定誤りの修正
+
+|`refactor/<topic>`
+|動作を変えない構成の整理
+
+|`ops/<topic>`
+|ホスト、サービス、デプロイ手順など運用構成の変更
+
+|`docs/<topic>`
+|文書のみの変更
+|===
+
+== 変更時の原則
+
+* 既存のディレクトリ構成と命名規則に従います。
+* ホスト固有の設定は`NixOS/hosts/`、再利用するサービスは`NixOS/modules/services/`、
+  用途別の構成は`NixOS/modules/profiles/`へ配置します。
+* 利用者や運用手順に影響する変更では、関連する`README.md`を同じpull requestで更新します。
+* 生成された`hardware-configuration.nix`やlockfileは、意図した差分だけをcommitします。
+* 無関係な整形、依存関係の更新、機密情報の更新を同じpull requestへ混在させません。
+* 既存サービスの削除やデータ移行を伴う変更では、影響範囲と復旧手順をpull requestへ記載します。
+
+[#secrets]
+== 機密情報
+
+平文のパスワード、秘密鍵、token、credential、環境変数ファイルをcommitしてはいけません。
+機密情報は既存の`.sops.yaml`と配置規則に従い、sops-nixで暗号化して管理します。
+
+機密情報を変更するときは、次を確認してください。
+
+. 対象ホストまたはサービスに対応する`secrets/`へ暗号化済みファイルを配置します。
+. `.sops.yaml`の`path_regex`とrecipientが対象ファイルに適合することを確認します。
+. 鍵の変更後は`list-sops-updatekeys-targets`で対象を確認し、必要なファイルに
+  `sops updatekeys`を実行します。
+. 復号した一時ファイルが残っていないことを`clean-secrets`で確認します。
+. `git diff --staged`を確認し、平文や意図しない暗号化ファイルが含まれていないことを確認します。
+
+機密情報を誤ってcommitまたはpushした場合は、履歴から消すだけで済ませず、対象のcredentialを直ちに
+失効またはローテーションし、maintainerへ連絡してください。
+
+[#verification]
+== 検証
+
+=== NixOS構成
+
+変更したホストの構成が評価できることを確認します。
+
+[source,console]
+----
+cd NixOS
+nix eval .#nixosConfigurations.<configuration-name>.config.system.build.toplevel.drvPath
+----
+
+実機へ反映する前に、可能な場合は対象ホストで`test`を実行します。
+
+[source,console]
+----
+sudo nixos-rebuild test --flake .#<configuration-name>
+----
+
+`switch`、diskの初期化、秘密情報の更新など、永続的または破壊的な操作は検証目的では実行しません。
+実行が必要な場合は、対象、影響、バックアップ、復旧手順を確認してください。
+
+=== Home Manager構成
+
+`NixOS/home/keishis/`を変更した場合は、構成を評価します。
+
+[source,console]
+----
+cd NixOS/home/keishis
+nix eval .#homeConfigurations.keishis.activationPackage.drvPath
+----
+
+=== Nixファイル
+
+変更したNixファイルは`nixfmt`で整形します。
+
+[source,console]
+----
+nixfmt <changed-files>
+----
+
+`flake.nix`または入力を変更した場合は、対応する`flake.lock`だけを更新し、lockfileの差分と
+影響する全構成の評価結果を確認します。
+
+=== Terraform構成
+
+`NixOS/ops/`以下を変更した場合は、対象ディレクトリで整形と検証を実行します。
+
+[source,console]
+----
+terraform fmt -check -recursive
+terraform init -backend=false
+terraform validate
+----
+
+`terraform plan`または`terraform apply`には外部環境へのアクセスや状態変更が伴います。
+pull requestには、実行した環境と結果を記載し、`apply`は明示的な確認を経て実行してください。
+
+=== スクリプトと文書
+
+* shell scriptを変更した場合は、少なくとも`bash -n <file>`で構文を確認し、可能な範囲で安全な入力を用いて実行します。
+* 運用補助スクリプトを変更した場合は、削除や更新を行わない確認用の実行方法を優先します。
+* 文書内のcommand例と参照先が現在の構成に一致することを確認します。
+
+すべての検証を実行できない場合は、未実施の項目と理由をpull requestへ記載してください。
+
+== Pull request
+
+pull requestには次の内容を簡潔に記載してください。
+
+* 変更の目的
+* 主な変更点
+* 影響するホスト、ユーザー、サービス
+* 実行した検証と結果
+* 未実施の検証と理由
+* データ移行、停止時間、rollbackなどの運用上の注意
+
+差分には意図したファイルだけが含まれていることを確認し、特に`flake.lock`、暗号化済みファイル、
+ホスト固有設定の予期しない変更へ注意してください。reviewの指摘へ対応した後は、影響する検証を
+再実行します。
