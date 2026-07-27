@@ -1,5 +1,7 @@
 # mcp_oauth_credentials_store = "file"
 
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
 
 [agents]
