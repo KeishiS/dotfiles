@@ -178,20 +178,9 @@ tokenファイル自体は管理しない。権限は`0600`に設定する。
 
 現在管理するskills:
 
-| skill                 | 用途                                                    |
-| --------------------- | ------------------------------------------------------- |
-| `read-pdf`            | PDFのtext抽出とページ画像の照合に基づいて内容を調査する |
-| `submit-trilium-idea` | アイデアを規定のMarkdown形式でTriliumNextへ保存する     |
-
-`submit-trilium-idea`は`agent-services` MCPを使用し、`Idea Inbox`配下へ
-`type=code`、`mime=text/markdown`のnoteを作成する。ETAPI tokenやOAuth tokenなどの
-秘密情報をnoteへ保存しない。
-
-明示的にskillを指定する場合の例:
-
-```text
-$submit-trilium-idea を使って、このアイデアをIdea Inboxへ保存してください。
-```
+| skill      | 用途                                                    |
+| ---------- | ------------------------------------------------------- |
+| `read-pdf` | PDFのtext抽出とページ画像の照合に基づいて内容を調査する |
 
 ## 設定変更
 

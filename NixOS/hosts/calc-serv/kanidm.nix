@@ -90,10 +90,6 @@ in
         server-users = {
           overwriteMembers = false;
         };
-        ai-agent-users = {
-          members = [ "agent" ];
-          overwriteMembers = false;
-        };
         idm_people_self_mail_write = {
           members = [ "server-users" ];
           overwriteMembers = false;
