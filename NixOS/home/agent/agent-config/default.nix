@@ -31,7 +31,7 @@ in
 
     ".codex/AGENTS.md".source = ./AGENTS.md;
     ".claude/CLAUDE.md".source = ./CLAUDE.md;
-    # ".codex/config.toml".source = ./codex-config.toml;
+    "codex-config-template.toml".source = ./codex-config.toml;
     ".claude/common.settings.json".source = ./claude-settings.json;
   };
 }
