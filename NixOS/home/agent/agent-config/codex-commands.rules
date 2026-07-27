@@ -5,9 +5,9 @@ prefix_rule(
 )
 
 prefix_rule(
-    pattern = ["nix", "build"],
+    pattern = ["nix", ["build", "fmt"]],
     decision = "allow",
-    justification = "Nixによるビルドを許可する"
+    justification = "Nixによるフォーマット・ビルドを許可する"
 )
 
 prefix_rule(
