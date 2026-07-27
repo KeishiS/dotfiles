@@ -7,7 +7,10 @@ prefix_rule(
 prefix_rule(
     pattern = ["nix", ["build", "fmt", "eval"]],
     decision = "allow",
-    justification = "Nixによるフォーマット・ビルド・評価を許可する"
+    justification = "Nixによるフォーマット・ビルド・評価を許可する",
+    match = [
+        "nix fmt -- flake.nix"
+    ]
 )
 
 prefix_rule(
