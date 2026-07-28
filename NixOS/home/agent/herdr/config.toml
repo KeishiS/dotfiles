@@ -1,0 +1,3 @@
+[ui.toast]
+delivery = "terminal"
+delay_seconds = 1
