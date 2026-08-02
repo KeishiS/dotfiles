@@ -35,7 +35,7 @@ in
       source-han-code-jp
       ipaexfont
       monaspace
-      moralerspace
+      moralerspace-hw
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.monaspace

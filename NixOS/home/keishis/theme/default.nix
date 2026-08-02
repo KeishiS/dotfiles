@@ -148,6 +148,6 @@ rec {
   # ============================================================================
 
   font = {
-    console = "Moralerspace Krypton";
+    console = "Moralerspace Krypton HW";
   };
 }
