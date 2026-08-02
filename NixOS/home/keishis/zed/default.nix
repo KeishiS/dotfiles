@@ -4,14 +4,17 @@
   pkgs-unstable,
   ...
 }:
+/*
 let
   theme = (import ../theme);
   homeManagerFlake = "path:${config.home.homeDirectory}/.config/home-manager";
 in
+*/
 {
   programs.zed-editor = {
     enable = true;
     package = pkgs-unstable.zed-editor;
+    /*
     extensions = [
       "nix"
       "ltex"
@@ -91,5 +94,6 @@ in
         };
       };
     };
+    */
   };
 }
