@@ -4,41 +4,54 @@ AIエージェントの活用を前提としたユーザー環境
 
 ## 管理対象
 
-このflakeは`agent`用のHome Manager設定を一つ提供する。
+このflakeは通常ホームと隔離ホームに対応する二つのHome Manager設定を提供する。
 
 ```text
 homeConfigurations.agent
+homeConfigurations.sandbox
 ```
 
-Home Managerは第一ホーム`/users/agent`を通常のホームとして管理する。calc-servの
-`agent-sandbox`が使用する`/sandbox/by-uid/<uid>`はHome Managerのホームとして扱わず、
-`#agent`のactivationから隔離環境用ファイルだけを配備する。
+`#agent`は通常ホーム`/users/agent`を管理する。`#sandbox`は隔離環境内の
+`/home/agent`を管理する。
 
-永続workdirは隔離環境内で`/home/agent`へbind mountされる。隔離環境から見れば
-`HOME=/home/agent`だが、独立したHome Manager profileは持たない。
+隔離ホームの実体はホスト側の`/sandbox/by-uid/<uid>`にあり、隔離環境内では
+`/home/agent`へバインドマウントされる。Home ManagerのGC rootをホスト側のNix daemonから
+辿れるように、同じ実体を隔離環境内の`/sandbox/by-uid/<uid>`にもバインドマウントする。
 
 ## 初回適用
 
-永続workdirは`agent-sandbox`の起動時にroot権限で作成される。初回のHome Manager適用
-より先に、対象workspaceから一度起動して終了する。
-
-```console
-agent-sandbox
-exit
-```
-
-その後、第一ホーム側のcheckoutから`#agent`を適用する。
+通常ホーム側のcheckoutから`#agent`を適用する。
 
 ```console
 home-manager switch --flake /path/to/NixOS/home/agent#agent
 ```
 
-activationは次を検査し、不一致がある場合は適用を失敗させる。
+隔離ホームは`agent-sandbox`の起動時にroot権限で作成される。対象workspaceから
+隔離環境へ入り、同じcheckoutの`#sandbox`を適用する。
 
-- `/sandbox`がmountpointであること
-- `/sandbox/by-uid/<uid>`がsymlinkではないdirectoryであること
+```console
+agent-sandbox
+cd /workspace/NixOS/home/agent
+home-manager switch --flake .#sandbox
+```
+
+`agent-sandbox`の起動処理は次を検査し、不一致がある場合は起動を失敗させる。
+
+- `/sandbox`がマウントポイントであること
+- `/sandbox/by-uid/<uid>`がシンボリックリンクではないディレクトリであること
 - 所有者が適用ユーザーのUIDとGIDであること
-- modeが`0700`であること
+- パーミッションが`0700`であること
+
+隔離環境では、Home Managerが状態ファイルの保存先を決める`XDG_STATE_HOME`を次の
+ホストからも見えるパスへ設定する。
+
+```console
+XDG_STATE_HOME=/sandbox/by-uid/<uid>/.local/state
+```
+
+これにより、Home ManagerのprofileとGC rootは`XDG_STATE_HOME`の配下に作成される。
+ホスト側のNix daemonもこれらのパスを辿れるため、現行世代と履歴世代が日次の
+ガベージコレクションで誤って削除されることを防ぐ。
 
 ## 分離モデル
 
@@ -52,40 +65,23 @@ session、skillsおよびMCP OAuth credentialがプロジェクト間で共有�
 
 ## 配備ファイル
 
-`#agent`のactivationは、永続workdirへ次のファイルをNix Storeへのread-only symlink
-として配備する。
+`#sandbox`のactivationは、隔離ホームへ次の主なファイルをNix Storeへの読み取り専用の
+シンボリックリンクとして配備する。
 
 ```text
 .bash_profile
 .bashrc
 .profile
 .vimrc
-.config/sheldon/plugins.toml
 .config/starship.toml
-.config/tmux/tmux.conf
-.config/zellij/config.kdl
 .codex/AGENTS.md
 .claude/CLAUDE.md
-.claude/settings.json
 .agents/skills
 .claude/skills
-.local/bin/codex
 ```
 
-第一ホーム用のGit設定とcredentialは配備しない。既存の通常ファイルやdirectoryと
-配備先が競合する場合は、初回だけ`.pre-agent-home-manager`を末尾に付けて退避する。
-
-管理対象の一覧は次に保存する。
-
-```text
-~/.local/state/agent-sandbox/managed-files
-```
-
-この`~`はHome Managerを適用する第一ホーム`/users/agent`を指す。manifestは隔離環境へ
-公開しない。
-
-リポジトリから管理対象を削除した場合、activationは旧manifestに記録されたsymlink
-だけを削除する。通常ファイル、credential、sessionおよび履歴は削除しない。
+通常ホーム用のGit設定とcredentialは配備しない。既存ファイルが配備先と競合する場合は、
+内容を確認してから退避または削除し、`home-manager switch`を再実行する。
 
 ## Claude Code設定
 
@@ -178,7 +174,7 @@ tokenファイル自体は管理しない。権限は`0600`に設定する。
 
 ## 設定変更
 
-第一ホーム側のcheckoutを編集する。
+通常ホーム側のcheckoutを編集する。
 
 ```console
 cd /path/to/NixOS/home/agent
@@ -194,18 +190,29 @@ agent-config/CLAUDE.md
 agent-config/codex-config.toml
 agent-config/claude-settings.json
 agent-config/skills/
-shell/
+main-agent.nix
+main-sandbox.nix
+starship/
 vim/
 zellij/
 ```
 
-変更後は同じcheckoutから`#agent`を再適用する。
+通常ホームの設定を変更した場合は`#agent`を再適用する。
 
 ```console
 home-manager switch --flake /path/to/NixOS/home/agent#agent
 ```
 
-永続workdir内にdotfilesの別checkoutを作成する必要はない。
+隔離ホームの設定を変更した場合は`agent-sandbox`へ入り、workspaceとして公開された
+同じcheckoutから`#sandbox`を再適用する。
+
+```console
+agent-sandbox
+cd /workspace/NixOS/home/agent
+home-manager switch --flake .#sandbox
+```
+
+隔離ホーム内にdotfilesの別checkoutを作成する必要はない。
 
 ## Git認証
 

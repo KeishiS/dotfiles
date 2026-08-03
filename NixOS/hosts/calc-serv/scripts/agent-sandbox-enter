@@ -142,6 +142,8 @@ bwrap \
     --dir /nix/var/nix \
     --dir /nix/var/nix/daemon-socket \
     --dir /run \
+    --dir "$sandbox_root" \
+    --dir "$sandbox_root/by-uid" \
     --dir /usr \
     --dir /usr/bin \
     --symlink "$AGENT_SANDBOX_BASH" /bin/sh \
@@ -162,6 +164,7 @@ bwrap \
     "${device_args[@]}" \
     --bind "$workspace" /workspace \
     --bind "$persistent_workdir" /home/agent \
+    --bind "$persistent_workdir" "$persistent_workdir" \
     --bind "$session_tmp" /tmp \
     "${file_mount_args[@]}" \
     --setenv HOME /home/agent \
@@ -180,6 +183,7 @@ bwrap \
     --setenv XDG_CACHE_HOME /home/agent/.cache \
     --setenv XDG_CONFIG_HOME /home/agent/.config \
     --setenv XDG_DATA_HOME /home/agent/.local/share \
+    --setenv XDG_STATE_HOME "$persistent_workdir/.local/state" \
     --setenv TMPDIR /tmp \
     --chdir /workspace \
     "$AGENT_SANDBOX_BASH" --login -i
