@@ -11,6 +11,7 @@
     ./nextcloud-media-archive.nix
     ./ai-services.nix
     ./marginalis
+    ./renkan
     ../../modules/services/kanidm-client
     ../../modules/services/nfs-client
   ];
