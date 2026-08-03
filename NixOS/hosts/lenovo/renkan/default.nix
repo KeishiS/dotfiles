@@ -17,4 +17,5 @@
     encryptionKeyFile = config.sops.secrets.renkan-encryption-key.path;
     syncIntervalSeconds = 600;
   };
+  networking.firewall.allowedTCPPorts = [ 6789 ];
 }
