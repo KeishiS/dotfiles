@@ -121,6 +121,36 @@ hostname
 agent-sandbox
 ```
 
+## シェル環境の異常調査
+
+Starshipが表示されない、またはHome Managerで導入したコマンドを実行できない場合は、
+`home-manager switch`で復旧する前に次の情報を保存する。復旧を先に行うと、シンボリックリンクや
+`PATH`の異常が上書きされ、原因を確認できなくなる。
+
+```console
+{
+  date --iso-8601=seconds
+  hostname
+  printf 'SHELL=%s\nPATH=%s\n' "$SHELL" "$PATH"
+  type -a starship node pnpm gh home-manager
+  ls -ld ~/.bashrc ~/.profile ~/.config/starship.toml ~/.nix-profile
+  readlink -f ~/.bashrc
+  readlink -f ~/.profile
+  readlink -f ~/.nix-profile
+  ls -ld ~/.local/state/nix/profiles/home-manager
+  home-manager generations
+} > /tmp/agent-sandbox-state.txt 2>&1
+```
+
+採取結果は次のファイルで確認する。
+
+```console
+cat /tmp/agent-sandbox-state.txt
+```
+
+隔離環境の`/tmp`はセッションごとの一時ディレクトリであり、`agent-sandbox`を終了すると削除される。
+調査を別のセッションで続ける場合は、終了前に`/workspace`などの必要な場所へ採取結果を移す。
+
 ## GitHub CLI認証
 
 Bash起動時に次のファイルが読み取り可能な場合、その内容を`GH_TOKEN`として読み込む。
