@@ -20,7 +20,7 @@
     listenAddress = "0.0.0.0:3456";
     openFirewall = true;
     baseUrl = "https://marginalis.sandi05.com";
-    backupDirectory = "/storage/marginalis/backup";
+    backupDirectory = "/srv/marginalis/backup";
 
     oidc = {
       issuerUrl = "https://id.sandi05.com/oauth2/openid/marginalis";
