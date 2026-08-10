@@ -23,7 +23,6 @@
     google-chrome
     pavucontrol
     slack
-    # thunderbird-bin
     zoom-us
     _1password-gui
     bitwarden-cli
@@ -33,6 +32,7 @@
     insomnia
     jetbrains.datagrip
     dbgate
+    zotero
 
     kicad
     freerouting
