@@ -61,8 +61,16 @@ in
     group = "kanidm";
   };
 
+  sops.secrets.renkan-oidc-client-secret = {
+    format = "yaml";
+    sopsFile = ./secrets/oidc-client-secret.enc.yaml;
+    mode = "0400";
+    owner = "kanidm";
+    group = "kanidm";
+  };
+
   services.kanidm = {
-    package = pkgs.kanidmWithSecretProvisioning_1_10;
+    package = pkgs.kanidmWithSecretProvisioning_1_11;
     client = {
       enable = true;
       settings.uri = "https://${domain}";
@@ -131,6 +139,24 @@ in
           "email"
           "groups_name"
         ];
+      };
+
+      systems.oauth2.renkan = {
+        displayName = "Renkan";
+        originUrl = "https://renkan.sandi05.com/auth/oidc/callback";
+        originLanding = "https://renkan.sandi05.com/";
+        basicSecretFile = config.sops.secrets.renkan-oidc-client-secret.path;
+        preferShortUsername = true;
+        scopeMaps.server-users = [
+          "openid"
+          "profile"
+          "email"
+          "groups_name"
+        ];
+        claimMaps.groups = {
+          joinType = "array";
+          valuesByGroup.server-users = [ "server-users" ];
+        };
       };
     };
 
