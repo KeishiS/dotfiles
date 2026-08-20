@@ -28,6 +28,7 @@ in
     rocmPackages.rocminfo
     rocmPackages.rocm-smi
     smartmontools
+    texliveFull
   ];
 
   services.libinput.enable = true;

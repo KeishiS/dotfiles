@@ -11,6 +11,11 @@
       ];
 
       auto-optimise-store = true;
+
+      substituters = [ "https://keishis.cachix.org" ];
+      trusted-public-keys = [
+        "keishis.cachix.org-1:j3UwGrrgTifYMa9Uo6fyDU8GEJBcorOzrHdkXBXruK4="
+      ];
     };
 
     gc = {
