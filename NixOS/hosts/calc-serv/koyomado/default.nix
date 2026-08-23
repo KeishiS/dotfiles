@@ -4,35 +4,27 @@
   # Nix storeには現れない。所有者はrootのままでよい。
   sops.secrets.koyomado-admin-emails = {
     format = "binary";
-    sopsFile = ./secrets/koyomado-admin-emails.enc;
+    sopsFile = ./secrets/admin-emails.enc;
     mode = "0400";
     restartUnits = [ "koyomado.service" ];
   };
 
   services.koyomado = {
     enable = true;
-
-    # 公開URLはn100のnginxが終端するhttps origin。cookieのSecureとOrigin検査の基準になる。
     baseUrl = "https://koyomado.com";
-
-    # TLS終端は同一ホストではなくn100にあるため、LAN側からの転送を受けられるaddressで待ち受ける。
     listenAddress = "0.0.0.0:8080";
     openFirewall = true;
-
     # 同一ホストにPostgreSQLを立て、socket + peer認証で接続する。
     # 版とバックアップはこのホストの責務になる。
     database.createLocally = true;
 
-    # infra/terraform/auth の出力。client IDは秘密情報ではないが、apply後に実際の値へ差し替える。
     cognito = {
       region = "ap-northeast-1";
-      clientId = "<REPLACE ME>";
+      clientId = "6u18otli855h13ihnd08oukvsv";
     };
 
     adminEmailsFile = config.sops.secrets.koyomado-admin-emails.path;
 
-    # 定期収集。抽出にはこのホストから到達できるOpenAI互換endpointを使う。
-    # endpoint自体はこのリポジトリの管理外で、事前に起動しておく必要がある。
     scraper = {
       enable = true;
       interval = "1d";
