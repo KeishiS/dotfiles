@@ -1,7 +1,7 @@
 prefix_rule(
-    pattern = ["nix", "develop", "-c"],
+    pattern = ["nix", "develop", "-c", ["cargo", "npm"]],
     decision = "allow",
-    justification = "Nixの開発環境に入っているコマンドの実行を許可する"
+    justification = "Nix開発環境内でRustとnpmの検証を許可する"
 )
 
 prefix_rule(
@@ -52,32 +52,60 @@ prefix_rule(
     decision = "allow"
 )
 
+
 prefix_rule(
-    pattern = ["gh", "pr", ["list", "view", "diff", "checks", "status", "create", "comment", "update-branch"]],
+    pattern = ["gh", "pr", ["list", "view", "diff", "checks", "status"]],
+    decision = "allow",
+    justification = "Pull Requestの読み取り操作を許可する"
+)
+
+prefix_rule(
+    pattern = ["gh", "issue", ["list", "view"]],
+    decision = "allow",
+    justification = "Issueの読み取り操作を許可する"
+)
+
+prefix_rule(
+    pattern = ["gh", "run", ["list", "view", "watch"]],
+    decision = "allow",
+    justification = "GitHub Actionsの実行状況の確認を許可する"
+)
+
+prefix_rule(
+    pattern = ["gh", "run", ["rerun", "cancel"]],
+    decision = "prompt",
+    justification = "GitHub Actionsの再実行または中止は外部状態を変更するため確認する"
+)
+
+prefix_rule(
+    pattern = ["gh", "workflow", "list"],
     decision = "allow"
 )
 
 prefix_rule(
-    pattern = ["gh", "issue", ["list", "view", "create", "comment"]],
+    pattern = ["gh", "workflow", "run"],
+    decision = "prompt",
+    justification = "GitHub Actions workflowの開始は外部状態を変更するため確認する"
+)
+
+prefix_rule(
+    pattern = ["gh", "release", ["list", "view"]],
     decision = "allow"
 )
 
 prefix_rule(
-    pattern = ["gh", "run", ["list", "view", "rerun", "cancel", "watch"]],
-    decision = "allow"
-)
-
-prefix_rule(
-    pattern = ["gh", "workflow", ["list", "run"]],
-    decision = "allow"
-)
-
-prefix_rule(
-    pattern = ["gh", "release", ["list", "view", "create"]],
-    decision = "allow"
+    pattern = ["gh", "release", "create"],
+    decision = "prompt",
+    justification = "GitHub Releaseの作成は外部公開を伴うため確認する"
 )
 
 prefix_rule(
     pattern = ["gh", "label", "list"],
     decision = "allow"
+)
+
+prefix_rule(
+    pattern = ["gh", "api"],
+    decision = "prompt",
+    justification = "GitHub APIによる書き込みには投稿前検査が適用されないため、実行内容を確認する"
 )
