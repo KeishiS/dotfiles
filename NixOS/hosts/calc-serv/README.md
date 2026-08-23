@@ -418,7 +418,8 @@ kanidm person credential create-reset-token --name idm_admin <USER>
 ## Koyomado
 
 Koyomadoは公開イベントを集めて表示するカレンダーです。calc-servで動かし、
-外部からのリクエストはn100のnginxが受け取って転送します。設定は `koyomado.nix` にあります。
+外部からのリクエストはn100のnginxが受け取って転送します。設定は `koyomado/default.nix` に、
+管理者メールアドレスのsecretは `koyomado/secrets/` にあります。
 
 経路は次のとおりです。Web UIとAPIは同じoriginで、どちらも `koyomado.service` が返します。
 
@@ -434,7 +435,7 @@ koyomado.com (Cloudflare DNS、A recordはkoyomado側のTerraformが管理)
 
 ### 反映前に必要な準備
 
-- `koyomado.nix` の `cognito.clientId` を `<REPLACE ME>` から実際の値へ差し替えます。
+- `koyomado/default.nix` の `cognito.clientId` を `<REPLACE ME>` から実際の値へ差し替えます。
   値はkoyomadoリポジトリの `infra/terraform/auth` をapplyしたときの `client_id` 出力です。
   差し替えるまでCognitoによるログインは動きません。
 - n100のACME用Cloudflare token(`hosts/n100/secrets/sandi05-cloudflare.enc.yaml`)に、
@@ -445,11 +446,11 @@ koyomado.com (Cloudflare DNS、A recordはkoyomado側のTerraformが管理)
 
 ### 管理者メールアドレスの変更
 
-管理者は `secrets/koyomado-admin-emails.enc` に1行1件で書いたメールアドレスで決まります。
+管理者は `koyomado/secrets/koyomado-admin-emails.enc` に1行1件で書いたメールアドレスで決まります。
 このファイルはsystemd credentialとして渡り、Nix storeには入りません。
 
 ```bash
-sops hosts/calc-serv/secrets/koyomado-admin-emails.enc
+sops hosts/calc-serv/koyomado/secrets/koyomado-admin-emails.enc
 sudo nixos-rebuild switch --flake .#nixos-sandi-calc-serv
 ```
 
