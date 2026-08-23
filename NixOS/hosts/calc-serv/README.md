@@ -415,6 +415,67 @@ kanidm person credential create-reset-token --name idm_admin <USER>
 - 高権限ユーザのcredential resetには制限がある。
 - reset tokenは既定で1時間、最大24時間まで。
 
+## Koyomado
+
+Koyomadoは公開イベントを集めて表示するカレンダーです。calc-servで動かし、
+外部からのリクエストはn100のnginxが受け取って転送します。設定は `koyomado.nix` にあります。
+
+経路は次のとおりです。Web UIとAPIは同じoriginで、どちらも `koyomado.service` が返します。
+
+```text
+koyomado.com (Cloudflare DNS、A recordはkoyomado側のTerraformが管理)
+  -> n100: nginx (443でTLS終端、useACMEHost = "koyomado.com")
+       -> calc-serv: koyomado.service (0.0.0.0:8080)
+            -> PostgreSQL (同一ホスト、socket + peer認証)
+```
+
+`services.koyomado.database.createLocally = true` により、このホストでPostgreSQLが動き、
+`koyomado` databaseと同名のroleが作られます。PostgreSQLの版とバックアップはこのホストの責務です。
+
+### 反映前に必要な準備
+
+- `koyomado.nix` の `cognito.clientId` を `<REPLACE ME>` から実際の値へ差し替えます。
+  値はkoyomadoリポジトリの `infra/terraform/auth` をapplyしたときの `client_id` 出力です。
+  差し替えるまでCognitoによるログインは動きません。
+- n100のACME用Cloudflare token(`hosts/n100/secrets/sandi05-cloudflare.enc.yaml`)に、
+  `koyomado.com` zoneの `Zone:Read` と `DNS:Edit` を含めます。証明書はDNS-01で取得するため、
+  権限が足りないと `acme-koyomado.com.service` が失敗します。
+- 定期収集はOpenAI互換のendpoint `http://127.0.0.1:12001/v1` を使います。この待ち受けは
+  このリポジトリの管理外なので、calc-serv上で先に起動し、モデル `qwen3.5:9b` を用意しておきます。
+
+### 管理者メールアドレスの変更
+
+管理者は `secrets/koyomado-admin-emails.enc` に1行1件で書いたメールアドレスで決まります。
+このファイルはsystemd credentialとして渡り、Nix storeには入りません。
+
+```bash
+sops hosts/calc-serv/secrets/koyomado-admin-emails.enc
+sudo nixos-rebuild switch --flake .#nixos-sandi-calc-serv
+```
+
+### 反映後の確認
+
+```bash
+systemctl is-active koyomado.service
+curl --fail http://127.0.0.1:8080/api/health
+
+# 非秘密設定、DB到達性、schemaの適用状態をJSONで報告する
+systemctl start koyomado-diagnose.service
+journalctl -u koyomado-diagnose.service -o cat -n 60
+
+# 外部からの経路(n100のnginx経由)
+curl --fail https://koyomado.com/api/health
+```
+
+定期収集は `koyomado-scraper.timer` が1日ごとに実行し、新しいイベントを候補として登録します。
+候補はWeb UIの `/admin/candidates` で承認または却下します。初回は手動で確認できます。
+
+```bash
+systemctl list-timers koyomado-scraper.timer
+systemctl start koyomado-scraper.service
+journalctl -u koyomado-scraper.service -o cat | grep -E 'Saved|import candidates completed|error'
+```
+
 ## disk故障時の交換手順
 
 disk交換はdiskoではなく、btrfsの運用commandで行う。
