@@ -433,6 +433,13 @@
     owner = "acme";
   };
 
+  sops.secrets.koyomado-cloudflare-acme = {
+    format = "yaml";
+    sopsFile = ./secrets/sandi05-cloudflare.enc.yaml;
+    mode = "0400";
+    owner = "acme";
+  };
+
   security.acme = {
     acceptTerms = true;
     defaults.email = "nobuta05@gmail.com";
@@ -457,7 +464,7 @@
     certs."koyomado.com" = {
       domain = "koyomado.com";
       dnsProvider = "cloudflare";
-      environmentFile = config.sops.secrets."sandi05-cloudflare-acme".path;
+      environmentFile = config.sops.secrets.koyomado-cloudflare-acme.path;
       dnsPropagationCheck = true;
     };
   };
