@@ -12,6 +12,17 @@
     recommendedGzipSettings = true;
     recommendedProxySettings = true;
 
+    # KoyomadoのOTPメールが連投されないよう、ログイン要求だけ流量を絞る。
+    # Cloudflareのproxy越しでは$binary_remote_addrがCloudflareのIPになるため、
+    # 利用者ごとに数えられるようCF-Connecting-IPがあればそれを鍵にする。
+    appendHttpConfig = ''
+      map $http_cf_connecting_ip $koyomado_client_ip {
+        ""      $binary_remote_addr;
+        default $http_cf_connecting_ip;
+      }
+      limit_req_zone $koyomado_client_ip zone=koyomado_login:1m rate=6r/m;
+    '';
+
     #---------------------------------------------------------------------
     # Nextcloud
     # --------------------------------------------------------------------
@@ -328,6 +339,54 @@
     };
 
     #---------------------------------------------------------------------
+    # Koyomado
+    # --------------------------------------------------------------------
+    virtualHosts."koyomado.com-redirect" = {
+      serverName = "koyomado.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 80;
+        }
+        {
+          addr = "[::]";
+          port = 80;
+        }
+      ];
+      extraConfig = ''
+        return 301 https://$host$request_uri;
+      '';
+    };
+
+    virtualHosts."koyomado.com" = {
+      serverName = "koyomado.com";
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 443;
+          ssl = true;
+        }
+        {
+          addr = "[::]";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      addSSL = true;
+      useACMEHost = "koyomado.com";
+
+      # Web UIとAPIは同一originで、calc-servのkoyomado.serviceが両方を返す。
+      locations."/".proxyPass = "http://calc-serv.sandi05.com:8080";
+
+      locations."/api/auth/request-login" = {
+        proxyPass = "http://calc-serv.sandi05.com:8080";
+        extraConfig = ''
+          limit_req zone=koyomado_login burst=3 nodelay;
+        '';
+      };
+    };
+
+    #---------------------------------------------------------------------
     # Root
     # --------------------------------------------------------------------
     virtualHosts."sandi05.com-redirect" = {
@@ -374,6 +433,13 @@
     owner = "acme";
   };
 
+  sops.secrets.koyomado-cloudflare-acme = {
+    format = "yaml";
+    sopsFile = ./secrets/sandi05-cloudflare.enc.yaml;
+    mode = "0400";
+    owner = "acme";
+  };
+
   security.acme = {
     acceptTerms = true;
     defaults.email = "nobuta05@gmail.com";
@@ -390,6 +456,15 @@
       ];
       dnsProvider = "cloudflare";
       environmentFile = config.sops.secrets."sandi05-cloudflare-acme".path;
+      dnsPropagationCheck = true;
+    };
+
+    # Koyomadoはzoneが別のため証明書も分ける。DNS-01で取得するので、環境変数の
+    # Cloudflare tokenにkoyomado.com zoneのZone:ReadとDNS:Editが必要になる。
+    certs."koyomado.com" = {
+      domain = "koyomado.com";
+      dnsProvider = "cloudflare";
+      environmentFile = config.sops.secrets.koyomado-cloudflare-acme.path;
       dnsPropagationCheck = true;
     };
   };
