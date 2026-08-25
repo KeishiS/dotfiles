@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   # 管理者メールアドレスの一覧(1行1件)。systemd credentialとしてserviceへ渡るため、
   # Nix storeには現れない。所有者はrootのままでよい。
@@ -50,5 +50,11 @@
         "https://fanfun.jaxa.jp/event/visit/"
       ];
     };
+  };
+
+  # scraperのLLM endpointは forwarding/ のsshトンネルが用意するため、その後に起動する。
+  systemd.services.koyomado-scraper = lib.mkIf config.services.koyomado.scraper.enable {
+    after = [ "llm-ssh-forwarding.service" ];
+    wants = [ "llm-ssh-forwarding.service" ];
   };
 }

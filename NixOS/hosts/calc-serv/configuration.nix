@@ -18,6 +18,7 @@ in
     ./kanidm.nix
     ./nextcloud.nix
     ./koyomado
+    ./forwarding
   ];
 
   networking.hostName = "nixos-sandi-calc-serv";

@@ -415,6 +415,47 @@ kanidm person credential create-reset-token --name idm_admin <USER>
 - 高権限ユーザのcredential resetには制限がある。
 - reset tokenは既定で1時間、最大24時間まで。
 
+## sshトンネル
+
+このホストから外のサービスへ届かせるためのsshトンネルは `forwarding/` にまとめます。
+接続先を含むためディレクトリ全体がgit-cryptの対象です。転送を足すときは、`scripts/` へ
+scriptを追加し、`forwarding/default.nix` に同じ形でserviceを定義します。
+
+経路はtailnetを通ります。calc-servのtailscaleを止めたり、userspace networkingへ切り替えたり
+すると、踏み台へ到達できずトンネルが張れなくなります。切り替える場合は、sshの `ProxyCommand`
+をSOCKS5経由へ変える必要があります。
+
+### LLMのendpoint
+
+`llm-ssh-forwarding.service` が踏み台を経由してMacへsshでつなぎ、calc-servの `127.0.0.1:12001`
+をMac側のLLMへ向けます。KoyomadoのscraperはこのendpointをOpenAI互換のAPIとして使い、
+`koyomado-scraper.service` はこのトンネルの後に起動します。
+
+秘密鍵はhome-srvで使っていたものと同じです。sopsの受信者がホストごとに違うため、calc-serv向けに
+暗号化し直します。復号にはyubikeyが必要です。
+
+```bash
+cd NixOS
+
+# 復号した平文をファイルに残さず、calc-servの規則で暗号化し直す
+sops -d --input-type binary --output-type binary \
+  hosts/home-srv/myserv1/secrets/id_ed25519.enc \
+  | sops -e --input-type binary --output-type binary \
+      --filename-override hosts/calc-serv/forwarding/secrets/llm-ssh-forwarding-key.enc /dev/stdin \
+  > hosts/calc-serv/forwarding/secrets/llm-ssh-forwarding-key.enc
+
+# 受信者がcalc-servの鍵になっていることを確認する
+grep -o '"recipient": "[^"]*"' hosts/calc-serv/forwarding/secrets/llm-ssh-forwarding-key.enc
+```
+
+反映後は、トンネルとportを確認します。
+
+```bash
+systemctl is-active llm-ssh-forwarding.service
+journalctl -u llm-ssh-forwarding.service -n 30 --no-pager
+curl --fail http://127.0.0.1:12001/v1/models
+```
+
 ## Koyomado
 
 Koyomadoは公開イベントを集めて表示するカレンダーです。calc-servで動かし、
@@ -442,15 +483,16 @@ koyomado.com (Cloudflare DNS、A recordはkoyomado側のTerraformが管理)
   `koyomado.com` zoneの `Zone:Read` と `DNS:Edit` を含めます。証明書はDNS-01で取得するため、
   権限が足りないと `acme-koyomado.com.service` が失敗します。
 - 定期収集はOpenAI互換のendpoint `http://127.0.0.1:12001/v1` を使います。この待ち受けは
-  このリポジトリの管理外なので、calc-serv上で先に起動し、モデル `qwen3.5:9b` を用意しておきます。
+  「sshトンネル」の節にある `llm-ssh-forwarding.service` が用意します。トンネルの先にあるMacで
+  LLMを起動し、モデル `qwen3.5:9b` を用意しておきます。
 
 ### 管理者メールアドレスの変更
 
-管理者は `koyomado/secrets/koyomado-admin-emails.enc` に1行1件で書いたメールアドレスで決まります。
+管理者は `koyomado/secrets/admin-emails.enc` に1行1件で書いたメールアドレスで決まります。
 このファイルはsystemd credentialとして渡り、Nix storeには入りません。
 
 ```bash
-sops hosts/calc-serv/koyomado/secrets/koyomado-admin-emails.enc
+sops hosts/calc-serv/koyomado/secrets/admin-emails.enc
 sudo nixos-rebuild switch --flake .#nixos-sandi-calc-serv
 ```
 
