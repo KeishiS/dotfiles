@@ -9,7 +9,7 @@
     restartUnits = [ "renkan.service" ];
   };
 
-  sops.secrets.renkan-oidc-client-secret = {
+  sops.secrets.renkan-oidc-secret = {
     format = "binary";
     sopsFile = ./secrets/renkan-oidc-client-secret.enc;
     owner = "root";
@@ -47,13 +47,18 @@
     oidc = {
       issuerUrl = "https://id.sandi05.com/oauth2/openid/renkan";
       clientId = "renkan";
-      clientSecretFile = config.sops.secrets.renkan-oidc-client-secret.path;
+      clientSecretFile = config.sops.secrets.renkan-oidc-secret.path;
     };
 
     zoteroOAuth = {
       consumerKeyFile = config.sops.secrets.renkan-zotero-client-key.path;
       consumerSecretFile = config.sops.secrets.renkan-zotero-client-secret.path;
       allowGroupReadAccess = true;
+    };
+
+    embedding = {
+      url = "http://localhost:12001/";
+      model = "qwen3-embedding:4b";
     };
   };
   networking.firewall.allowedTCPPorts = [ 6789 ];

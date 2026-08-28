@@ -335,7 +335,7 @@
       ];
       addSSL = true;
       useACMEHost = "sandi05.com";
-      locations."/".proxyPass = "http://lenovo.sandi05.com:6789/";
+      locations."/".proxyPass = "http://calc-serv.sandi05.com:6789/";
     };
 
     #---------------------------------------------------------------------

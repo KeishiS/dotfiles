@@ -18,6 +18,7 @@ in
     ./kanidm.nix
     ./nextcloud.nix
     ./koyomado
+    ./renkan
     ./forwarding
   ];
 

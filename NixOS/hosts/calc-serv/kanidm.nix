@@ -54,8 +54,8 @@ in
   };
 
   sops.secrets.marginalis-oidc-client-secret = {
-    format = "binary";
-    sopsFile = ./secrets/marginalis-oidc-client-secret.enc;
+    format = "yaml";
+    sopsFile = ./secrets/oidc-client-secret.enc.yaml;
     mode = "0400";
     owner = "kanidm";
     group = "kanidm";
