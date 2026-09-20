@@ -37,6 +37,7 @@
   environment.systemPackages = with pkgs; [
     podman-compose
     remmina
+    distrobox
   ];
 
   services.tailscale = {

@@ -31,29 +31,29 @@
       llm.baseUrl = "http://127.0.0.1:12001/v1";
       sources = [
         # 国立科学博物館(上野本館・筑波実験植物園・自然教育園の展示一覧)
-        "https://www.kahaku.go.jp/tenji/exhibitions.html"
+        { url = "https://www.kahaku.go.jp/tenji/exhibitions.html"; tags = [ "国立科学博物館" ]; }
         # 東京都現代美術館(展覧会)
-        "https://www.mot-art-museum.jp/exhibitions/"
+        { url = "https://www.mot-art-museum.jp/exhibitions/"; tags = [ "東京都現代美術館" ]; }
         # 国立天文台(イベント)
-        "https://www.nao.ac.jp/news/events/"
+        { url = "https://www.nao.ac.jp/news/events/"; tags = [ "国立天文台" ]; }
         # 国立天文台 4D2U ドームシアター
-        "https://prc.nao.ac.jp/cgi-bin/naoj/4d2u/entry.cgi"
+        { url = "https://prc.nao.ac.jp/cgi-bin/naoj/4d2u/entry.cgi"; tags = [ "国立天文台" ]; }
         # JAMSTEC(イベント)
-        "https://www.jamstec.go.jp/j/pr/events/"
+        { url = "https://www.jamstec.go.jp/j/pr/events/"; tags = [ "海洋研究開発機構" ]; }
         # 理化学研究所(イベント)
-        "https://www.riken.jp/pr/events/events/"
+        { url = "https://www.riken.jp/pr/events/events/"; tags = [ "理化学研究所" ]; }
         # 自然科学研究機構(イベント)
-        "https://www.nins.jp/event/"
+        { url = "https://www.nins.jp/event/"; tags = [ "自然科学研究機構" ]; }
         # 高エネルギー加速器研究機構 KEK(イベント)
-        "https://www.kek.jp/ja/event"
+        { url = "https://www.kek.jp/ja/event"; tags = [ "高エネルギー加速器研究機構" ]; }
         # JAXA 施設見学・イベント
-        "https://fanfun.jaxa.jp/event/visit/"
+        { url = "https://fanfun.jaxa.jp/event/visit/"; tags = [ "JAXA" ]; }
       ];
     };
   };
 
   # scraperのLLM endpointは forwarding/ のsshトンネルが用意するため、その後に起動する。
-  systemd.services.koyomado-scraper = lib.mkIf config.services.koyomado.scraper.enable {
+  systemd.services.koyomado-scraper-extract = lib.mkIf config.services.koyomado.scraper.enable {
     after = [ "llm-ssh-forwarding.service" ];
     wants = [ "llm-ssh-forwarding.service" ];
   };
