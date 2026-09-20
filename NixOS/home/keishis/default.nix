@@ -36,6 +36,7 @@
     ./vim
     ./helix
     ./zed
+    ./delta
     ./vscode
 
     # media
