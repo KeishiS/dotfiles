@@ -14,6 +14,8 @@ in
 {
   home.packages = [ agent-tools-install ];
   home.file = {
+    ".config/agent/pdf-env".source = ./pdf-env;
+
     ".agents/skills" = {
       source = ./skills;
       recursive = true;
