@@ -7,6 +7,17 @@
 let
   sandboxRoot = "/sandbox";
 
+  homeSwitch = pkgs.writeShellApplication {
+    name = "agent-home-switch";
+    runtimeInputs = with pkgs; [
+      coreutils
+      util-linux
+      nix
+      home-manager
+    ];
+    text = builtins.readFile ./scripts/agent-home-switch;
+  };
+
   sandboxEnterRuntimeInputs = with pkgs; [
     bashInteractive
     bubblewrap
@@ -60,6 +71,7 @@ in
 {
   environment.systemPackages = [
     sandboxFrontend
+    homeSwitch
   ];
 
   # bwrapの--new-sessionを使わず対話shellのjob controlを維持するため、

@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# 同じUIDの全sandboxで、移行とHome Managerの適用を直列化します。
+die() {
+    echo "agent-home-switch: $*" >&2
+    exit 1
+}
+
+migrate=0
+if [[ ${1:-} == --migrate ]]; then
+    migrate=1
+    shift
+fi
+[[ $# == 1 ]] || die "使い方: agent-home-switch [--migrate] FLAKE_DIRECTORY"
+flake_dir="$(realpath -- "$1")"
+[[ -f $flake_dir/flake.nix ]] || die "指定先にflake.nixがありません。"
+expected_home="/sandbox/by-uid/$(id -u)"
+[[ ${AGENT_SANDBOX:-} == 1 && $HOME == "$expected_home" ]] ||
+    die "新しいagent-sandbox内で実行してください。"
+[[ ! -L $HOME && $(stat -c '%u:%a' "$HOME") == "$(id -u):700" ]] ||
+    die "ホームの所有者または権限が不正です。"
+export AGENT_SANDBOX_HOME="$expected_home"
+export XDG_STATE_HOME="$HOME/.local/state"
+mkdir -p "$XDG_STATE_HOME"
+exec 9>"$XDG_STATE_HOME/agent-home-switch.lock"
+flock 9
+
+profiles="$XDG_STATE_HOME/nix/profiles"
+if [[ $migrate == 1 ]]; then
+    [[ ! -e $HOME/.nix-profile || -L $HOME/.nix-profile ]] ||
+        die ".nix-profileがシンボリックリンクではありません。"
+    mkdir -p "$profiles"
+    # 参照先が残る既存世代を保護します。消失済みの世代は復元しません。
+    shopt -s nullglob
+    for generation in "$profiles"/profile-*-link "$profiles"/home-manager-*-link; do
+        [[ -L $generation ]] || die "世代ファイルがシンボリックリンクではありません。"
+        target="$(readlink "$generation")"
+        [[ $target == /nix/store/* ]] || die "世代の参照先がNix Storeではありません。"
+        if [[ -e $target ]]; then
+            nix-store --realise "$target" --add-root "$generation" --indirect >/dev/null
+        else
+            printf '参照先が消失した世代を残します: %s\n' "$generation" >&2
+        fi
+    done
+    # 現行世代が消失している場合は、壊れた入口を退避して再構築します。
+    # 過去の世代リンクは調査用に残します。
+    for current in "$profiles/profile" "$profiles/home-manager"; do
+        if [[ -L $current && ! -e $current ]]; then
+            backup_dir="$(mktemp -d "$XDG_STATE_HOME/agent-home-migration.XXXXXXXX")"
+            mv -- "$current" "$backup_dir/"
+            printf '参照先が消失した現行リンクを退避しました: %s\n' "$backup_dir" >&2
+        fi
+    done
+    # リンクの旧値は復旧調査用に一度だけ保存します。
+    if [[ -L $HOME/.nix-profile && ! -e $XDG_STATE_HOME/agent-nix-profile-before-migration.txt ]]; then
+        readlink "$HOME/.nix-profile" >"$XDG_STATE_HOME/agent-nix-profile-before-migration.txt"
+    fi
+    ln -sfnT "$profiles/profile" "$HOME/.nix-profile"
+else
+    if [[ -L $HOME/.nix-profile && $(readlink "$HOME/.nix-profile") != "$profiles/profile" ]]; then
+        die "旧形式のプロファイルです。全sandboxを終了・再起動し、--migrateで移行してください。"
+    fi
+fi
+
+home-manager switch --impure --flake "path:$flake_dir#sandbox"
+# 同じ世代が再利用されても、GC rootを確実に登録します。
+generation="$(readlink "$profiles/profile")"
+[[ $generation == profile-*-link && $generation != */* ]] || die "適用後のプロファイル形式が不正です。"
+profile_generation="$profiles/$generation"
+target="$(readlink -e "$profile_generation")"
+nix-store --realise "$target" --add-root "$profile_generation" --indirect >/dev/null
+printf '共有ホームの設定を適用しました。新しいシェルで使用してください。\n'

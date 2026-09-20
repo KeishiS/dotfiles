@@ -94,8 +94,8 @@ trap 'exit 143' TERM
 trap 'exit 129' HUP
 
 # 隔離環境の初期設定
-printf 'agent:x:%s:%s:AI Agent:/home/agent:%s\n' \
-    "$current_uid" "$current_gid" "$AGENT_SANDBOX_BASH" >"$runtime_dir/passwd"
+printf 'agent:x:%s:%s:AI Agent:%s:%s\n' \
+    "$current_uid" "$current_gid" "$persistent_workdir" "$AGENT_SANDBOX_BASH" >"$runtime_dir/passwd"
 printf 'agent:x:%s:\n' "$current_gid" >"$runtime_dir/group"
 printf '%s\n' \
     'passwd: files' \
@@ -163,11 +163,11 @@ bwrap \
     --dev /dev \
     "${device_args[@]}" \
     --bind "$workspace" /workspace \
-    --bind "$persistent_workdir" /home/agent \
     --bind "$persistent_workdir" "$persistent_workdir" \
     --bind "$session_tmp" /tmp \
     "${file_mount_args[@]}" \
-    --setenv HOME /home/agent \
+    --setenv HOME "$persistent_workdir" \
+    --setenv AGENT_SANDBOX_HOME "$persistent_workdir" \
     --setenv AGENT_SANDBOX 1 \
     --setenv USER agent \
     --setenv LOGNAME agent \
@@ -180,9 +180,9 @@ bwrap \
     --setenv SSL_CERT_FILE "$AGENT_SANDBOX_CACERT" \
     --setenv NIX_SSL_CERT_FILE "$AGENT_SANDBOX_CACERT" \
     --setenv NIX_REMOTE daemon \
-    --setenv XDG_CACHE_HOME /home/agent/.cache \
-    --setenv XDG_CONFIG_HOME /home/agent/.config \
-    --setenv XDG_DATA_HOME /home/agent/.local/share \
+    --setenv XDG_CACHE_HOME "$persistent_workdir/.cache" \
+    --setenv XDG_CONFIG_HOME "$persistent_workdir/.config" \
+    --setenv XDG_DATA_HOME "$persistent_workdir/.local/share" \
     --setenv XDG_STATE_HOME "$persistent_workdir/.local/state" \
     --setenv TMPDIR /tmp \
     --chdir /workspace \
