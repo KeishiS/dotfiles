@@ -1,10 +1,10 @@
-{ pkgs, ... }: {
+{ pkgs, sandboxHome, ... }: {
   imports = [
     ./agent-config
   ];
   home = {
     username = "agent";
-    homeDirectory = "/home/agent";
+    homeDirectory = sandboxHome;
 
     packages = with pkgs; [
       pnpm_11

@@ -11,12 +11,10 @@ homeConfigurations.agent
 homeConfigurations.sandbox
 ```
 
-`#agent`は通常ホーム`/users/agent`を管理する。`#sandbox`は隔離環境内の
-`/home/agent`を管理する。
-
-隔離ホームの実体はホスト側の`/sandbox/by-uid/<uid>`にあり、隔離環境内では
-`/home/agent`へバインドマウントされる。Home ManagerのGC rootをホスト側のNix daemonから
-辿れるように、同じ実体を隔離環境内の`/sandbox/by-uid/<uid>`にもバインドマウントする。
+`#agent`は通常ホーム`/users/agent`を管理します。`#sandbox`は、ホストと隔離環境の
+両方で`/sandbox/by-uid/<uid>`をホームとして管理します。`<uid>`は起動ユーザーの数値UIDです。
+固定パス`/home/agent`は使用しません。これにより、プロファイルを削除から保護する参照
+（GC root）をホストのNix daemonからも同じパスで辿れます。
 
 ## 初回適用
 
@@ -31,8 +29,7 @@ home-manager switch --flake /path/to/NixOS/home/agent#agent
 
 ```console
 agent-sandbox
-cd /workspace/NixOS/home/agent
-home-manager switch --flake .#sandbox
+agent-home-switch /workspace/NixOS/home/agent
 ```
 
 `agent-sandbox`の起動処理は次を検査し、不一致がある場合は起動を失敗させる。
@@ -52,6 +49,51 @@ XDG_STATE_HOME=/sandbox/by-uid/<uid>/.local/state
 これにより、Home ManagerのprofileとGC rootは`XDG_STATE_HOME`の配下に作成される。
 ホスト側のNix daemonもこれらのパスを辿れるため、現行世代と履歴世代が日次の
 ガベージコレクションで誤って削除されることを防ぐ。
+
+## 共有ホームへの適用
+
+隔離ホームには、ホストが提供する`agent-home-switch FLAKE_DIRECTORY`で設定を適用します。
+プロファイルが壊れていても、`/run/current-system/sw/bin/agent-home-switch`から起動できます。
+このコマンドは同じUIDで共有するロックを取得し、ビルドから適用完了まで保持します。
+複数のsandboxから実行した場合、後から実行した処理は先行処理の終了を待ちます。
+
+`#sandbox`の評価には`AGENT_SANDBOX_HOME`が必要です。適用コマンドが実UIDと
+`HOME`を照合して値を設定し、`--impure`でHome Managerに渡します。通常ホームの
+`#agent`は従来どおり環境変数なしで評価できます。
+
+隔離ホームでは`home-manager switch`や世代の`activate`を直接実行しないでください。
+それらの操作や`nix-env`・`nix profile`の直接操作は、この共有ロックの対象外です。
+
+## 旧ホームパスからの移行
+
+この移行では同じホームの実体を使い続けるため、認証情報や履歴を初期化しません。
+ただし、移行後の生成物は古いsandboxから利用できません。次の順序で移行します。
+
+1. 同じUIDで起動したすべてのsandboxと、その中のエージェントを終了します。
+2. ホストでこのリポジトリのNixOS設定を適用し、新しい`agent-sandbox`と`agent-home-switch`を導入します。
+3. 新しいsandboxに入り、以下を実行します。
+
+    ```console
+    /run/current-system/sw/bin/agent-home-switch --migrate /workspace/NixOS/home/agent
+    ```
+
+    移行前のシェル設定が古いパスを参照して警告を出す場合でも、上記の絶対パスで実行できます。
+    起動設定がシェルを終了させる場合は、ホスト側で該当する設定を退避してから再試行します。
+
+4. sandboxを終了して入り直し、`echo "$HOME"`、`readlink -e ~/.nix-profile`、
+   `command -v node gh starship`を確認します。
+
+移行コマンドは既存のユーザープロファイルとHome Managerの世代を調べ、Store内に残る
+世代のGC rootを新しい絶対パスで登録し直します。消失済みの過去世代は復元せず、
+リンクを調査用に残します。現行世代が消失している場合は、その入口を
+`$XDG_STATE_HOME/agent-home-migration.*`へ退避して新しい設定を構築します。
+`~/.nix-profile`の旧リンク先は`$XDG_STATE_HOME/agent-nix-profile-before-migration.txt`へ保存します。
+失敗時は原因を解消して同じ移行コマンドを再実行できます。
+
+Home Managerが管理するファイルは再生成します。ツールが独自に保存した設定中の
+`/home/agent`や、そのパスを指す手動作成のリンクは一括置換しません。該当ツールで
+エラーが出た場合は保存先設定を変更してください。古いホームパスを含む世代の
+`activate`を直接実行してロールバックすることはできません。
 
 ## 分離モデル
 
@@ -81,7 +123,7 @@ session、skillsおよびMCP OAuth credentialがプロジェクト間で共有�
 ```
 
 通常ホーム用のGit設定とcredentialは配備しない。既存ファイルが配備先と競合する場合は、
-内容を確認してから退避または削除し、`home-manager switch`を再実行する。
+内容を確認してから退避または削除し、`agent-home-switch`を再実行します。
 
 ## Claude Code設定
 
@@ -120,7 +162,7 @@ agent-sandbox
 ## シェル環境の異常調査
 
 Starshipが表示されない、またはHome Managerで導入したコマンドを実行できない場合は、
-`home-manager switch`で復旧する前に次の情報を保存する。復旧を先に行うと、シンボリックリンクや
+`agent-home-switch`で復旧する前に次の情報を保存する。復旧を先に行うと、シンボリックリンクや
 `PATH`の異常が上書きされ、原因を確認できなくなる。
 
 ```console
@@ -170,7 +212,42 @@ tokenファイル自体は管理しない。権限は`0600`に設定する。
 
 | skill      | 用途                                                    |
 | ---------- | ------------------------------------------------------- |
-| `read-pdf` | PDFのtext抽出とページ画像の照合に基づいて内容を調査する |
+| `read-pdf` | PDFのテキスト抽出、OCR、ページ画像との照合 |
+
+PDF用ツールは通常のホーム環境にインストールせず、専用のNix環境で使用します。
+`#sandbox`は`agent-config/pdf-env/`の定義と`flake.lock`だけを
+`~/.config/agent/pdf-env/`へ配備します。次のコマンドで、固定したバージョンの
+`poppler-utils`、`ocrmypdf`、`tesseract`を必要なときに利用できます。
+
+```console
+nix develop --no-update-lock-file "path:$(readlink -f "$HOME/.config/agent/pdf-env")" -c pdfinfo document.pdf
+nix develop --no-update-lock-file "path:$(readlink -f "$HOME/.config/agent/pdf-env")" -c tesseract --list-langs
+```
+
+初回は必要なパッケージを取得・ビルドします。終了後は通常環境の`PATH`に残りませんが、
+取得したパッケージはNix Storeにキャッシュされます。OCR用データは英語、日本語、
+文字の向きを検出するための`osd`です。言語の追加は`agent-config/pdf-env/flake.nix`の
+`enableLanguages`で行います。バージョンは専用の`flake.lock`で独立して管理します。
+更新する場合はリポジトリ内の`agent-config/pdf-env/`で`nix flake update`を実行し、
+PDF処理を検証してから`#sandbox`を再適用します。
+
+配備先はシンボリックリンクなので、`readlink -f`で実体のパスを解決し、
+`path:`を付けてNixに渡します。
+
+日本語の文体や検証など、作業全般に適用する指示は`AGENTS.md`で管理します。
+リモート名、Issueの運用、Git worktreeの使用可否は対象リポジトリの指示に従います。
+共通skillには、複数のプロジェクトで繰り返し使う具体的な手順を置きます。
+
+## コマンドの許可範囲
+
+共通設定の自動許可は、Gitの差分・履歴・状態の確認を中心にします。
+CodexではGitHubの情報取得も許可します。Gitの変更操作、Nix、Cargo、npmのコマンドは
+共通の自動許可から外します。PDF用Nix環境の起動も一括許可の対象にはしません。
+
+ビルドやテストもプロジェクト内のコードを実行するため、必要な許可は対象リポジトリで
+タスク定義を確認して管理します。共通設定から外した操作を一律禁止するものではなく、
+実行時の承認やsandboxの設定に従います。Codexのrulesはsandbox外での実行を制御するため、
+すべての操作に確認を強制する仕組みではありません。
 
 ## 設定変更
 
@@ -208,8 +285,7 @@ home-manager switch --flake /path/to/NixOS/home/agent#agent
 
 ```console
 agent-sandbox
-cd /workspace/NixOS/home/agent
-home-manager switch --flake .#sandbox
+agent-home-switch /workspace/NixOS/home/agent
 ```
 
 隔離ホーム内にdotfilesの別checkoutを作成する必要はない。
