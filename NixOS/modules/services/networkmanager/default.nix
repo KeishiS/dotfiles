@@ -5,7 +5,7 @@
     wifi.macAddress = lib.mkDefault "permanent";
     plugins = with pkgs; [
       networkmanager-openvpn
-      networkmanager-vpnc
+      # networkmanager-vpnc
     ];
   };
 }
