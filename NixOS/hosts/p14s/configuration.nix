@@ -40,6 +40,10 @@
     distrobox
   ];
 
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
+  users.users.keishis.extraGroups = [ "libvirtd" ];
+
   services.tailscale = {
     enable = true;
     openFirewall = true;

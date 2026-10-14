@@ -27,27 +27,106 @@
 
     scraper = {
       enable = true;
-      interval = "1d";
+      interval = "2d";
       llm.baseUrl = "http://127.0.0.1:12001/v1";
+      llm.model = "gemma4:12b-mxfp8";
       sources = [
         # 国立科学博物館(上野本館・筑波実験植物園・自然教育園の展示一覧)
-        { url = "https://www.kahaku.go.jp/tenji/exhibitions.html"; tags = [ "国立科学博物館" ]; }
+        {
+          id = "kahaku";
+          url = "https://www.kahaku.go.jp/tenji/exhibitions.html";
+          institutionName = "国立科学博物館";
+          tags = [
+            "国立科学博物館"
+            "科博"
+          ];
+        }
+
         # 東京都現代美術館(展覧会)
-        { url = "https://www.mot-art-museum.jp/exhibitions/"; tags = [ "東京都現代美術館" ]; }
+        {
+          id = "mot";
+          url = "https://www.mot-art-museum.jp/exhibitions/";
+          institutionName = "東京都現代美術館";
+          tags = [
+            "東京都現代美術館"
+            "MOT"
+          ];
+        }
+
         # 国立天文台(イベント)
-        { url = "https://www.nao.ac.jp/news/events/"; tags = [ "国立天文台" ]; }
+        {
+          id = "naoj";
+          url = "https://www.nao.ac.jp/news/events/";
+          institutionName = "国立天文台";
+          tags = [
+            "国立天文台"
+            "NAOJ"
+          ];
+        }
+
         # 国立天文台 4D2U ドームシアター
-        { url = "https://prc.nao.ac.jp/cgi-bin/naoj/4d2u/entry.cgi"; tags = [ "国立天文台" ]; }
+        {
+          id = "naoj-theater";
+          url = "https://prc.nao.ac.jp/cgi-bin/naoj/4d2u/entry.cgi";
+          institutionName = "国立天文台 4D2Uドームシアター";
+          tags = [
+            "国立天文台"
+            "NAOJ"
+            "4D2Uドームシアター"
+          ];
+        }
+
         # JAMSTEC(イベント)
-        { url = "https://www.jamstec.go.jp/j/pr/events/"; tags = [ "海洋研究開発機構" ]; }
+        {
+          id = "jamstec";
+          url = "https://www.jamstec.go.jp/j/pr/events/";
+          institutionName = "海洋研究開発機構";
+          tags = [
+            "海洋研究開発機構"
+            "JAMSTEC"
+          ];
+        }
+
         # 理化学研究所(イベント)
-        { url = "https://www.riken.jp/pr/events/events/"; tags = [ "理化学研究所" ]; }
+        {
+          id = "riken";
+          url = "https://www.riken.jp/pr/events/events/";
+          institutionName = "理化学研究所";
+          tags = [
+            "理化学研究所"
+            "理研"
+          ];
+        }
+
         # 自然科学研究機構(イベント)
-        { url = "https://www.nins.jp/event/"; tags = [ "自然科学研究機構" ]; }
+        {
+          id = "nins";
+          url = "https://www.nins.jp/event/";
+          institutionName = "自然科学研究機構";
+          tags = [
+            "自然科学研究機構"
+            "NINS"
+          ];
+        }
+
         # 高エネルギー加速器研究機構 KEK(イベント)
-        { url = "https://www.kek.jp/ja/event"; tags = [ "高エネルギー加速器研究機構" ]; }
+        {
+          id = "kek";
+          url = "https://www.kek.jp/ja/event";
+          institutionName = "高エネルギー加速器研究機構";
+          tags = [
+            "高エネルギー加速器研究機構"
+            "KEK"
+          ];
+        }
+
         # JAXA 施設見学・イベント
-        { url = "https://fanfun.jaxa.jp/event/visit/"; tags = [ "JAXA" ]; }
+        {
+          id = "jaxa";
+          url = "https://fanfun.jaxa.jp/event/visit/";
+          institutionName = "JAXA";
+          tags = [ "JAXA" ];
+        }
       ];
     };
   };
